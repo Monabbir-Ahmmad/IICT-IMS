@@ -1,8 +1,13 @@
+import { Stack } from "@mui/material";
+import React from "react";
+import ProductAddForm from "../components/product/ProductAddForm";
 
 function ProductAddPage() {
   return (
-    <div>ProductAddPage</div>
-  )
+    <Stack>
+      <ProductAddForm />
+    </Stack>
+  );
 }
 
-export default ProductAddPage
+export default ProductAddPage;

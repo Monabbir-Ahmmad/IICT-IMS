@@ -6,12 +6,12 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { BiBox as ProductIcon } from "react-icons/bi";
 import {
   RiHome5Line as DiscoverIcon,
   RiShutDownLine as LogoutIcon,
   RiTeamLine as PeopleIcon,
   RiUser6Line as UserIcon,
-  RiPenNibLine as WriteIcon,
 } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -76,7 +76,7 @@ function NavMenu() {
         <NavLinkItem
           title={"Products"}
           link={"/products"}
-          icon={<WriteIcon fontSize={24} />}
+          icon={<ProductIcon fontSize={24} />}
         />
         <NavLinkItem
           title={"Users"}

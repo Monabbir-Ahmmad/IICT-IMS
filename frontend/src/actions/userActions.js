@@ -21,9 +21,9 @@ import {
   USER_PROFILE_UPDATE_RESET,
 } from "../constants/userConstants";
 
-import TokenService from "../service/token.service";
+import TokenService from "../services/token.service";
 import { USER_LOGIN_SUCCESS } from "../constants/authConstants";
-import api from "../service/api";
+import api from "../services/api";
 
 export const getUserDetails = (userId) => async (dispatch, getState) => {
   try {
