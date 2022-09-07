@@ -12,13 +12,13 @@ import {
   RiShutDownLine as LogoutIcon,
   RiTeamLine as PeopleIcon,
   RiUser6Line as UserIcon,
+  RiShoppingCartLine as CartIcon,
 } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-
-import { API_HOST } from "../../constants/apiLinks";
+import { API_HOST } from "../../../constants/apiLinks";
 import NavLinkItem from "./NavLinkItem";
-import { logout } from "../../actions/authActions";
-import { stringToColour } from "../../utils/utilities";
+import { logout } from "../../../redux/actions/authActions";
+import { stringToColour } from "../../../utils/utilities";
 import { useNavigate } from "react-router-dom";
 
 function NavMenu() {
@@ -82,6 +82,12 @@ function NavMenu() {
           title={"Users"}
           link={"/users"}
           icon={<PeopleIcon fontSize={24} />}
+        />
+
+        <NavLinkItem
+          title={"Procurement"}
+          link={"/procurement"}
+          icon={<CartIcon fontSize={24} />}
         />
       </MenuList>
 

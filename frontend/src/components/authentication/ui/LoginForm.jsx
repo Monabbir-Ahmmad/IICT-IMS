@@ -16,7 +16,7 @@ import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 
-import { login } from "../../actions/authActions";
+import { login } from "../../../redux/actions/authActions";
 import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
 

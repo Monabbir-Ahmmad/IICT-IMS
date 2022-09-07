@@ -1,4 +1,4 @@
-import { ReactComponent as Logo } from "../../assets/vectors/logo.svg";
+import { ReactComponent as Logo } from "../../../assets/vectors/logo.svg";
 import { SvgIcon } from "@mui/material";
 
 function AppIcon(props) {

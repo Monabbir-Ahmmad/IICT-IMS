@@ -1,4 +1,4 @@
-import { POST_USER_LOGIN, POST_USER_REGISTER } from "../constants/apiLinks";
+import { POST_USER_LOGIN, POST_USER_REGISTER } from "../../constants/apiLinks";
 import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
@@ -9,8 +9,8 @@ import {
   USER_REGISTER_SUCCESS,
 } from "../constants/authConstants";
 
-import TokenService from "../services/token.service";
-import api from "../services/api";
+import TokenService from "../../services/token.service";
+import api from "../../services/api";
 
 export const register = (registrationData) => async (dispatch) => {
   try {

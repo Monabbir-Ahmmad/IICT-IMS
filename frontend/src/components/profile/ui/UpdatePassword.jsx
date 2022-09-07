@@ -14,8 +14,7 @@ import {
 import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-
-import { updateUserPassword } from "../../actions/userActions";
+import { updateUserPassword } from "../../../redux/reducers/actions/userActions";
 
 function UpdatePassword({ openPasswordEdit, handlePasswordEditCancel }) {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 
-import AppIcon from "../icon/AppIcon";
-import AuthPageImage from "../../assets/images/bg1.png";
+import AppIcon from "../../shared/icon/AppIcon";
+import AuthPageImage from "../../../assets/images/bg1.png";
 
 function AuthIntro() {
   return (

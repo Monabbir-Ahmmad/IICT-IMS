@@ -19,15 +19,14 @@ import {
 } from "react-icons/fi";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
-
-import { API_HOST } from "../../constants/apiLinks";
 import DateAdapter from "@mui/lab/AdapterMoment";
-import ProfileImagePicker from "../imagePicker/ProfileImagePicker";
 import moment from "moment";
-import { updateUserProfile } from "../../actions/userActions";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { genders } from "../../utils/utilities";
+import { API_HOST } from "../../../constants/apiLinks";
+import { updateUserProfile } from "../../../redux/reducers/actions/userActions";
+import ProfileImagePicker from "../../shared/imagePicker/ProfileImagePicker";
+import { genders } from "../../../utils/utilities";
 
 function UpdateProfile({ openProfileEdit, handleProfileEditCancel }) {
   const dispatch = useDispatch();

@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import reduxStore from "./redux/reduxStore";
+import { ThemeContextProvider } from "./context/ThemeContext";
 import App from "./App";
 
 import "./index.css";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import reduxStore from "./reduxStore";
-import { ThemeContextProvider } from "./context/ThemeContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-import AuthIntro from "../components/authentication/AuthIntro";
-import LoginForm from "../components/authentication/LoginForm";
 import { Box, Paper, Stack } from "@mui/material";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
+import AuthIntro from "../ui/AuthIntro";
+import LoginForm from "../ui/LoginForm";
 
 const Wrapper = styled(Box)`
   display: flex;

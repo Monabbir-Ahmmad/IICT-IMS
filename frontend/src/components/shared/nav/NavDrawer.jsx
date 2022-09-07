@@ -1,6 +1,5 @@
 import { Link, useTheme } from "@mui/material";
 import { Outlet, Link as RouterLink } from "react-router-dom";
-
 import AppBar from "@mui/material/AppBar";
 import AppIcon from "../icon/AppIcon";
 import Box from "@mui/material/Box";

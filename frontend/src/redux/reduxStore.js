@@ -5,10 +5,9 @@ import {
   userProfileUpdateReducer,
 } from "./reducers/userReducer";
 import { userLoginReducer, userRegisterReducer } from "./reducers/authReducer";
-
-import TokenService from "./services/token.service";
 import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
+import TokenService from "../services/token.service";
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,

@@ -52,7 +52,7 @@ namespace API.Services.Auth
             return await _context.Users.AnyAsync(x => x.Email == email);
         }
 
-        public Task<bool> PasswordMatche(string username, string password)
+        public Task<bool> PasswordMatch(string username, string password)
         {
             throw new NotImplementedException();
         }

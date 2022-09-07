@@ -6,9 +6,9 @@ import {
 } from "../constants/apiLinks";
 
 import TokenService from "./token.service";
-import { USER_LOGOUT } from "../constants/authConstants";
+import { USER_LOGOUT } from "../redux/constants/authConstants";
 import axios from "axios";
-import reduxStore from "../reduxStore";
+import reduxStore from "../redux/reduxStore";
 
 const api = (contentType = "application/json") => {
   const instance = axios.create({

@@ -9,6 +9,6 @@ namespace API.Interfaces.Auth
         Task<AuthResponseDto> RegisterUser(RegisterDto registerDto);
         Task<AuthResponseDto> LoginUser(LoginDto loginDto);
         Task<bool> UserExists(string email);
-        Task<bool> PasswordMatche(string username, string password);
+        Task<bool> PasswordMatch(string username, string password);
     }
 }
