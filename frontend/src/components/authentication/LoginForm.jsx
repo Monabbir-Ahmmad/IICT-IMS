@@ -1,9 +1,14 @@
 import {
   Alert,
   Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   IconButton,
   InputAdornment,
   LinearProgress,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
 } from "@mui/material";
@@ -33,6 +38,8 @@ function LoginForm() {
   } = useForm({
     defaultValues: { email: "", password: "" },
   });
+
+  const [loginAs, setLoginAs] = useState(1);
 
   const dispatch = useDispatch();
 
@@ -96,11 +103,27 @@ function LoginForm() {
         }}
       />
 
+      <FormControl>
+        <FormLabel>Login As</FormLabel>
+        <RadioGroup
+          row
+          value={loginAs}
+          onChange={(e) => setLoginAs(e.target.value)}
+        >
+          <FormControlLabel
+            value={1}
+            control={<Radio />}
+            label="IICT Employee"
+          />
+          <FormControlLabel value={2} control={<Radio />} label="Supplier" />
+        </RadioGroup>
+      </FormControl>
+
       <Typography variant="body2" textAlign={"center"} color={"text.secondary"}>
         By continuing, you agree to our User Agreement and Privacy Policy.
       </Typography>
 
-      <Button variant="contained" size="large" type="submit" sx={{ mt: 3 }}>
+      <Button variant="contained" size="large" type="submit">
         Sign in
       </Button>
     </FormContainer>
