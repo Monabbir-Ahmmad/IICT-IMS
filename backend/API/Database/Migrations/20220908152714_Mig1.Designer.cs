@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220908081818_ProcurementsUpdate")]
-    partial class ProcurementsUpdate
+    [Migration("20220908152714_Mig1")]
+    partial class Mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,17 +28,17 @@ namespace API.Database.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("TEXT");
+
                     b.Property<float>("EstimatedTotalPrice")
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("IssuingDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("TenderDeadline")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -48,7 +48,7 @@ namespace API.Database.Migrations
                     b.ToTable("Procurements");
                 });
 
-            modelBuilder.Entity("API.Entities.ProcurementItem", b =>
+            modelBuilder.Entity("API.Entities.ProcurementProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,6 +102,9 @@ namespace API.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("ProductCategories");
                 });
 
@@ -139,7 +142,7 @@ namespace API.Database.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("API.Entities.ProcurementItem", b =>
+            modelBuilder.Entity("API.Entities.ProcurementProduct", b =>
                 {
                     b.HasOne("API.Entities.ProductCategory", "Category")
                         .WithMany()
@@ -148,7 +151,7 @@ namespace API.Database.Migrations
                         .IsRequired();
 
                     b.HasOne("API.Entities.Procurement", "Procurement")
-                        .WithMany("Items")
+                        .WithMany("Products")
                         .HasForeignKey("ProcurementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -160,7 +163,7 @@ namespace API.Database.Migrations
 
             modelBuilder.Entity("API.Entities.Procurement", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,7 +4,7 @@ using API.Interfaces.Category;
 
 namespace API.Services.Categories
 {
-    public class CategoryService: ICategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly DatabaseContext _context;
 
@@ -15,10 +15,10 @@ namespace API.Services.Categories
 
         public async Task<bool> CreateCategory(string categoryName)
         {
-            var category = new ProductCategory
-            {
-                Name = categoryName
-            };
+            if (_context.ProductCategories.Where(x => x.Name == categoryName).Any())
+                return false;
+
+            var category = new ProductCategory { Name = categoryName };
 
             _context.ProductCategories.Add(category);
             var result = await _context.SaveChangesAsync();
@@ -26,5 +26,4 @@ namespace API.Services.Categories
             return result > 0;
         }
     }
-   
 }

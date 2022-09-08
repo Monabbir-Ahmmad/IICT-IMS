@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Database.Migrations
 {
-    public partial class Procurements : Migration
+    public partial class Mig1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,15 +23,30 @@ namespace API.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Procurements",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     IssuingDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TenderDeadline = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Deadline = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EstimatedTotalPrice = table.Column<float>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
@@ -58,7 +73,7 @@ namespace API.Database.Migrations
                     EstimatedPrice = table.Column<float>(type: "REAL", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     EstimatedTotalPrice = table.Column<float>(type: "REAL", nullable: false),
-                    ProcurementId = table.Column<int>(type: "INTEGER", nullable: true)
+                    ProcurementId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,7 +82,8 @@ namespace API.Database.Migrations
                         name: "FK_ProcurementItems_Procurements_ProcurementId",
                         column: x => x.ProcurementId,
                         principalTable: "Procurements",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProcurementItems_ProductCategories_CategoryId",
                         column: x => x.CategoryId,
@@ -90,12 +106,21 @@ namespace API.Database.Migrations
                 name: "IX_Procurements_CategoryId",
                 table: "Procurements",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCategories_Name",
+                table: "ProductCategories",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "ProcurementItems");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Procurements");

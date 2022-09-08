@@ -4,15 +4,15 @@
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public ProductCategory Category { get; set; }
-        
+
         public DateTime IssuingDate { get; set; }
 
-        public DateTime TenderDeadline { get; set; }
+        public DateTime Deadline { get; set; }
 
-        public List<ProcurementItem> Items { get; set; }
+        public List<ProcurementProduct> Products { get; set; }
 
         public float EstimatedTotalPrice { get; set; }
     }

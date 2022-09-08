@@ -4,7 +4,6 @@ using API.Interfaces.Procurement;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace API.Controllers
 {
     [Route("api/[controller]")]
@@ -14,20 +13,27 @@ namespace API.Controllers
         private readonly IProcurementService _procurementService;
         private readonly ILogger<AuthController> _logger;
 
-        public ProcurementController(IProcurementService procurementService, ILogger<AuthController> logger)
+        public ProcurementController(
+            IProcurementService procurementService,
+            ILogger<AuthController> logger
+        )
         {
             _procurementService = procurementService;
             _logger = logger;
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<ProcurementResponseDto>> CreateProcurement(ProcuremnetDto procurementDto)
+        public async Task<ActionResult<ProcurementResponseDto>> CreateProcurement(
+            ProcuremnetDto procurementDto
+        )
         {
             try
             {
-                var result = await _procurementService.CreateProcurement(procurementDto); 
+                var result = await _procurementService.CreateProcurement(procurementDto);
 
-                return Created("Procurement created", result);
+                return result
+                    ? Ok("Procurement created")
+                    : BadRequest("Procurement not be created");
             }
             catch (Exception ex)
             {
@@ -79,6 +85,7 @@ namespace API.Controllers
                 );
             }
         }
+
         [HttpGet()]
         public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements()
         {

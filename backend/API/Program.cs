@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.EnableSensitiveDataLogging();
 });
 
 // Add api services

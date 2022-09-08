@@ -24,7 +24,7 @@ namespace API.Controllers
             {
                 var result = await _categoryService.CreateCategory(categoryName);
 
-                return Created("Category created", result);
+                return result ? Ok("Category created") : BadRequest("Category already exists");
             }
             catch (Exception ex)
             {

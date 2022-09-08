@@ -3,6 +3,7 @@ using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
 using API.Interfaces.Procurement;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Services.Procurements
 {
@@ -17,14 +18,21 @@ namespace API.Services.Procurements
 
         public async Task<bool> CreateProcurement(ProcuremnetDto procuremnetDto)
         {
-            var procurementItems = new List<ProcurementItem>();
+            var procurementProducts = new List<ProcurementProduct>();
 
-            foreach (var item in procuremnetDto.Items)
+            var procurementCategory = await _context.ProductCategories
+                .Where(x => x.Id == procuremnetDto.ProcuremnetCategoryId)
+                .FirstOrDefaultAsync();
+
+            if (procurementCategory == null)
+                return false;
+
+            foreach (var item in procuremnetDto.Products)
             {
-                var procurementItem = new ProcurementItem
+                var procurementItem = new ProcurementProduct
                 {
                     Name = item.Name,
-                    Category = item.Category,
+                    Category = procurementCategory,
                     Manufacturer = item.Manufacturer,
                     Details = item.Details,
                     EstimatedPrice = item.EstimatedPrice,
@@ -32,20 +40,21 @@ namespace API.Services.Procurements
                     EstimatedTotalPrice = item.EstimatedTotalPrice
                 };
 
-                procurementItems.Add(procurementItem);
+                procurementProducts.Add(procurementItem);
             }
 
             var procurement = new Procurement
             {
-                Name = procuremnetDto.Name,
-                Category = procuremnetDto.Category,
+                Title = procuremnetDto.Title,
+                Category = procurementCategory,
                 EstimatedTotalPrice = procuremnetDto.EstimatedTotalPrice,
-                IssuingDate = procuremnetDto.IssuingDate,
-                TenderDeadline = procuremnetDto.TenderDeadline,
-                Items = procurementItems
+                IssuingDate = DateTime.Today,
+                Deadline = procuremnetDto.TenderDeadline,
+                Products = procurementProducts
             };
 
             _context.Procurements.Add(procurement);
+
             await _context.SaveChangesAsync();
 
             return true;
