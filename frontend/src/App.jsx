@@ -1,13 +1,9 @@
 import { Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
-import NavDrawer from "./components/nav/NavDrawer";
-
-import AuthPage from "./pages/AuthPage";
-import HomePage from "./pages/HomePage";
-import PeoplePage from "./pages/PeoplePage";
-import ProductAddPage from "./pages/ProductAddPage";
-import ProductPage from "./pages/ProductPage";
-import ProfilePage from "./pages/ProfilePage";
+import AuthPage from "./components/authentication/page/AuthPage";
+import ProcurementCreatePage from "./components/procurement/page/ProcurementCreatePage";
+import ProcurementPage from "./components/procurement/page/ProcurementPage";
+import NavDrawer from "./components/shared/nav/NavDrawer";
 
 function App() {
   return (
@@ -15,11 +11,8 @@ function App() {
       <Route index element={<AuthPage />} />
 
       <Route path="/" element={<NavDrawer />}>
-        <Route path="home" element={<HomePage />} />
-        <Route path="profile/:userId" element={<ProfilePage />} />
-        <Route path="users" element={<PeoplePage />} />
-        <Route path="products" element={<ProductPage />} />
-        <Route path="products/add" element={<ProductAddPage />} />
+        <Route path="procurement" element={<ProcurementPage />} />
+        <Route path="procurement/create" element={<ProcurementCreatePage />} />
         <Route
           path="*"
           element={<Typography variant="h4">Sorry! Page Not Found</Typography>}

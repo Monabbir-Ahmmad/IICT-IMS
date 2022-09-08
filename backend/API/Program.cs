@@ -1,6 +1,10 @@
 using API.Database;
 using API.Interfaces.Auth;
+using API.Interfaces.Category;
+using API.Interfaces.Procurement;
 using API.Services.Auth;
+using API.Services.Categories;
+using API.Services.Procurements;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,11 +15,14 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.EnableSensitiveDataLogging();
 });
 
 // Add api services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProcurementService, ProcurementService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
