@@ -85,7 +85,7 @@ namespace API.Database.Migrations
 
                     b.HasIndex("ProcurementId");
 
-                    b.ToTable("ProcurementItems");
+                    b.ToTable("ProcurementProducts");
                 });
 
             modelBuilder.Entity("API.Entities.ProductCategory", b =>

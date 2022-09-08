@@ -73,7 +73,7 @@ namespace API.Controllers
             {
                 var result = await _procurementService.GetProcurement(id);
 
-                return Created(" Get Procurement successful", result);
+                return result;
             }
             catch (Exception ex)
             {

@@ -9,7 +9,7 @@ namespace API.Database
 
         public DbSet<Procurement> Procurements { get; set; }
 
-        public DbSet<ProcurementProduct> ProcurementItems { get; set; }
+        public DbSet<ProcurementProduct> ProcurementProducts { get; set; }
 
         public DbSet<ProductCategory> ProductCategories { get; set; }
 

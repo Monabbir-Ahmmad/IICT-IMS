@@ -4,6 +4,7 @@ using API.DTOs.Response;
 using API.Entities;
 using API.Interfaces.Procurement;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace API.Services.Procurements
 {
@@ -60,14 +61,69 @@ namespace API.Services.Procurements
             return true;
         }
 
-        public Task<bool> DeleteProcurement(int id)
+        public async Task<bool> DeleteProcurement(int id)
         {
-            throw new NotImplementedException();
+            var procurement = await _context.Procurements
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (procurement == null)
+                return false;
+            else
+            {
+                _context.Procurements.Remove(procurement);
+                return true;
+            }
         }
 
-        public Task<ProcurementResponseDto> GetProcurement(int id)
+        public async Task<ProcurementResponseDto> GetProcurement(int id)
         {
-            throw new NotImplementedException();
+            var procurement = await _context.Procurements
+                .Where(x => x.Id == id)
+                .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Category)
+                .FirstOrDefaultAsync();
+
+            System.Diagnostics.Debug.Write(procurement);
+
+            if (procurement == null)
+            {
+                return null;
+            }
+            else
+            {
+                var procurementResponse = new ProcurementResponseDto()
+                {
+                    Id = procurement.Id,
+                    Title = procurement.Title,
+                    Category = procurement.Category.Name,
+                    IssuingDate = procurement.IssuingDate,
+                    TenderDeadline = procurement.Deadline,
+                    EstimatedTotalPrice = procurement.EstimatedTotalPrice,
+                    Products = new List<ProcurementProductResponseDto>()
+
+                };
+
+                foreach (var item in procurement.Products)
+                {
+                    var procurementProduct = new ProcurementProductResponseDto()
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Category = item.Category.Name,
+                        Manufacturer = item.Manufacturer,
+                        Details = item.Details,
+                        EstimatedPrice = item.EstimatedPrice,
+                        Quantity = item.Quantity,
+                        EstimatedTotalPrice = item.EstimatedTotalPrice
+                    };
+
+                    procurementResponse.Products.Add(procurementProduct);
+                }
+
+                return procurementResponse;
+            }
         }
 
         public Task<List<ProcurementResponseDto>> GetProcurements()
