@@ -9,7 +9,7 @@ namespace API.DTOs.Request
         public string Name { get; set; }
 
         [Required]
-        public string Category { get; set; }
+        public ProductCategory Category { get; set; }
 
         [Required]
         public float EstimatedTotalPrice { get; set; }
@@ -21,6 +21,6 @@ namespace API.DTOs.Request
         public DateTime TenderDeadline { get; set; }
 
         [Required]
-        public List<ProcurementItem> Items { get; set; }
+        public List<ProcurementItemDto> Items { get; set; }
     }
 }

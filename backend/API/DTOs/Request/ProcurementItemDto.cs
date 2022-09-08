@@ -1,9 +1,9 @@
-﻿namespace API.Entities
-{
-    public class ProcurementItem
-    {
-        public int Id { get; set; }
+﻿using API.Entities;
 
+namespace API.DTOs.Request
+{
+    public class ProcurementItemDto
+    {
         public string Name { get; set; }
 
         public ProductCategory Category { get; set; }
@@ -17,7 +17,5 @@
         public int Quantity { get; set; }
 
         public float EstimatedTotalPrice { get; set; }
-
-        public Procurement Procurement { get; set; }
     }
 }

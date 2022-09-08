@@ -12,6 +12,8 @@
 
         public DateTime TenderDeadline { get; set; }
 
-        public float EstimatedTotalCost { get; set; }
+        public List<ProcurementItem> Items { get; set; }
+
+        public float EstimatedTotalPrice { get; set; }
     }
 }

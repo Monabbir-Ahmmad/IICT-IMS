@@ -3,6 +3,7 @@ using System;
 using API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220908075937_Procurements")]
+    partial class Procurements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
@@ -73,7 +75,7 @@ namespace API.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProcurementId")
+                    b.Property<int?>("ProcurementId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -145,15 +147,11 @@ namespace API.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Procurement", "Procurement")
+                    b.HasOne("API.Entities.Procurement", null)
                         .WithMany("Items")
-                        .HasForeignKey("ProcurementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProcurementId");
 
                     b.Navigation("Category");
-
-                    b.Navigation("Procurement");
                 });
 
             modelBuilder.Entity("API.Entities.Procurement", b =>

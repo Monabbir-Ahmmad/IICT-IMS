@@ -4,7 +4,7 @@
 
 namespace API.Database.Migrations
 {
-    public partial class Procurements : Migration
+    public partial class category : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
