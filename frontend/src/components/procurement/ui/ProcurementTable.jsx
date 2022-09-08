@@ -1,7 +1,29 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
+import { DataGrid, GridFooter, GridFooterContainer } from "@mui/x-data-grid";
+import { RiDeleteBinLine as DeleteIcon } from "react-icons/ri";
 import { currencyFormatter } from "../../../utils/utilities";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
+
+function CustomeFooter({ onSelectedRowDeleteClick, selectedRows }) {
+  return (
+    <GridFooterContainer>
+      {selectedRows.length > 0 && (
+        <Button
+          startIcon={<DeleteIcon />}
+          variant="outlined"
+          color="error"
+          size="small"
+          sx={{ mx: 1 }}
+          onClick={onSelectedRowDeleteClick}
+        >
+          Delete selected rows
+        </Button>
+      )}
+      <GridFooter sx={{ border: "none", flex: 1 }} />
+    </GridFooterContainer>
+  );
+}
 
 const columns = [
   {
@@ -39,7 +61,12 @@ const columns = [
   },
 ];
 
-function ProcurementTable({ data = [], onRowSelectionChange }) {
+function ProcurementTable({
+  data = [],
+  onRowSelectionChange,
+  onSelectedRowDeleteClick,
+  selectedRows,
+}) {
   return (
     <div style={{ height: 650, width: "100%" }}>
       <DataGrid
@@ -49,6 +76,13 @@ function ProcurementTable({ data = [], onRowSelectionChange }) {
         disableSelectionOnClick
         components={{
           NoRowsOverlay: EmptyTableOverlay,
+          Footer: CustomeFooter,
+        }}
+        componentsProps={{
+          footer: {
+            onSelectedRowDeleteClick,
+            selectedRows,
+          },
         }}
         onSelectionModelChange={onRowSelectionChange}
         sx={{ border: 0 }}

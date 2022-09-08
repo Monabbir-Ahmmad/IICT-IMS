@@ -69,20 +69,11 @@ function ProcurementCreatePage() {
       <Paper variant="outlined">
         <ProcurementTable
           data={items}
+          selectedRows={selectedRows}
           onRowSelectionChange={onRowSelectionChange}
+          onSelectedRowDeleteClick={onDeleteSelected}
         />
       </Paper>
-      {selectedRows.length > 0 && (
-        <Button
-          startIcon={<DeleteIcon />}
-          variant="contained"
-          color="error"
-          sx={{ alignSelf: "start" }}
-          onClick={onDeleteSelected}
-        >
-          Delete Selected Items
-        </Button>
-      )}
     </Stack>
   );
 }
