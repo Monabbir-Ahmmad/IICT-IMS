@@ -1,4 +1,5 @@
-﻿using API.Interfaces.Category;
+﻿using API.DTOs.Response;
+using API.Interfaces.Category;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,65 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("{ErrorMessage}", ex.Message);
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new { response = "Something went wrong." }
+                );
+            }
+        }
+
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult<bool>> DeleteCategory(int categoryId)
+        {
+            try
+            {
+                return await _categoryService.DeleteCategory(categoryId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{ErrorMessage}", ex.Message);
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new { response = "Something went wrong." }
+                );
+            }
+        }
+
+        [HttpGet("{id}")]
+
+        public async Task<ActionResult<CategoryResponseDto>> GetCategory(int categoryId)
+        {
+            try
+            {
+                return await _categoryService.GetCategory(categoryId); ;
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("{ErrorMessage}", ex.Message);
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new { response = "Something went wrong." }
+                );
+            }
+        }
+
+        [HttpGet()]
+        public async Task<ActionResult<CategoryResponseDto>> GetCategories()
+        {
+            try
+            {
+                return await _categoryService.GetCategories();
+
+            }
+            catch (Exception ex)
+            {
+
                 _logger.LogError("{ErrorMessage}", ex.Message);
 
                 return StatusCode(
