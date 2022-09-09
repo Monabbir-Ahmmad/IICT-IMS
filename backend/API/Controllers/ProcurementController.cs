@@ -87,11 +87,13 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements()
+        public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements([FromQuery]
+            GetProcurementsDto getProcurementsDto
+        )
         {
             try
             {
-                var result = await _procurementService.GetProcurements();
+                var result = await _procurementService.GetProcurements(getProcurementsDto);
 
                 return Created(" Get All Procurements successful", result);
             }

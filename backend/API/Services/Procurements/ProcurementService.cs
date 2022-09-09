@@ -65,6 +65,9 @@ namespace API.Services.Procurements
         {
             var procurement = await _context.Procurements
                 .Where(x => x.Id == id)
+                .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Category)
                 .FirstOrDefaultAsync();
 
             if (procurement == null)
@@ -72,6 +75,7 @@ namespace API.Services.Procurements
             else
             {
                 _context.Procurements.Remove(procurement);
+                await _context.SaveChangesAsync();
                 return true;
             }
         }
@@ -84,8 +88,6 @@ namespace API.Services.Procurements
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Category)
                 .FirstOrDefaultAsync();
-
-            System.Diagnostics.Debug.Write(procurement);
 
             if (procurement == null)
             {
@@ -102,7 +104,6 @@ namespace API.Services.Procurements
                     TenderDeadline = procurement.Deadline,
                     EstimatedTotalPrice = procurement.EstimatedTotalPrice,
                     Products = new List<ProcurementProductResponseDto>()
-
                 };
 
                 foreach (var item in procurement.Products)
@@ -126,9 +127,43 @@ namespace API.Services.Procurements
             }
         }
 
-        public Task<List<ProcurementResponseDto>> GetProcurements()
+        public async Task<List<ProcurementResponseDto>> GetProcurements(
+            GetProcurementsDto getProcurementsDto
+        )
         {
-            throw new NotImplementedException();
+            var procurementList = new List<Procurement>();
+
+            if (getProcurementsDto.Id == null)
+            {
+                procurementList = await _context.Procurements
+                    .Include(x => x.Category)
+                    .ToListAsync();
+            }
+            else
+            {
+                procurementList = await _context.Procurements
+                    .Where(x => x.Category.Id == getProcurementsDto.Id)
+                    .Include(x => x.Category)
+                    .ToListAsync();
+            }
+
+            var procurementListRes = new List<ProcurementResponseDto>();
+
+            foreach (var procs in procurementList)
+            {
+                procurementListRes.Add(
+                    new ProcurementResponseDto()
+                    {
+                        Id = procs.Id,
+                        Title = procs.Title,
+                        Category = procs.Category.Name,
+                        IssuingDate = procs.IssuingDate,
+                        TenderDeadline = procs.Deadline,
+                        EstimatedTotalPrice = procs.EstimatedTotalPrice
+                    }
+                );
+            }
+            return procurementListRes;
         }
     }
 }
