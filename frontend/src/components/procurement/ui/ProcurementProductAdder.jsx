@@ -7,11 +7,10 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 import { useEffect } from "react";
 
-import { Controller, useForm } from "react-hook-form";
-
-function ProcurementItemAdder({ open, onSubmit, onCancel }) {
+function ProcurementProductAdder({ open, onSubmit, onCancel }) {
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       id: Date.now(),
@@ -161,4 +160,4 @@ function ProcurementItemAdder({ open, onSubmit, onCancel }) {
   );
 }
 
-export default ProcurementItemAdder;
+export default ProcurementProductAdder;

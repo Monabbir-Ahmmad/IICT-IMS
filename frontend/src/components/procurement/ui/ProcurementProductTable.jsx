@@ -1,9 +1,9 @@
-import { Button } from "@mui/material";
 import { DataGrid, GridFooter, GridFooterContainer } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
 import { RiDeleteBinLine as DeleteIcon } from "react-icons/ri";
-import { currencyFormatter } from "../../../utils/utilities";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
+import { currencyFormatter } from "../../../utils/utilities";
 
 function CustomeFooter({ onSelectedRowDeleteClick, selectedRows }) {
   return (
@@ -46,7 +46,7 @@ const columns = [
   },
   {
     field: "estimatedPrice",
-    headerName: "Estimated price",
+    headerName: "Estimated Price",
     valueFormatter: ({ value }) => currencyFormatter().format(value),
     type: "number",
     width: 150,
@@ -61,7 +61,7 @@ const columns = [
   },
 ];
 
-function ProcurementTable({
+function ProcurementProductTable({
   data = [],
   onRowSelectionChange,
   onSelectedRowDeleteClick,
@@ -91,4 +91,4 @@ function ProcurementTable({
   );
 }
 
-export default ProcurementTable;
+export default ProcurementProductTable;

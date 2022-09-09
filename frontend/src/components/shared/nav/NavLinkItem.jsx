@@ -1,9 +1,8 @@
 import { ListItemIcon, ListItemText, MenuItem, useTheme } from "@mui/material";
-
+import { RiCheckboxBlankCircleLine as DefaultIcon } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
-import React from "react";
 
-function NavLinkItem({ title, link, icon }) {
+function NavLinkItem({ title, link, icon: Icon = DefaultIcon }) {
   const theme = useTheme();
 
   return (
@@ -25,7 +24,9 @@ function NavLinkItem({ title, link, icon }) {
           : undefined
       }
     >
-      <ListItemIcon sx={{ mx: 2, color: "inherit" }}>{icon}</ListItemIcon>
+      <ListItemIcon sx={{ mx: 2, color: "inherit" }}>
+        {<Icon fontSize={24} />}
+      </ListItemIcon>
       <ListItemText primary={title} />
     </MenuItem>
   );

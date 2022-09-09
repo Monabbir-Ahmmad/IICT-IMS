@@ -13,7 +13,7 @@ import {
   USER_PROFILE_UPDATE_REQUEST,
   USER_PROFILE_UPDATE_SUCCESS,
   USER_PROFILE_UPDATE_RESET,
-} from "../constants/userConstants";
+} from "../action_types/user";
 
 export const userDetailsReducer = (state = { user: {} }, action) => {
   switch (action.type) {

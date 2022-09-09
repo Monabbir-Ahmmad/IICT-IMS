@@ -1,24 +1,16 @@
+import { Button, MenuList, Stack, Toolbar } from "@mui/material";
 import {
-  Avatar,
-  Button,
-  MenuList,
-  Stack,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { BiBox as ProductIcon } from "react-icons/bi";
-import {
-  RiHome5Line as DiscoverIcon,
+  RiHome5Line as HomeIcon,
   RiShutDownLine as LogoutIcon,
   RiTeamLine as PeopleIcon,
+  RiArchiveLine as ProductIcon,
+  RiShoppingCartLine as ProcurementIcon,
+  RiFileList3Line as QuotationIcon,
   RiUser6Line as UserIcon,
-  RiShoppingCartLine as CartIcon,
 } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { API_HOST } from "../../../constants/apiLinks";
 import NavLinkItem from "./NavLinkItem";
-import { logout } from "../../../redux/actions/authActions";
-import { stringToColour } from "../../../utils/utilities";
+import { logout } from "../../../redux/actions/auth.actions";
 import { useNavigate } from "react-router-dom";
 
 function NavMenu() {
@@ -34,60 +26,30 @@ function NavMenu() {
 
   return (
     <Stack height={"100%"}>
-      <Toolbar
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          px: 2,
-          py: 6,
-          gap: 2,
-        }}
-      >
-        <Avatar
-          alt={userAuthInfo?.name}
-          src={
-            userAuthInfo?.profileImage
-              ? `${API_HOST}/${userAuthInfo?.profileImage}`
-              : "broken.png"
-          }
-          sx={{
-            width: 100,
-            height: 100,
-            fontSize: 60,
-            bgcolor: stringToColour(userAuthInfo?.name),
-          }}
-        />
-        <Typography variant="h6">{userAuthInfo?.name}</Typography>
-      </Toolbar>
+      <Toolbar />
 
       <MenuList sx={{ flex: 1 }}>
-        <NavLinkItem
-          title={"Home"}
-          link={"/home"}
-          icon={<DiscoverIcon fontSize={24} />}
-        />
+        <NavLinkItem title={"Home"} link={"/home"} icon={HomeIcon} />
+
         <NavLinkItem
           title={"Profile"}
           link={`/profile/${userAuthInfo?.id}`}
-          icon={<UserIcon fontSize={24} />}
+          icon={UserIcon}
         />
+        <NavLinkItem title={"Products"} link={"/products"} icon={ProductIcon} />
+
+        <NavLinkItem title={"Users"} link={"/users"} icon={PeopleIcon} />
+
         <NavLinkItem
-          title={"Products"}
-          link={"/products"}
-          icon={<ProductIcon fontSize={24} />}
-        />
-        <NavLinkItem
-          title={"Users"}
-          link={"/users"}
-          icon={<PeopleIcon fontSize={24} />}
+          title={"Procurements"}
+          link={"/procurement"}
+          icon={ProcurementIcon}
         />
 
         <NavLinkItem
-          title={"Procurement"}
-          link={"/procurement"}
-          icon={<CartIcon fontSize={24} />}
+          title={"Quotations"}
+          link={"/quotation"}
+          icon={QuotationIcon}
         />
       </MenuList>
 

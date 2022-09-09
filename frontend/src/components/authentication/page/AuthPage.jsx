@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { Box, Paper, Stack, useTheme } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Box, Paper, Stack } from "@mui/material";
-import styled from "@emotion/styled";
-import { useSelector } from "react-redux";
+
 import AuthIntro from "../ui/AuthIntro";
 import LoginForm from "../ui/LoginForm";
+import styled from "@emotion/styled";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Wrapper = styled(Box)`
   display: flex;
@@ -14,6 +15,8 @@ const Wrapper = styled(Box)`
 `;
 
 function LoginRegPage() {
+  const theme = useTheme();
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -31,7 +34,7 @@ function LoginRegPage() {
     <Stack
       direction={{ xs: "column", lg: "row" }}
       minHeight={"100vh"}
-      bgcolor="#f0f5ff"
+      bgcolor={theme.palette.mode === "light" ? "#f7f7ff" : "#1a1a1a"}
     >
       <Wrapper style={{ flex: 1.3 }} display={{ xs: "none", lg: "flex" }}>
         <AuthIntro />

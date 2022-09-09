@@ -105,11 +105,11 @@ const GridCellExpand = memo(function GridCellExpand(props) {
   );
 });
 
-function RenderCellExpand(params) {
+function RenderCellExpand(prop) {
   return (
     <GridCellExpand
-      value={params.value || ""}
-      width={params.colDef.computedWidth}
+      value={prop.value || ""}
+      width={prop.colDef.computedWidth}
     />
   );
 }

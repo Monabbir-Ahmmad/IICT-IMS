@@ -1,10 +1,11 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Paper, Stack, Typography } from "@mui/material";
 import { RiAddLine as AddIcon } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import ProcurementListItem from "../ui/ProcurementListTable";
 
 function ProcurementPage() {
   return (
-    <Stack>
+    <Stack spacing={3}>
       <Button
         component={Link}
         to="./create"
@@ -12,8 +13,26 @@ function ProcurementPage() {
         startIcon={<AddIcon />}
         sx={{ alignSelf: "start" }}
       >
-        Create new Procurement
+        Create a new procurement
       </Button>
+
+      <Typography variant="h5">Procurement list</Typography>
+
+      <Paper variant="outlined">
+        <ProcurementListItem
+          data={[
+            {
+              id: 1,
+              title: "title",
+              procurementCategory: "Cat",
+              issueDate: "2020/01/01",
+              tendaringDeadline: "2020/01/01",
+              status: "status",
+              estimatedTotalPrice: 1000,
+            },
+          ]}
+        />
+      </Paper>
     </Stack>
   );
 }
