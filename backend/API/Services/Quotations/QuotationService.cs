@@ -23,6 +23,11 @@ namespace API.Services.Quotations
                 .Include(x => x.Category)
                 .FirstOrDefaultAsync();
 
+            if (procurement.Quotations.Any(x => x.Id == createQuotationDto.SupplierId))
+            {
+                return false;
+            }
+
             var supplier = await _context.Suppliers
                 .Where(x => x.Id == createQuotationDto.SupplierId)
                 .FirstOrDefaultAsync();

@@ -11,11 +11,11 @@ namespace API.Controllers
     public class ProcurementController : ControllerBase
     {
         private readonly IProcurementService _procurementService;
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger<ProcurementController> _logger;
 
         public ProcurementController(
             IProcurementService procurementService,
-            ILogger<AuthController> logger
+            ILogger<ProcurementController> logger
         )
         {
             _procurementService = procurementService;
@@ -87,8 +87,8 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements([FromQuery]
-            GetProcurementsDto getProcurementsDto
+        public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements(
+            [FromQuery] GetProcurementsDto getProcurementsDto
         )
         {
             try
