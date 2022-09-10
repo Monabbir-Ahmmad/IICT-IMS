@@ -6,7 +6,7 @@ namespace API.Interfaces.Category
     {
         Task<bool> CreateCategory(string categoryName);
         Task<bool> DeleteCategory(int categoryId);
-        Task<CategoryResponseDto> GetCategories();
+        Task<List<CategoryResponseDto>> GetCategories();
         Task<CategoryResponseDto> GetCategory(int categoryId);
 
 

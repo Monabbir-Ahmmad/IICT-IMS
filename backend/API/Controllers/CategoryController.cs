@@ -78,7 +78,7 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<CategoryResponseDto>> GetCategories()
+        public async Task<ActionResult<List<CategoryResponseDto>>> GetCategories()
         {
             try
             {
