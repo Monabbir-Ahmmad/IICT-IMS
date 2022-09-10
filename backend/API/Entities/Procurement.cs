@@ -14,7 +14,8 @@
 
         public List<ProcurementProduct> Products { get; set; }
 
-        public float EstimatedTotalPrice { get; set; }
+        public List<Quotation> Quotations { get; set; }
 
+        public float EstimatedTotalPrice { get; set; }
     }
 }
