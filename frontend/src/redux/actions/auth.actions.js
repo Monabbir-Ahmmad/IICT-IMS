@@ -1,4 +1,3 @@
-import { POST_USER_LOGIN, POST_USER_REGISTER } from "../../constants/apiLinks";
 import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
@@ -7,19 +6,14 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
-} from "../constants/authConstants";
-
-import TokenService from "../../services/token.service";
-import api from "../../services/api";
+} from "../action_types/auth";
+import authService from "../../services/auth.service";
 
 export const register = (registrationData) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
 
-    const res = await api("multipart/form-data").post(
-      POST_USER_REGISTER,
-      registrationData
-    );
+    const res = await authService.register(registrationData);
 
     dispatch({
       type: USER_REGISTER_SUCCESS,
@@ -29,14 +23,6 @@ export const register = (registrationData) => async (dispatch) => {
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: res.data,
-    });
-
-    TokenService.setUser({
-      id: res.data.id,
-      name: res.data.name,
-      profileImage: res.data.profileImage,
-      refreshToken: res.data.refreshToken,
-      accessToken: res.data.accessToken,
     });
   } catch (error) {
     dispatch({
@@ -53,19 +39,11 @@ export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
 
-    const res = await api().post(POST_USER_LOGIN, { email, password });
+    const res = await authService.login(email, password);
 
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: res.data,
-    });
-
-    TokenService.setUser({
-      id: res.data.id,
-      name: res.data.name,
-      profileImage: res.data.profileImage,
-      refreshToken: res.data.refreshToken,
-      accessToken: res.data.accessToken,
     });
   } catch (error) {
     dispatch({
@@ -79,7 +57,7 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 export const logout = () => (dispatch) => {
-  TokenService.removeUser();
+  authService.logout();
 
   dispatch({
     type: USER_LOGOUT,

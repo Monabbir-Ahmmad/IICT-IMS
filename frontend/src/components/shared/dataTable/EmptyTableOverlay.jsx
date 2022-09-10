@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
 import { Typography, useTheme } from "@mui/material";
+import styled from "@emotion/styled";
 
 const StyledOverlay = styled.div`
   display: flex;

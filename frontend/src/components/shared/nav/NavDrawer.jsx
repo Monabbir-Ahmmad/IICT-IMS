@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import FloatingAlerts from "../snackbar/FloatingAlerts";
 import IconButton from "@mui/material/IconButton";
-import { FiMenu as MenuIcon } from "react-icons/fi";
+import { FiMenu as MenuOpenIcon, FiX as MenuCloseIcon } from "react-icons/fi";
 import NavMenu from "./NavMenu";
 import ThemeSwitcher from "../themeSwitch/ThemeSwitcher";
 import Toolbar from "@mui/material/Toolbar";
@@ -38,8 +38,7 @@ function NavDrawer({ window }) {
       <AppBar
         position="fixed"
         sx={{
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-          alignSelf: "flex-end",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
           boxShadow: "none",
           background: theme.palette.background.paper,
           borderBottom: "1px solid",
@@ -54,7 +53,7 @@ function NavDrawer({ window }) {
               onClick={handleDrawerToggle}
               sx={{ display: { md: "none" } }}
             >
-              <MenuIcon />
+              {mobileOpen ? <MenuCloseIcon /> : <MenuOpenIcon />}
             </IconButton>
 
             <Link
@@ -94,6 +93,9 @@ function NavDrawer({ window }) {
               boxSizing: "border-box",
               width: drawerWidth * 0.85,
             },
+          }}
+          PaperProps={{
+            sx: { bgcolor: "background.paper", backgroundImage: "none" },
           }}
         >
           <NavMenu />

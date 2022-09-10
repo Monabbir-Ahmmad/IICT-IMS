@@ -1,27 +1,42 @@
-import { Button } from "@mui/material";
-import { DataGrid, GridFooter, GridFooterContainer } from "@mui/x-data-grid";
-import { RiDeleteBinLine as DeleteIcon } from "react-icons/ri";
-import { currencyFormatter } from "../../../utils/utilities";
+import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
+import { alpha, Button, Typography } from "@mui/material";
+import { MdDelete as DeleteIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
+import { currencyFormatter } from "../../../utils/utilities";
 
-function CustomeFooter({ onSelectedRowDeleteClick, selectedRows }) {
+function CustomeToolbar({ onSelectedRowDeleteClick, selectedRows }) {
   return (
-    <GridFooterContainer>
-      {selectedRows.length > 0 && (
-        <Button
-          startIcon={<DeleteIcon />}
-          variant="outlined"
-          color="error"
-          size="small"
-          sx={{ mx: 1 }}
-          onClick={onSelectedRowDeleteClick}
-        >
-          Delete selected rows
-        </Button>
+    <GridToolbarContainer
+      sx={{
+        bgcolor: (theme) =>
+          selectedRows.length > 0 &&
+          alpha(
+            theme.palette.primary.main,
+            theme.palette.action.activatedOpacity
+          ),
+      }}
+    >
+      {selectedRows.length > 0 ? (
+        <>
+          <Typography sx={{ m: 2, mr: "auto" }}>
+            {selectedRows.length} Rows Selected
+          </Typography>
+          <Button
+            startIcon={<DeleteIcon />}
+            variant="contained"
+            color="error"
+            size="small"
+            sx={{ mx: 2 }}
+            onClick={onSelectedRowDeleteClick}
+          >
+            Delete
+          </Button>
+        </>
+      ) : (
+        <Typography sx={{ m: 2 }}>Product List</Typography>
       )}
-      <GridFooter sx={{ border: "none", flex: 1 }} />
-    </GridFooterContainer>
+    </GridToolbarContainer>
   );
 }
 
@@ -46,22 +61,22 @@ const columns = [
   },
   {
     field: "estimatedPrice",
-    headerName: "Estimated price",
+    headerName: "Estimated Price",
     valueFormatter: ({ value }) => currencyFormatter().format(value),
     type: "number",
     width: 150,
   },
   { field: "quantity", headerName: "Quantity", type: "number", width: 150 },
   {
-    field: "totalEstimatedPrice",
-    headerName: "Total Estimated Price",
+    field: "estimatedTotalPrice",
+    headerName: "Estimated Total Price",
     valueFormatter: ({ value }) => currencyFormatter().format(value),
     type: "number",
     width: 200,
   },
 ];
 
-function ProcurementTable({
+function ProcurementProductTable({
   data = [],
   onRowSelectionChange,
   onSelectedRowDeleteClick,
@@ -74,12 +89,13 @@ function ProcurementTable({
         columns={columns}
         checkboxSelection
         disableSelectionOnClick
+        hideFooterSelectedRowCount
         components={{
           NoRowsOverlay: EmptyTableOverlay,
-          Footer: CustomeFooter,
+          Toolbar: CustomeToolbar,
         }}
         componentsProps={{
-          footer: {
+          toolbar: {
             onSelectedRowDeleteClick,
             selectedRows,
           },
@@ -91,4 +107,4 @@ function ProcurementTable({
   );
 }
 
-export default ProcurementTable;
+export default ProcurementProductTable;

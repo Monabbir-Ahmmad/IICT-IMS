@@ -3,11 +3,19 @@ import {
   userListReducer,
   userPasswordUpdateReducer,
   userProfileUpdateReducer,
-} from "./reducers/userReducer";
-import { userLoginReducer, userRegisterReducer } from "./reducers/authReducer";
+} from "./reducers/user.reducers";
+import {
+  userLoginReducer,
+  userRegisterReducer,
+} from "./reducers/auth.reducers";
 import { combineReducers } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
-import TokenService from "../services/token.service";
+import tokenService from "../services/token.service";
+import {
+  productCategoryCreateReducer,
+  productCategoryListReducer,
+  productCategoryUpdateReducer,
+} from "./reducers/productCategory.reducers";
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -16,10 +24,13 @@ const reducer = combineReducers({
   userProfileUpdate: userProfileUpdateReducer,
   userPasswordUpdate: userPasswordUpdateReducer,
   userList: userListReducer,
+  productCategoryCreate: productCategoryCreateReducer,
+  productCategoryList: productCategoryListReducer,
+  productCategoryUpdate: productCategoryUpdateReducer,
 });
 
 const initialState = {
-  userLogin: { userAuthInfo: TokenService.getUser() },
+  userLogin: { userAuthInfo: tokenService.getUser() },
 };
 
 const reduxStore = configureStore({ reducer, preloadedState: initialState });

@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
 
-import { login } from "../../../redux/actions/authActions";
+import { login } from "../../../redux/actions/auth.actions";
 import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const FormContainer = styled.form`
   display: flex;
