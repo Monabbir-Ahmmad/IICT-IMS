@@ -25,5 +25,14 @@ namespace API.Services.Categories
 
             return result > 0;
         }
+        public async Task<CategoryResponseDto> GetCategories()
+        {
+
+        }
+
+        public async Task<CategoryResponseDto> GetCategory(int categoryId)
+        {
+
+        }
     }
 }
