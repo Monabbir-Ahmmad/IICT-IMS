@@ -4,6 +4,14 @@ import { Link } from "react-router-dom";
 import ProcurementListItem from "../ui/ProcurementListTable";
 
 function ProcurementPage() {
+  const onRowDelete = (id) => {
+    console.log(id);
+  };
+
+  const onRowClick = (id) => {
+    console.log(id);
+  };
+
   return (
     <Stack spacing={3}>
       <Button
@@ -23,7 +31,8 @@ function ProcurementPage() {
           data={[
             {
               id: 1,
-              title: "title",
+              title:
+                "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet ",
               procurementCategory: "Cat",
               issueDate: "2020/01/01",
               tendaringDeadline: "2020/01/01",
@@ -31,6 +40,8 @@ function ProcurementPage() {
               estimatedTotalPrice: 1000,
             },
           ]}
+          onRowOpenClick={onRowClick}
+          onRowDeleteClick={onRowDelete}
         />
       </Paper>
     </Stack>

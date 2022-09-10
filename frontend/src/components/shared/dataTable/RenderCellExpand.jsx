@@ -9,7 +9,8 @@ function isOverflown(element) {
 }
 
 const GridCellExpand = memo(function GridCellExpand(props) {
-  const { width, value } = props;
+  const { width, value, align } = props;
+
   const wrapper = useRef(null);
   const cellDiv = useRef(null);
   const cellValue = useRef(null);
@@ -77,6 +78,8 @@ const GridCellExpand = memo(function GridCellExpand(props) {
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
+          width: "100%",
+          textAlign: align,
         }}
       >
         {value}
@@ -85,7 +88,7 @@ const GridCellExpand = memo(function GridCellExpand(props) {
         <Popper
           open={showFullCell && anchorEl !== null}
           anchorEl={anchorEl}
-          style={{ width, marginLeft: -17 }}
+          style={{ width, marginLeft: -17, zIndex: 1 }}
         >
           <Paper
             elevation={1}
@@ -110,6 +113,7 @@ function RenderCellExpand(prop) {
     <GridCellExpand
       value={prop.value || ""}
       width={prop.colDef.computedWidth}
+      align={prop.colDef.align}
     />
   );
 }

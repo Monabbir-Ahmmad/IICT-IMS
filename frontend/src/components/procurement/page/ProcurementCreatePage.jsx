@@ -1,7 +1,4 @@
-import {
-  RiAddLine as AddIcon,
-  RiUpload2Line as UploadIcon,
-} from "react-icons/ri";
+import { MdAdd as AddIcon, MdPublish as UploadIcon } from "react-icons/md";
 import {
   Button,
   MenuItem,
@@ -37,7 +34,7 @@ function ProcurementCreatePage() {
       ...items,
       {
         ...newItem,
-        totalEstimatedPrice: newItem.quantity * newItem.estimatedPrice,
+        estimatedTotalPrice: newItem.quantity * newItem.estimatedPrice,
       },
     ]);
     setOpenAddNew(false);
@@ -80,7 +77,7 @@ function ProcurementCreatePage() {
               Total Estimated Price:{" "}
               <strong>
                 {currencyFormatter().format(
-                  items.reduce((acc, item) => acc + item.totalEstimatedPrice, 0)
+                  items.reduce((acc, item) => acc + item.estimatedTotalPrice, 0)
                 )}
               </strong>
             </Typography>
@@ -135,7 +132,6 @@ function ProcurementCreatePage() {
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                   <DatePicker
                     disablePast
-                    inputFormat="MMM Do, YYYY"
                     label="Tendering Deadline"
                     value={field.value}
                     onChange={(newValue) => field.onChange(newValue)}

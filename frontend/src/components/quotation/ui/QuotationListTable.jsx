@@ -1,5 +1,5 @@
-import { Chip, IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Button, Chip } from "@mui/material";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { MdDelete as DeleteIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
@@ -7,7 +7,7 @@ import { currencyFormatter } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
+function QuotationListTable({ data = [] }) {
   const columns = useMemo(
     () => [
       {
@@ -15,23 +15,12 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         headerName: "Title",
         width: 300,
         renderCell: RenderCellExpand,
-        headerAlign: "center",
-        align: "center",
-      },
-      {
-        field: "procurementCategory",
-        headerName: "Category",
-        width: 200,
-        headerAlign: "center",
-        align: "center",
       },
       {
         field: "issueDate",
         headerName: "Issue Date",
         width: 150,
         type: "date",
-        headerAlign: "center",
-        align: "center",
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
@@ -39,8 +28,6 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         headerName: "Deadline",
         width: 150,
         type: "date",
-        headerAlign: "center",
-        align: "center",
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
@@ -49,15 +36,19 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         valueFormatter: ({ value }) => currencyFormatter().format(value),
         type: "number",
         width: 200,
-        headerAlign: "center",
-        align: "center",
+      },
+      {
+        field: "offeredTotalPrice",
+        headerName: "Offered Total Price",
+        valueFormatter: ({ value }) =>
+          value ? currencyFormatter().format(value) : "N/A",
+        type: "number",
+        width: 200,
       },
       {
         field: "status",
         headerName: "Status",
         width: 150,
-        headerAlign: "center",
-        align: "center",
         renderCell: (props) => (
           <Chip
             variant="outlined"
@@ -71,13 +62,13 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         headerName: "Actions",
         type: "actions",
         getActions: (params) => [
-          <IconButton color="error" onClick={() => onRowDeleteClick(params.id)}>
-            <DeleteIcon size={24} />
-          </IconButton>,
+          <Button variant="contained" onClick={() => console.log(params.id)}>
+            Open
+          </Button>,
         ],
       },
     ],
-    [onRowDeleteClick]
+    []
   );
 
   return (
@@ -89,11 +80,10 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}
-        onRowClick={(params) => onRowOpenClick(params.id)}
         sx={{ border: 0 }}
       />
     </div>
   );
 }
 
-export default ProcurementListTable;
+export default QuotationListTable;

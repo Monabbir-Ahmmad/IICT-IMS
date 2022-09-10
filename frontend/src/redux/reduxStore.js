@@ -15,7 +15,7 @@ import {
   productCategoryCreateReducer,
   productCategoryListReducer,
   productCategoryUpdateReducer,
-} from "./reducers/product-category.reducers";
+} from "./reducers/productCategory.reducers";
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,

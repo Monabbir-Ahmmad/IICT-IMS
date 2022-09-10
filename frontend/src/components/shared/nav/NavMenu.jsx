@@ -42,13 +42,13 @@ function NavMenu() {
 
         <NavLinkItem
           title={"Procurements"}
-          link={"/procurement"}
+          link={"/procurements"}
           icon={ProcurementIcon}
         />
 
         <NavLinkItem
           title={"Quotations"}
-          link={"/quotation"}
+          link={"/quotations"}
           icon={QuotationIcon}
         />
       </MenuList>
