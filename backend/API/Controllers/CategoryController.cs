@@ -40,11 +40,12 @@ namespace API.Controllers
 
         [HttpDelete("{id}")]
 
-        public async Task<ActionResult<bool>> DeleteCategory(int categoryId)
+        public async Task<ActionResult<bool>> DeleteCategory(int id)
         {
             try
             {
-                return await _categoryService.DeleteCategory(categoryId);
+                var result = await _categoryService.DeleteCategory(id);
+                return result ? Ok("Category Deleted") : BadRequest("Category does not exist");
             }
             catch (Exception ex)
             {
@@ -59,11 +60,12 @@ namespace API.Controllers
 
         [HttpGet("{id}")]
 
-        public async Task<ActionResult<CategoryResponseDto>> GetCategory(int categoryId)
+        public async Task<ActionResult<CategoryResponseDto>> GetCategory(int id)
         {
             try
             {
-                return await _categoryService.GetCategory(categoryId); ;
+                var category = await _categoryService.GetCategory(id);
+                return Ok(category);
             }
             catch (Exception ex)
             {
@@ -82,7 +84,8 @@ namespace API.Controllers
         {
             try
             {
-                return await _categoryService.GetCategories();
+                var categories = await _categoryService.GetCategories();
+                return categories;
 
             }
             catch (Exception ex)
