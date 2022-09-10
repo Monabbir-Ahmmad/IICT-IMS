@@ -17,18 +17,18 @@ namespace API.Services.Procurements
             _context = context;
         }
 
-        public async Task<bool> CreateProcurement(ProcuremnetDto procuremnetDto)
+        public async Task<bool> CreateProcurement(ProcurementDto procurementDto)
         {
             var procurementProducts = new List<ProcurementProduct>();
 
             var procurementCategory = await _context.ProductCategories
-                .Where(x => x.Id == procuremnetDto.ProcuremnetCategoryId)
+                .Where(x => x.Id == procurementDto.ProcurementCategoryId)
                 .FirstOrDefaultAsync();
 
             if (procurementCategory == null)
                 return false;
 
-            foreach (var item in procuremnetDto.Products)
+            foreach (var item in procurementDto.Products)
             {
                 var procurementItem = new ProcurementProduct
                 {
@@ -46,11 +46,11 @@ namespace API.Services.Procurements
 
             var procurement = new Procurement
             {
-                Title = procuremnetDto.Title,
+                Title = procurementDto.Title,
                 Category = procurementCategory,
-                EstimatedTotalPrice = procuremnetDto.EstimatedTotalPrice,
+                EstimatedTotalPrice = procurementDto.EstimatedTotalPrice,
                 IssuingDate = DateTime.Today,
-                Deadline = procuremnetDto.TenderDeadline,
+                Deadline = procurementDto.TenderDeadline,
                 Products = procurementProducts
             };
 
@@ -63,21 +63,14 @@ namespace API.Services.Procurements
 
         public async Task<bool> DeleteProcurement(int id)
         {
-            var procurement = await _context.Procurements
-                .Where(x => x.Id == id)
-                .Include(x => x.Category)
-                .Include(x => x.Products)
-                .ThenInclude(x => x.Category)
-                .FirstOrDefaultAsync();
+            var procurement = await _context.Procurements.SingleAsync(x => x.Id == id);
 
             if (procurement == null)
                 return false;
-            else
-            {
-                _context.Procurements.Remove(procurement);
-                await _context.SaveChangesAsync();
-                return true;
-            }
+
+            _context.Procurements.Remove(procurement);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<ProcurementResponseDto> GetProcurement(int id)
@@ -133,16 +126,14 @@ namespace API.Services.Procurements
         {
             var procurementList = new List<Procurement>();
 
-            IQueryable<Procurement> procurements = _context.Procurements
-                .Include(x => x.Category);
+            IQueryable<Procurement> procurements = _context.Procurements.Include(x => x.Category);
             if (getProcurementsDto?.Id > 0)
             {
                 procurements = procurements.Where(x => x.Category.Id == getProcurementsDto.Id);
             }
-        
+
             procurementList = await procurements.ToListAsync();
 
-            
             var procurementListRes = new List<ProcurementResponseDto>();
 
             foreach (var procs in procurementList)

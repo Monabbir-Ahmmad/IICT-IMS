@@ -11,11 +11,11 @@ namespace API.Controllers
     public class ProcurementController : ControllerBase
     {
         private readonly IProcurementService _procurementService;
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger<ProcurementController> _logger;
 
         public ProcurementController(
             IProcurementService procurementService,
-            ILogger<AuthController> logger
+            ILogger<ProcurementController> logger
         )
         {
             _procurementService = procurementService;
@@ -24,7 +24,7 @@ namespace API.Controllers
 
         [HttpPost("create")]
         public async Task<ActionResult<ProcurementResponseDto>> CreateProcurement(
-            ProcuremnetDto procurementDto
+            ProcurementDto procurementDto
         )
         {
             try
@@ -46,14 +46,16 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> DeleteProcurement(int id)
         {
             try
             {
                 var result = await _procurementService.DeleteProcurement(id);
 
-                return Created("Procurement deleted", result);
+                return result
+                    ? Ok("Procurement deleted")
+                    : BadRequest("Procurement not be deleted");
             }
             catch (Exception ex)
             {
@@ -87,8 +89,8 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements([FromQuery]
-            GetProcurementsDto getProcurementsDto
+        public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements(
+            [FromQuery] GetProcurementsDto getProcurementsDto
         )
         {
             try

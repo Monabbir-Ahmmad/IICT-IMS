@@ -35,7 +35,7 @@ export const procurementListReducer = (
     case GET_PROCUREMENT_LIST_REQUEST:
       return { loading: true, procurements: [] };
     case GET_PROCUREMENT_LIST_SUCCESS:
-      return { loading: false, procurements: action.payload };
+      return { ...state, loading: false, procurements: action.payload };
     case GET_PROCUREMENT_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:

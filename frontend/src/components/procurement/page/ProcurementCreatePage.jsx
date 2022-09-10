@@ -1,6 +1,8 @@
-import { MdAdd as AddIcon, MdPublish as UploadIcon } from "react-icons/md";
+import { MdPublish as UploadIcon } from "react-icons/md";
 import {
+  Alert,
   Button,
+  LinearProgress,
   MenuItem,
   Paper,
   Stack,
@@ -13,25 +15,50 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import ProcurementProductAdder from "../ui/ProcurementProductAdder";
 import ProcurementProductTable from "../ui/ProcurementProductTable";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { currencyFormatter } from "../../../utils/utilities";
+import { getAllProductCategories } from "../../../redux/actions/productCategory.actions";
+import { createProcurement } from "../../../redux/actions/procurement.actions";
 
 function ProcurementCreatePage() {
-  const { handleSubmit, control, formState } = useForm({
+  const dispatch = useDispatch();
+
+  const { productCategories } = useSelector(
+    (state) => state.productCategoryList
+  );
+
+  const { loading, success, error } = useSelector(
+    (state) => state.procurementCreate
+  );
+
+  const { handleSubmit, control, formState, reset } = useForm({
     defaultValues: {
       title: "",
-      tenderingDeadling: "",
+      tenderDeadline: "",
       procurementCategoryId: "",
     },
   });
   const [openAddNew, setOpenAddNew] = useState(false);
 
-  const [items, setItems] = useState([]);
+  const [products, setProducts] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const onAddNewItemSubmit = (newItem) => {
-    setItems([
-      ...items,
+  useEffect(() => {
+    dispatch(getAllProductCategories());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (success) {
+      reset();
+      setProducts([]);
+      setSelectedRows([]);
+    }
+  }, [success, reset]);
+
+  const onAddNewProductSubmit = (newItem) => {
+    setProducts([
+      ...products,
       {
         ...newItem,
         estimatedTotalPrice: newItem.quantity * newItem.estimatedPrice,
@@ -45,20 +72,42 @@ function ProcurementCreatePage() {
   };
 
   const onDeleteSelected = () => {
-    setItems(items.filter((item) => !selectedRows.includes(item.id)));
+    setProducts(products.filter((item) => !selectedRows.includes(item.id)));
     setSelectedRows([]);
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log({
+      ...data,
+      estimatedTotalPrice: products.reduce(
+        (acc, item) => acc + item.estimatedTotalPrice,
+        0
+      ),
+      products,
+    });
+
+    dispatch(
+      createProcurement({
+        ...data,
+        estimatedTotalPrice: products.reduce(
+          (acc, item) => acc + item.estimatedTotalPrice,
+          0
+        ),
+        products,
+      })
+    );
   };
 
   return (
     <Stack spacing={3}>
+      {loading && <LinearProgress />}
+
+      {error && <Alert severity="error">{error}</Alert>}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Button
           type="submit"
-          disabled={items.length === 0 || !formState.errors}
+          disabled={products.length === 0 || !formState.errors}
           variant="contained"
           startIcon={<UploadIcon />}
           sx={{ justifySelf: "end", mb: 3 }}
@@ -77,7 +126,10 @@ function ProcurementCreatePage() {
               Total Estimated Price:{" "}
               <strong>
                 {currencyFormatter().format(
-                  items.reduce((acc, item) => acc + item.estimatedTotalPrice, 0)
+                  products.reduce(
+                    (acc, item) => acc + item.estimatedTotalPrice,
+                    0
+                  )
                 )}
               </strong>
             </Typography>
@@ -119,20 +171,24 @@ function ProcurementCreatePage() {
                   helperText={fieldState.error?.message}
                   sx={{ flex: 1 }}
                 >
-                  <MenuItem value={1}>Category 1</MenuItem>
+                  {productCategories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
                 </TextField>
               )}
             />
 
             <Controller
-              name="tentderingDeadline"
+              name="tenderDeadline"
               control={control}
-              rules={{ required: "Tendering deadline is required" }}
+              rules={{ required: "Tender deadline is required" }}
               render={({ field, fieldState }) => (
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                   <DatePicker
                     disablePast
-                    label="Tendering Deadline"
+                    label="Tender Deadline"
                     value={field.value}
                     onChange={(newValue) => field.onChange(newValue)}
                     renderInput={(params) => (
@@ -152,25 +208,21 @@ function ProcurementCreatePage() {
         </Paper>
       </form>
 
-      <Button
-        variant="contained"
-        startIcon={<AddIcon />}
-        sx={{ justifySelf: "start" }}
-        onClick={() => setOpenAddNew(true)}
-      >
-        Add Products To List
-      </Button>
-
       <ProcurementProductAdder
         open={openAddNew}
-        onSubmit={onAddNewItemSubmit}
+        onSubmit={onAddNewProductSubmit}
         onCancel={() => setOpenAddNew(false)}
       />
 
+      <Typography variant="h6" sx={{ pt: 3 }}>
+        Product List
+      </Typography>
+
       <Paper variant="outlined">
         <ProcurementProductTable
-          data={items}
+          data={products}
           selectedRows={selectedRows}
+          onAddNewRowClick={() => setOpenAddNew(true)}
           onRowSelectionChange={onRowSelectionChange}
           onSelectedRowDeleteClick={onDeleteSelected}
         />

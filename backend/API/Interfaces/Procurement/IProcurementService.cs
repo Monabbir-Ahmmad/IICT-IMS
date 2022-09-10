@@ -5,7 +5,7 @@ namespace API.Interfaces.Procurement
 {
     public interface IProcurementService
     {
-        Task<bool> CreateProcurement(ProcuremnetDto procuremnetDto);
+        Task<bool> CreateProcurement(ProcurementDto procuremnetDto);
         Task<bool> DeleteProcurement(int id);
 
         Task<List<ProcurementResponseDto>> GetProcurements(GetProcurementsDto getProcurementsDto);

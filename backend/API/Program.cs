@@ -1,9 +1,9 @@
 using API.Database;
 using API.Interfaces.Auth;
-using API.Interfaces.Category;
+using API.Interfaces.ProductCategory;
 using API.Interfaces.Procurement;
 using API.Services.Auth;
-using API.Services.Categories;
+using API.Services.ProductCategories;
 using API.Services.Procurements;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +22,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProcurementService, ProcurementService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

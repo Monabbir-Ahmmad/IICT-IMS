@@ -1,31 +1,37 @@
 ﻿using API.DTOs.Response;
-using API.Interfaces.Category;
-using Microsoft.AspNetCore.Http;
+using API.Interfaces.ProductCategory;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class ProductCategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
-        private readonly ILogger<AuthController> _logger;
+        private readonly IProductCategoryService _productCategoryService;
+        private readonly ILogger<ProductCategoryController> _logger;
 
-        public CategoryController(ICategoryService categoryService, ILogger<AuthController> logger)
+        public ProductCategoryController(
+            IProductCategoryService productCategoryService,
+            ILogger<ProductCategoryController> logger
+        )
         {
-            _categoryService = categoryService;
+            _productCategoryService = productCategoryService;
             _logger = logger;
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<bool>> CreateCategory(string categoryName)
+        public async Task<ActionResult<ProductCategoryResponseDto>> CreateCategory(
+            string categoryName
+        )
         {
             try
             {
-                var result = await _categoryService.CreateCategory(categoryName);
+                var result = await _productCategoryService.CreateCategory(categoryName);
 
-                return result ? Ok("Category created") : BadRequest("Category already exists");
+                return result != null
+                    ? Created("Category created", result)
+                    : BadRequest("Category already exists");
             }
             catch (Exception ex)
             {
@@ -39,12 +45,11 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-
         public async Task<ActionResult<bool>> DeleteCategory(int id)
         {
             try
             {
-                var result = await _categoryService.DeleteCategory(id);
+                var result = await _productCategoryService.DeleteCategory(id);
                 return result ? Ok("Category Deleted") : BadRequest("Category does not exist");
             }
             catch (Exception ex)
@@ -59,17 +64,15 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-
-        public async Task<ActionResult<CategoryResponseDto>> GetCategory(int id)
+        public async Task<ActionResult<ProductCategoryResponseDto>> GetCategory(int id)
         {
             try
             {
-                var category = await _categoryService.GetCategory(id);
+                var category = await _productCategoryService.GetCategory(id);
                 return Ok(category);
             }
             catch (Exception ex)
             {
-
                 _logger.LogError("{ErrorMessage}", ex.Message);
 
                 return StatusCode(
@@ -80,17 +83,15 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<CategoryResponseDto>>> GetCategories()
+        public async Task<ActionResult<List<ProductCategoryResponseDto>>> GetCategories()
         {
             try
             {
-                var categories = await _categoryService.GetCategories();
+                var categories = await _productCategoryService.GetCategories();
                 return categories;
-
             }
             catch (Exception ex)
             {
-
                 _logger.LogError("{ErrorMessage}", ex.Message);
 
                 return StatusCode(

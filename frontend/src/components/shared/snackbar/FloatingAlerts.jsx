@@ -6,17 +6,9 @@ function FloatingAlerts() {
 
   const passwordUpdate = useSelector((state) => state.userPasswordUpdate);
 
-  const postBlog = useSelector((state) => state.postBlog);
+  const procurementCreate = useSelector((state) => state.procurementCreate);
 
-  const blogDelete = useSelector((state) => state.blogDelete);
-
-  const blogUpdate = useSelector((state) => state.blogUpdate);
-
-  const commentPost = useSelector((state) => state.commentPost);
-
-  const commentUpdate = useSelector((state) => state.commentUpdate);
-
-  const commentDelete = useSelector((state) => state.commentDelete);
+  const procurementDelete = useSelector((state) => state.procurementDelete);
 
   return (
     <>
@@ -31,39 +23,19 @@ function FloatingAlerts() {
         message={"Password updated successfully"}
       />
       <AlertSnackbar
-        open={postBlog?.success}
+        open={procurementCreate?.success}
         severity={"success"}
-        message={"Blog published successfully"}
+        message={"Procurement published successfully"}
       />
       <AlertSnackbar
-        open={blogDelete?.success}
+        open={procurementDelete?.success}
         severity={"success"}
-        message={"Blog deleted successfully"}
+        message={"Procurement deleted successfully"}
       />
       <AlertSnackbar
-        open={blogDelete?.error}
+        open={procurementDelete?.error}
         severity={"error"}
-        message={blogDelete?.error}
-      />
-      <AlertSnackbar
-        open={blogUpdate?.success}
-        severity={"success"}
-        message={"Blog updated successfully"}
-      />
-      <AlertSnackbar
-        open={commentPost?.error}
-        severity={"error"}
-        message={commentPost?.error}
-      />
-      <AlertSnackbar
-        open={commentUpdate?.error}
-        severity={"error"}
-        message={commentUpdate?.error}
-      />
-      <AlertSnackbar
-        open={commentDelete?.error}
-        severity={"error"}
-        message={commentDelete?.error}
+        message={procurementDelete?.error}
       />
     </>
   );

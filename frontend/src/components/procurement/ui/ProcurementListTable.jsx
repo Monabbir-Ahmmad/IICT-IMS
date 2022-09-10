@@ -11,6 +11,13 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
   const columns = useMemo(
     () => [
       {
+        field: "id",
+        headerName: "ID",
+        width: 100,
+        headerAlign: "center",
+        align: "center",
+      },
+      {
         field: "title",
         headerName: "Title",
         width: 300,
@@ -19,14 +26,14 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         align: "center",
       },
       {
-        field: "procurementCategory",
+        field: "category",
         headerName: "Category",
         width: 200,
         headerAlign: "center",
         align: "center",
       },
       {
-        field: "issueDate",
+        field: "issueingDate",
         headerName: "Issue Date",
         width: 150,
         type: "date",
@@ -35,7 +42,7 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
-        field: "tenderingDeadline",
+        field: "tenderDeadline",
         headerName: "Deadline",
         width: 150,
         type: "date",

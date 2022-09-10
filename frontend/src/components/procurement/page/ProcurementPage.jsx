@@ -1,11 +1,33 @@
-import { Button, Paper, Stack, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  LinearProgress,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { RiAddLine as AddIcon } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import ProcurementListItem from "../ui/ProcurementListTable";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import {
+  deleteProcurement,
+  getProcurementList,
+} from "../../../redux/actions/procurement.actions";
 function ProcurementPage() {
+  const dispatch = useDispatch();
+
+  const { procurements, loading, error } = useSelector(
+    (state) => state.procurementList
+  );
+
+  useEffect(() => {
+    dispatch(getProcurementList());
+  }, [dispatch]);
+
   const onRowDelete = (id) => {
-    console.log(id);
+    dispatch(deleteProcurement(id));
   };
 
   const onRowClick = (id) => {
@@ -24,22 +46,17 @@ function ProcurementPage() {
         Create a new procurement
       </Button>
 
-      <Typography variant="h5">Procurement list</Typography>
+      <Typography variant="h5" sx={{ pt: 3 }}>
+        Procurement list
+      </Typography>
+
+      {loading && <LinearProgress />}
+
+      {error && <Alert severity="error">{error}</Alert>}
 
       <Paper variant="outlined">
         <ProcurementListItem
-          data={[
-            {
-              id: 1,
-              title:
-                "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet ",
-              procurementCategory: "Cat",
-              issueDate: "2020/01/01",
-              tendaringDeadline: "2020/01/01",
-              status: "status",
-              estimatedTotalPrice: 1000,
-            },
-          ]}
+          data={procurements}
           onRowOpenClick={onRowClick}
           onRowDeleteClick={onRowDelete}
         />

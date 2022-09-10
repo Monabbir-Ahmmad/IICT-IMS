@@ -1,15 +1,14 @@
-﻿using API.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.Request
 {
-    public class ProcuremnetDto
+    public class ProcurementDto
     {
         [Required]
         public string Title { get; set; }
 
         [Required]
-        public int ProcuremnetCategoryId { get; set; }
+        public int ProcurementCategoryId { get; set; }
 
         [Required]
         public float EstimatedTotalPrice { get; set; }

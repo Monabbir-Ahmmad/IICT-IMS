@@ -1,5 +1,5 @@
 //Host of the api
-export const API_URL = "http://localhost:5000";
+export const API_URL = "https://localhost:5001";
 
 export const POST_REFRESH_TOKEN = "/auth/refreshtoken";
 

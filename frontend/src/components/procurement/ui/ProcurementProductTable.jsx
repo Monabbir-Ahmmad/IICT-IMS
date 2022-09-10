@@ -1,11 +1,15 @@
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
-import { alpha, Button, Typography } from "@mui/material";
-import { MdDelete as DeleteIcon } from "react-icons/md";
+import { alpha, Box, Button, Typography } from "@mui/material";
+import { MdDelete as DeleteIcon, MdAdd as AddIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter } from "../../../utils/utilities";
 
-function CustomeToolbar({ onSelectedRowDeleteClick, selectedRows }) {
+function CustomeToolbar({
+  onAddNewRowClick,
+  onSelectedRowDeleteClick,
+  selectedRows,
+}) {
   return (
     <GridToolbarContainer
       sx={{
@@ -17,24 +21,27 @@ function CustomeToolbar({ onSelectedRowDeleteClick, selectedRows }) {
           ),
       }}
     >
-      {selectedRows.length > 0 ? (
-        <>
-          <Typography sx={{ m: 2, mr: "auto" }}>
-            {selectedRows.length} Rows Selected
-          </Typography>
+      <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        sx={{ m: 1.5, mr: "auto" }}
+        onClick={onAddNewRowClick}
+      >
+        Add New Product To List
+      </Button>
+
+      {selectedRows.length > 0 && (
+        <Box display={"flex"} alignItems={"center"} gap={3} m={1.5}>
+          <Typography>{selectedRows.length} Rows Selected</Typography>
           <Button
             startIcon={<DeleteIcon />}
             variant="contained"
             color="error"
-            size="small"
-            sx={{ mx: 2 }}
             onClick={onSelectedRowDeleteClick}
           >
             Delete
           </Button>
-        </>
-      ) : (
-        <Typography sx={{ m: 2 }}>Product List</Typography>
+        </Box>
       )}
     </GridToolbarContainer>
   );
@@ -78,6 +85,7 @@ const columns = [
 
 function ProcurementProductTable({
   data = [],
+  onAddNewRowClick,
   onRowSelectionChange,
   onSelectedRowDeleteClick,
   selectedRows,
@@ -96,6 +104,7 @@ function ProcurementProductTable({
         }}
         componentsProps={{
           toolbar: {
+            onAddNewRowClick,
             onSelectedRowDeleteClick,
             selectedRows,
           },

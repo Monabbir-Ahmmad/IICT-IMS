@@ -4,14 +4,14 @@ import {
   CREATE_PRODUCT_CATEGORY_REQUEST,
   CREATE_PRODUCT_CATEGORY_RESET,
   CREATE_PRODUCT_CATEGORY_SUCCESS,
-  GET_PRODUCT_CATEGORIES_FAIL,
-  GET_PRODUCT_CATEGORIES_REQUEST,
-  GET_PRODUCT_CATEGORIES_SUCCESS,
+  GET_PRODUCT_CATEGORY_LIST_REQUEST,
+  GET_PRODUCT_CATEGORY_LIST_SUCCESS,
+  GET_PRODUCT_CATEGORY_LIST_FAIL,
   UPDATE_PRODUCT_CATEGORY_FAIL,
   UPDATE_PRODUCT_CATEGORY_REQUEST,
   UPDATE_PRODUCT_CATEGORY_RESET,
   UPDATE_PRODUCT_CATEGORY_SUCCESS,
-} from "../actionTypes/productCategory";
+} from "../action_types/productCategory";
 
 export const createProductCategory = (name) => async (dispatch) => {
   try {
@@ -40,17 +40,17 @@ export const createProductCategory = (name) => async (dispatch) => {
 
 export const getAllProductCategories = () => async (dispatch) => {
   try {
-    dispatch({ type: GET_PRODUCT_CATEGORIES_REQUEST });
+    dispatch({ type: GET_PRODUCT_CATEGORY_LIST_REQUEST });
 
     const res = await productCategoryService.getAll();
 
     dispatch({
-      type: GET_PRODUCT_CATEGORIES_SUCCESS,
+      type: GET_PRODUCT_CATEGORY_LIST_SUCCESS,
       payload: res.data,
     });
   } catch (error) {
     dispatch({
-      type: GET_PRODUCT_CATEGORIES_FAIL,
+      type: GET_PRODUCT_CATEGORY_LIST_FAIL,
       payload:
         error.response && error.response.data?.message
           ? error.response.data?.message

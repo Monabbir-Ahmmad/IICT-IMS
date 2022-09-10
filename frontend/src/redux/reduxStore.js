@@ -16,6 +16,11 @@ import {
   productCategoryListReducer,
   productCategoryUpdateReducer,
 } from "./reducers/productCategory.reducers";
+import {
+  procurementCreateReducer,
+  procurementDeleteReducer,
+  procurementListReducer,
+} from "./reducers/procurement.reducers";
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -27,6 +32,9 @@ const reducer = combineReducers({
   productCategoryCreate: productCategoryCreateReducer,
   productCategoryList: productCategoryListReducer,
   productCategoryUpdate: productCategoryUpdateReducer,
+  procurementCreate: procurementCreateReducer,
+  procurementList: procurementListReducer,
+  procurementDelete: procurementDeleteReducer,
 });
 
 const initialState = {

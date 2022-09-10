@@ -1,7 +1,4 @@
-﻿using API.Entities;
-using System.ComponentModel.DataAnnotations;
-
-namespace API.DTOs.Response
+﻿namespace API.DTOs.Response
 {
     public class ProcurementResponseDto
     {
@@ -21,7 +18,6 @@ namespace API.DTOs.Response
 
     public class ProcurementProductResponseDto
     {
-        
         public int Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
@@ -30,6 +26,5 @@ namespace API.DTOs.Response
         public float EstimatedPrice { get; set; }
         public int Quantity { get; set; }
         public float EstimatedTotalPrice { get; set; }
-    
-}
+    }
 }

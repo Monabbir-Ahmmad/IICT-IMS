@@ -2,6 +2,7 @@ import procurementService from "../../services/procurement.service";
 import {
   CREATE_PROCUREMENT_FAIL,
   CREATE_PROCUREMENT_REQUEST,
+  CREATE_PROCUREMENT_RESET,
   CREATE_PROCUREMENT_SUCCESS,
   DELETE_PROCUREMENT_FAIL,
   DELETE_PROCUREMENT_REQUEST,
@@ -31,6 +32,10 @@ export const createProcurement = (data) => async (dispatch) => {
           : error.message,
     });
   }
+
+  setTimeout(() => {
+    dispatch({ type: CREATE_PROCUREMENT_RESET });
+  }, 5000);
 };
 
 export const getProcurementList = () => async (dispatch) => {
@@ -54,17 +59,26 @@ export const getProcurementList = () => async (dispatch) => {
   }
 };
 
-export const deleteProcurement = (id) => async (dispatch) => {
+export const deleteProcurement = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: DELETE_PROCUREMENT_REQUEST });
 
-    const res = await procurementService.delete(id);
+    await procurementService.delete(id);
 
     dispatch({
       type: DELETE_PROCUREMENT_SUCCESS,
-      payload: res.data,
+    });
+
+    const { procurementList } = getState();
+
+    dispatch({
+      type: GET_PROCUREMENT_LIST_SUCCESS,
+      payload: procurementList.procurements.filter(
+        (procurement) => procurement.id !== id
+      ),
     });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: DELETE_PROCUREMENT_FAIL,
       payload:
@@ -76,5 +90,5 @@ export const deleteProcurement = (id) => async (dispatch) => {
 
   setTimeout(() => {
     dispatch({ type: DELETE_PROCUREMENT_RESET });
-  }, 4000);
+  }, 5000);
 };
