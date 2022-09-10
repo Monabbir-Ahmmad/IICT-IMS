@@ -1,6 +1,6 @@
 namespace API.DTOs.Request
 {
-    public class CreateQuotationDto
+    public class QuotationCreateReqDto
     {
         public int ProcurementId { get; set; }
         public int SupplierId { get; set; }

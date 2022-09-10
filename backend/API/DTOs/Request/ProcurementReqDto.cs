@@ -2,7 +2,7 @@
 
 namespace API.DTOs.Request
 {
-    public class ProcurementDto
+    public class ProcurementReqDto
     {
         [Required]
         public string Title { get; set; }

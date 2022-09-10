@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220910145105_quotationUpdate")]
-    partial class quotationUpdate
+    [Migration("20220910194631_Mig1")]
+    partial class Mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -127,7 +127,7 @@ namespace API.Database.Migrations
                     b.ToTable("Quotations");
                 });
 
-            modelBuilder.Entity("API.Entities.SupplierDetails", b =>
+            modelBuilder.Entity("API.Entities.Supplier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -136,8 +136,8 @@ namespace API.Database.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("BIN")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("BIN")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("INTEGER");
@@ -149,6 +149,9 @@ namespace API.Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Website")
@@ -208,10 +211,10 @@ namespace API.Database.Migrations
             modelBuilder.Entity("API.Entities.Quotation", b =>
                 {
                     b.HasOne("API.Entities.Procurement", "Procurement")
-                        .WithMany()
+                        .WithMany("Quotations")
                         .HasForeignKey("ProcurementId");
 
-                    b.HasOne("API.Entities.SupplierDetails", "Supplier")
+                    b.HasOne("API.Entities.Supplier", "Supplier")
                         .WithMany("Quotations")
                         .HasForeignKey("SupplierId");
 
@@ -220,7 +223,7 @@ namespace API.Database.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("API.Entities.SupplierDetails", b =>
+            modelBuilder.Entity("API.Entities.Supplier", b =>
                 {
                     b.HasOne("API.Entities.ProductCategory", "Category")
                         .WithMany()
@@ -232,9 +235,11 @@ namespace API.Database.Migrations
             modelBuilder.Entity("API.Entities.Procurement", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("Quotations");
                 });
 
-            modelBuilder.Entity("API.Entities.SupplierDetails", b =>
+            modelBuilder.Entity("API.Entities.Supplier", b =>
                 {
                     b.Navigation("Quotations");
                 });

@@ -20,11 +20,11 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<AuthResDto>> Register(RegisterReqDto registerDto)
         {
             try
             {
-                if (await _authService.UserExists(registerDto.Email!))
+                if (await _authService.UserExists(registerDto.Email))
                     return Conflict("User already exists");
 
                 var result = await _authService.RegisterUser(registerDto);
@@ -49,7 +49,76 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login(LoginDto loginDto)
+        public async Task<ActionResult<AuthResDto>> Login(LoginReqDto loginDto)
+        {
+            try
+            {
+                var result = await _authService.LoginUser(loginDto);
+
+                if (result == null)
+                    return Unauthorized("Invalid credentials");
+
+                HttpContext.Response.Cookies.Append(
+                    "authorization",
+                    result.Token.ToString(),
+                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+                );
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{ErrorMessage}", ex.Message);
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new { response = "Something went wrong." }
+                );
+            }
+        }
+
+        [HttpPost("supplier/register")]
+        public async Task<ActionResult<AuthResDto>> SupplierRegister(
+            SupplierRegisterReqDto supplierRegisterDto
+        )
+        {
+            try
+            {
+                if (
+                    await _authService.SupplierExists(
+                        supplierRegisterDto.BIN,
+                        supplierRegisterDto.Email,
+                        supplierRegisterDto.CompanyName
+                    )
+                )
+                    return Conflict("Supplier already exists");
+
+                var result = await _authService.RegisterSupplier(supplierRegisterDto);
+
+                if (result == null)
+                    return BadRequest("Failed to create supplier");
+
+                HttpContext.Response.Cookies.Append(
+                    "authorization",
+                    result.Token.ToString(),
+                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+                );
+
+                return Created("Supplier created", result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("{ErrorMessage}", ex.Message);
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new { response = "Something went wrong." }
+                );
+            }
+        }
+
+        [HttpPost("supplier/login")]
+        public async Task<ActionResult<AuthResDto>> SupplierLogin(LoginReqDto loginDto)
         {
             try
             {

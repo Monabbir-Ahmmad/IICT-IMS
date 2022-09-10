@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace API.DTOs.Response
 {
-    public class QuotationResponseDto
+    public class QuotationResDto
     {
         public int Id { get; set; }
         public int ProcurementId { get; set; }

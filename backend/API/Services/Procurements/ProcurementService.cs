@@ -17,7 +17,7 @@ namespace API.Services.Procurements
             _context = context;
         }
 
-        public async Task<bool> CreateProcurement(ProcurementDto procurementDto)
+        public async Task<bool> CreateProcurement(ProcurementReqDto procurementDto)
         {
             var procurementProducts = new List<ProcurementProduct>();
 
@@ -63,7 +63,7 @@ namespace API.Services.Procurements
 
         public async Task<bool> DeleteProcurement(int id)
         {
-            var procurement = await _context.Procurements.SingleAsync(x => x.Id == id);
+            var procurement = await _context.Procurements.SingleOrDefaultAsync(x => x.Id == id);
 
             if (procurement == null)
                 return false;
@@ -73,13 +73,15 @@ namespace API.Services.Procurements
             return true;
         }
 
-        public async Task<ProcurementResponseDto> GetProcurement(int id)
+        public async Task<ProcurementResDto> GetProcurement(int id)
         {
             var procurement = await _context.Procurements
                 .Where(x => x.Id == id)
                 .Include(x => x.Category)
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Category)
+                .Include(x => x.Quotations)
+                .ThenInclude(x => x.Supplier)
                 .FirstOrDefaultAsync();
 
             if (procurement == null)
@@ -88,7 +90,7 @@ namespace API.Services.Procurements
             }
             else
             {
-                var procurementResponse = new ProcurementResponseDto()
+                var procurementResponse = new ProcurementResDto()
                 {
                     Id = procurement.Id,
                     Title = procurement.Title,
@@ -96,32 +98,46 @@ namespace API.Services.Procurements
                     IssuingDate = procurement.IssuingDate,
                     TenderDeadline = procurement.Deadline,
                     EstimatedTotalPrice = procurement.EstimatedTotalPrice,
-                    Products = new List<ProcurementProductResponseDto>()
+                    Products = new List<ProcurementProductResponseDto>(),
+                    Quotations = new List<QuotationResDto>()
                 };
 
-                foreach (var item in procurement.Products)
+                foreach (var product in procurement.Products)
                 {
-                    var procurementProduct = new ProcurementProductResponseDto()
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        Category = item.Category.Name,
-                        Manufacturer = item.Manufacturer,
-                        Details = item.Details,
-                        EstimatedPrice = item.EstimatedPrice,
-                        Quantity = item.Quantity,
-                        EstimatedTotalPrice = item.EstimatedTotalPrice
-                    };
+                    procurementResponse.Products.Add(
+                        new ProcurementProductResponseDto()
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            Category = product.Category.Name,
+                            Manufacturer = product.Manufacturer,
+                            Details = product.Details,
+                            EstimatedPrice = product.EstimatedPrice,
+                            Quantity = product.Quantity,
+                            EstimatedTotalPrice = product.EstimatedTotalPrice
+                        }
+                    );
+                }
 
-                    procurementResponse.Products.Add(procurementProduct);
+                foreach (var quotation in procurement.Quotations)
+                {
+                    procurementResponse.Quotations.Add(
+                        new QuotationResDto()
+                        {
+                            Id = quotation.Id,
+                            SupplierId = quotation.Supplier.Id,
+                            SupplierName = quotation.Supplier.CompanyName,
+                            QuotedTotalPrice = quotation.QuotedTotalPrice,
+                        }
+                    );
                 }
 
                 return procurementResponse;
             }
         }
 
-        public async Task<List<ProcurementResponseDto>> GetProcurements(
-            GetProcurementsDto getProcurementsDto
+        public async Task<List<ProcurementResDto>> GetProcurements(
+            ProcurementsGetReqDto getProcurementsDto
         )
         {
             var procurementList = new List<Procurement>();
@@ -134,12 +150,12 @@ namespace API.Services.Procurements
 
             procurementList = await procurements.ToListAsync();
 
-            var procurementListRes = new List<ProcurementResponseDto>();
+            var procurementListRes = new List<ProcurementResDto>();
 
             foreach (var procs in procurementList)
             {
                 procurementListRes.Add(
-                    new ProcurementResponseDto()
+                    new ProcurementResDto()
                     {
                         Id = procs.Id,
                         Title = procs.Title,

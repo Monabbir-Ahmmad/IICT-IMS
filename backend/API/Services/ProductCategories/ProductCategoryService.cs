@@ -15,7 +15,7 @@ namespace API.Services.ProductCategories
             _context = context;
         }
 
-        public async Task<ProductCategoryResponseDto> CreateCategory(string categoryName)
+        public async Task<ProductCategoryResDto> CreateCategory(string categoryName)
         {
             if (_context.ProductCategories.Where(x => x.Name == categoryName).Any())
                 return null;
@@ -25,14 +25,14 @@ namespace API.Services.ProductCategories
             _context.ProductCategories.Add(category);
             await _context.SaveChangesAsync();
 
-            return new ProductCategoryResponseDto { Id = category.Id, Name = category.Name };
+            return new ProductCategoryResDto { Id = category.Id, Name = category.Name };
         }
 
         public async Task<bool> DeleteCategory(int categoryId)
         {
-            var category = await _context.ProductCategories
-                .Where(x => x.Id == categoryId)
-                .FirstOrDefaultAsync();
+            var category = await _context.ProductCategories.SingleOrDefaultAsync(
+                x => x.Id == categoryId
+            );
 
             if (category == null)
             {
@@ -44,22 +44,22 @@ namespace API.Services.ProductCategories
             return result > 0;
         }
 
-        public async Task<List<ProductCategoryResponseDto>> GetCategories()
+        public async Task<List<ProductCategoryResDto>> GetCategories()
         {
-            List<ProductCategoryResponseDto> categories = new List<ProductCategoryResponseDto>();
+            List<ProductCategoryResDto> categories = new List<ProductCategoryResDto>();
 
             var categoryList = await _context.ProductCategories.ToListAsync();
 
             foreach (var category in categoryList)
             {
                 categories.Add(
-                    new ProductCategoryResponseDto() { Id = category.Id, Name = category.Name }
+                    new ProductCategoryResDto() { Id = category.Id, Name = category.Name }
                 );
             }
             return categories;
         }
 
-        public async Task<ProductCategoryResponseDto> GetCategory(int categoryId)
+        public async Task<ProductCategoryResDto> GetCategory(int categoryId)
         {
             var category = await _context.ProductCategories
                 .Where(x => x.Id == categoryId)
@@ -67,7 +67,7 @@ namespace API.Services.ProductCategories
             if (category == null)
                 return null;
 
-            var categoryRes = new ProductCategoryResponseDto()
+            var categoryRes = new ProductCategoryResDto()
             {
                 Id = category.Id,
                 Name = category.Name

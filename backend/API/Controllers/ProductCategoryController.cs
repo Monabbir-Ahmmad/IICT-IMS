@@ -21,9 +21,7 @@ namespace API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<ProductCategoryResponseDto>> CreateCategory(
-            string categoryName
-        )
+        public async Task<ActionResult<ProductCategoryResDto>> CreateCategory(string categoryName)
         {
             try
             {
@@ -64,7 +62,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductCategoryResponseDto>> GetCategory(int id)
+        public async Task<ActionResult<ProductCategoryResDto>> GetCategory(int id)
         {
             try
             {
@@ -83,7 +81,7 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<ProductCategoryResponseDto>>> GetCategories()
+        public async Task<ActionResult<List<ProductCategoryResDto>>> GetCategories()
         {
             try
             {

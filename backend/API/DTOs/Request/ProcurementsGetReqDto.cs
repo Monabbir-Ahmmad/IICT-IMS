@@ -1,6 +1,6 @@
 ﻿namespace API.DTOs.Request
 {
-    public class GetProcurementsDto
+    public class ProcurementsGetReqDto
     {
         public int Id { get; set; }
     }

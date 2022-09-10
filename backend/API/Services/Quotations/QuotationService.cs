@@ -16,14 +16,14 @@ namespace API.Services.Quotations
             _context = context;
         }
 
-        public async Task<bool> CreateQuotation(CreateQuotationDto createQuotationDto)
+        public async Task<bool> CreateQuotation(QuotationCreateReqDto createQuotationDto)
         {
             var procurement = await _context.Procurements
                 .Where(x => x.Id == createQuotationDto.ProcurementId)
                 .Include(x => x.Category)
                 .FirstOrDefaultAsync();
 
-            if (procurement.Quotations.Any(x => x.Id == createQuotationDto.SupplierId))
+            if (_context.Quotations.Any(x => x.Id == createQuotationDto.SupplierId))
             {
                 return false;
             }
@@ -45,17 +45,18 @@ namespace API.Services.Quotations
             return created > 0;
         }
 
-        public async Task<QuotationResponseDto> GetQuotation(int quotationId)
+        public async Task<QuotationResDto> GetQuotation(int quotationId)
         {
             var quotation = await _context.Quotations
+                .Where(q => q.Id == quotationId)
                 .Include(q => q.Procurement)
                 .Include(q => q.Supplier)
-                .FirstOrDefaultAsync(q => q.Id == quotationId);
+                .FirstOrDefaultAsync();
 
             if (quotation == null)
                 return null;
 
-            var quotationResponseDto = new QuotationResponseDto
+            var quotationResponseDto = new QuotationResDto
             {
                 Id = quotation.Id,
                 ProcurementId = quotation.Procurement.Id,
@@ -68,7 +69,7 @@ namespace API.Services.Quotations
             return quotationResponseDto;
         }
 
-        public async Task<List<QuotationResponseDto>> GetQuotations(int procurementId)
+        public async Task<List<QuotationResDto>> GetQuotations(int procurementId)
         {
             var quotations = await _context.Quotations
                 .Include(q => q.Procurement)
@@ -79,11 +80,11 @@ namespace API.Services.Quotations
             if (quotations == null)
                 return null;
 
-            var quotationResponseDtos = new List<QuotationResponseDto>();
+            var quotationResponseDtos = new List<QuotationResDto>();
 
             foreach (var quotation in quotations)
             {
-                var quotationResponseDto = new QuotationResponseDto
+                var quotationResponseDto = new QuotationResDto
                 {
                     Id = quotation.Id,
                     ProcurementId = quotation.Procurement.Id,

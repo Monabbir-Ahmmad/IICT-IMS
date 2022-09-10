@@ -1,6 +1,6 @@
 ﻿namespace API.DTOs.Response
 {
-    public class ProcurementResponseDto
+    public class ProcurementResDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -14,6 +14,7 @@
         public DateTime TenderDeadline { get; set; }
 
         public List<ProcurementProductResponseDto> Products { get; set; }
+        public List<QuotationResDto> Quotations { get; set; }
     }
 
     public class ProcurementProductResponseDto

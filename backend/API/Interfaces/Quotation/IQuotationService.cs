@@ -6,8 +6,8 @@ namespace API.Interfaces.Quotation
 {
     public interface IQuotationService
     {
-        Task<bool> CreateQuotation(CreateQuotationDto createQuotationDto);
-        Task<QuotationResponseDto> GetQuotation(int quotationId);
-        Task<List<QuotationResponseDto>> GetQuotations(int procurementId);
+        Task<bool> CreateQuotation(QuotationCreateReqDto createQuotationDto);
+        Task<QuotationResDto> GetQuotation(int quotationId);
+        Task<List<QuotationResDto>> GetQuotations(int procurementId);
     }
 }

@@ -4,9 +4,9 @@ namespace API.Interfaces.ProductCategory
 {
     public interface IProductCategoryService
     {
-        Task<ProductCategoryResponseDto> CreateCategory(string categoryName);
+        Task<ProductCategoryResDto> CreateCategory(string categoryName);
         Task<bool> DeleteCategory(int categoryId);
-        Task<List<ProductCategoryResponseDto>> GetCategories();
-        Task<ProductCategoryResponseDto> GetCategory(int categoryId);
+        Task<List<ProductCategoryResDto>> GetCategories();
+        Task<ProductCategoryResDto> GetCategory(int categoryId);
     }
 }

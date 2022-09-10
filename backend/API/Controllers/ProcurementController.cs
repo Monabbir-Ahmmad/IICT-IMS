@@ -23,8 +23,8 @@ namespace API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<ProcurementResponseDto>> CreateProcurement(
-            ProcurementDto procurementDto
+        public async Task<ActionResult<ProcurementResDto>> CreateProcurement(
+            ProcurementReqDto procurementDto
         )
         {
             try
@@ -69,7 +69,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProcurementResponseDto>> GetProcurementById(int id)
+        public async Task<ActionResult<ProcurementResDto>> GetProcurementById(int id)
         {
             try
             {
@@ -89,8 +89,8 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<ProcurementResponseDto>>> GetProcurements(
-            [FromQuery] GetProcurementsDto getProcurementsDto
+        public async Task<ActionResult<List<ProcurementResDto>>> GetProcurements(
+            [FromQuery] ProcurementsGetReqDto getProcurementsDto
         )
         {
             try

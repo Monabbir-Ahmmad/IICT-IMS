@@ -22,8 +22,10 @@ namespace API.Controllers
             _logger = logger;
         }
 
-        [HttpPost("sendQuotation")]
-        public async Task<ActionResult<bool>> CreateQuotation(CreateQuotationDto createQuotationDto)
+        [HttpPost("create")]
+        public async Task<ActionResult<bool>> CreateQuotation(
+            QuotationCreateReqDto createQuotationDto
+        )
         {
             try
             {
@@ -42,12 +44,12 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("{quotationId}")]
-        public async Task<ActionResult<QuotationResponseDto>> GetQuotation(int quotationId)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<QuotationResDto>> GetQuotation(int id)
         {
             try
             {
-                var result = await _quotationService.GetQuotation(quotationId);
+                var result = await _quotationService.GetQuotation(id);
 
                 return result != null ? Ok(result) : BadRequest("Quotation not found");
             }
@@ -63,7 +65,7 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<QuotationResponseDto>>> GetQuotations(int procurementId)
+        public async Task<ActionResult<List<QuotationResDto>>> GetQuotations(int procurementId)
         {
             try
             {

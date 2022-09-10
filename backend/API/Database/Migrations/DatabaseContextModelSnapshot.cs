@@ -125,7 +125,7 @@ namespace API.Database.Migrations
                     b.ToTable("Quotations");
                 });
 
-            modelBuilder.Entity("API.Entities.SupplierDetails", b =>
+            modelBuilder.Entity("API.Entities.Supplier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,8 +134,8 @@ namespace API.Database.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("BIN")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("BIN")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("INTEGER");
@@ -147,6 +147,9 @@ namespace API.Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Website")
@@ -209,7 +212,7 @@ namespace API.Database.Migrations
                         .WithMany("Quotations")
                         .HasForeignKey("ProcurementId");
 
-                    b.HasOne("API.Entities.SupplierDetails", "Supplier")
+                    b.HasOne("API.Entities.Supplier", "Supplier")
                         .WithMany("Quotations")
                         .HasForeignKey("SupplierId");
 
@@ -218,7 +221,7 @@ namespace API.Database.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("API.Entities.SupplierDetails", b =>
+            modelBuilder.Entity("API.Entities.Supplier", b =>
                 {
                     b.HasOne("API.Entities.ProductCategory", "Category")
                         .WithMany()
@@ -234,7 +237,7 @@ namespace API.Database.Migrations
                     b.Navigation("Quotations");
                 });
 
-            modelBuilder.Entity("API.Entities.SupplierDetails", b =>
+            modelBuilder.Entity("API.Entities.Supplier", b =>
                 {
                     b.Navigation("Quotations");
                 });

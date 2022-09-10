@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public Procurement Procurement { get; set; }
-        public SupplierDetails Supplier { get; set; }
+        public Supplier Supplier { get; set; }
         public float QuotedTotalPrice { get; set; }
     }
 }
