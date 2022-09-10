@@ -133,20 +133,16 @@ namespace API.Services.Procurements
         {
             var procurementList = new List<Procurement>();
 
-            if (getProcurementsDto.Id == null)
+            IQueryable<Procurement> procurements = _context.Procurements
+                .Include(x => x.Category);
+            if (getProcurementsDto?.Id > 0)
             {
-                procurementList = await _context.Procurements
-                    .Include(x => x.Category)
-                    .ToListAsync();
+                procurements = procurements.Where(x => x.Category.Id == getProcurementsDto.Id);
             }
-            else
-            {
-                procurementList = await _context.Procurements
-                    .Where(x => x.Category.Id == getProcurementsDto.Id)
-                    .Include(x => x.Category)
-                    .ToListAsync();
-            }
+        
+            procurementList = await procurements.ToListAsync();
 
+            
             var procurementListRes = new List<ProcurementResponseDto>();
 
             foreach (var procs in procurementList)
