@@ -15,5 +15,6 @@
         public List<ProcurementProduct> Products { get; set; }
 
         public float EstimatedTotalPrice { get; set; }
+
     }
 }

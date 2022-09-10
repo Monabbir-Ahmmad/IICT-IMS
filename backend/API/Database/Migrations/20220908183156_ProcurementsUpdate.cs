@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Database.Migrations
 {
-    public partial class Mig1 : Migration
+    public partial class ProcurementsUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,7 +61,7 @@ namespace API.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProcurementItems",
+                name: "ProcurementProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -77,15 +77,15 @@ namespace API.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProcurementItems", x => x.Id);
+                    table.PrimaryKey("PK_ProcurementProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProcurementItems_Procurements_ProcurementId",
+                        name: "FK_ProcurementProducts_Procurements_ProcurementId",
                         column: x => x.ProcurementId,
                         principalTable: "Procurements",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProcurementItems_ProductCategories_CategoryId",
+                        name: "FK_ProcurementProducts_ProductCategories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "ProductCategories",
                         principalColumn: "Id",
@@ -93,13 +93,13 @@ namespace API.Database.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProcurementItems_CategoryId",
-                table: "ProcurementItems",
+                name: "IX_ProcurementProducts_CategoryId",
+                table: "ProcurementProducts",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProcurementItems_ProcurementId",
-                table: "ProcurementItems",
+                name: "IX_ProcurementProducts_ProcurementId",
+                table: "ProcurementProducts",
                 column: "ProcurementId");
 
             migrationBuilder.CreateIndex(
@@ -117,7 +117,7 @@ namespace API.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ProcurementItems");
+                name: "ProcurementProducts");
 
             migrationBuilder.DropTable(
                 name: "Users");

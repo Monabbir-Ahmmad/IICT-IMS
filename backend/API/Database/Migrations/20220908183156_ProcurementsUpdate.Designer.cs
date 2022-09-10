@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220908152714_Mig1")]
-    partial class Mig1
+    [Migration("20220908183156_ProcurementsUpdate")]
+    partial class ProcurementsUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,7 +87,7 @@ namespace API.Database.Migrations
 
                     b.HasIndex("ProcurementId");
 
-                    b.ToTable("ProcurementItems");
+                    b.ToTable("ProcurementProducts");
                 });
 
             modelBuilder.Entity("API.Entities.ProductCategory", b =>
