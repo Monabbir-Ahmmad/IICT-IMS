@@ -1,13 +1,12 @@
 import { Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
-import NavDrawer from "./components/nav/NavDrawer";
-
-import AuthPage from "./pages/AuthPage";
-import HomePage from "./pages/HomePage";
-import PeoplePage from "./pages/PeoplePage";
-import ProductAddPage from "./pages/ProductAddPage";
-import ProductPage from "./pages/ProductPage";
-import ProfilePage from "./pages/ProfilePage";
+import AuthPage from "./components/authentication/page/AuthPage";
+import ProcurementCreatePage from "./components/procurement/page/ProcurementCreatePage";
+import ProcurementPage from "./components/procurement/page/ProcurementPage";
+import SingleProcurementPage from "./components/procurement/page/SingleProcurementPage";
+import QuotationOfferPage from "./components/quotation/page/QuotationOfferPage";
+import QuotationPage from "./components/quotation/page/QuotationPage";
+import NavDrawer from "./components/shared/nav/NavDrawer";
 
 function App() {
   return (
@@ -15,11 +14,17 @@ function App() {
       <Route index element={<AuthPage />} />
 
       <Route path="/" element={<NavDrawer />}>
-        <Route path="home" element={<HomePage />} />
-        <Route path="profile/:userId" element={<ProfilePage />} />
-        <Route path="users" element={<PeoplePage />} />
-        <Route path="products" element={<ProductPage />} />
-        <Route path="products/add" element={<ProductAddPage />} />
+        <Route path="procurements" element={<ProcurementPage />} />
+        <Route
+          path="procurements/:procurementId"
+          element={<SingleProcurementPage />}
+        />
+        <Route path="procurements/create" element={<ProcurementCreatePage />} />
+        <Route path="quotations" element={<QuotationPage />} />
+        <Route
+          path="quotations/:procurementId"
+          element={<QuotationOfferPage />}
+        />
         <Route
           path="*"
           element={<Typography variant="h4">Sorry! Page Not Found</Typography>}

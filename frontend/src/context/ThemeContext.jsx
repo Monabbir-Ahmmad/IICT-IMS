@@ -38,10 +38,10 @@ function ThemeContextProvider({ children }) {
         palette: {
           mode,
           primary: {
-            main: "#1976d2",
+            main: "#727CF5",
           },
           accent: {
-            main: "#1976d220",
+            main: "#727df512",
           },
           backgroundColor: mode === "light" ? "#f9f9f9" : "#1c1c1c",
         },

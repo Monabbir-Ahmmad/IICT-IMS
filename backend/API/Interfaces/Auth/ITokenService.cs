@@ -4,6 +4,6 @@ namespace API.Interfaces.Auth
 {
     public interface ITokenService
     {
-        string CreateToken(User user);
+        string CreateToken(int Id, string email, string role);
     }
 }
