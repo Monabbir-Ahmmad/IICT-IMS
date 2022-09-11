@@ -45,7 +45,7 @@ namespace API.Controllers
             try
             {
                 var result = await _categoryService.DeleteCategory(id);
-                return result ? Ok("Category Deleted") : BadRequest("Category does not exist");
+                return result ? Ok("Category Deleted") : BadRequest("Category does not exist.");
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace API.Controllers
             try
             {
                 var category = await _categoryService.GetCategory(id);
-                return Ok(category);
+                return category == null ? BadRequest("Category does not exist.") : Ok(category);
             }
             catch (Exception ex)
             {
