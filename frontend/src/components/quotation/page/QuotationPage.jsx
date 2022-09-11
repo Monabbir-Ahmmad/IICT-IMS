@@ -1,31 +1,39 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import { Alert, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getProcurementList } from "../../../redux/actions/procurement.actions";
 import QuotationListTable from "../ui/QuotationListTable";
 
 function QuotationPage() {
-  const data = [
-    {
-      id: 1,
-      title: "Supplier 1",
-      issueDate: "2021-09-10",
-      tenderingDeadline: "2021-10-10",
-      estimatedTotalPrice: 1000,
-      status: "Pending",
-    },
-    {
-      id: 2,
-      title: "Supplier 1",
-      issueDate: "2021-09-10",
-      tenderingDeadline: "2021-10-10",
-      estimatedTotalPrice: 1000,
-      status: "Completed",
-    },
-  ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { procurements, loading, error } = useSelector(
+    (state) => state.procurementList
+  );
+
+  useEffect(() => {
+    dispatch(getProcurementList());
+  }, [dispatch]);
+
+  const onRowOpenClick = (id) => {
+    navigate("./" + id);
+  };
 
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Quotations</Typography>
+
+      {loading && <LinearProgress />}
+
+      {error && <Alert severity="error">{error}</Alert>}
+
       <Paper variant="outlined">
-        <QuotationListTable data={data} />
+        <QuotationListTable
+          data={procurements}
+          onRowOpenClick={onRowOpenClick}
+        />
       </Paper>
     </Stack>
   );

@@ -23,7 +23,13 @@ namespace API.Services.Quotations
                 .Include(x => x.Category)
                 .FirstOrDefaultAsync();
 
-            if (_context.Quotations.Any(x => x.Id == createQuotationDto.SupplierId))
+            if (
+                await _context.Quotations.AnyAsync(
+                    x =>
+                        x.Procurement.Id == createQuotationDto.ProcurementId
+                        && x.Supplier.Id == createQuotationDto.SupplierId
+                )
+            )
             {
                 return false;
             }

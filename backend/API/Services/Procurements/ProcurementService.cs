@@ -1,10 +1,10 @@
-﻿using API.Database;
+﻿using System.Net;
+using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
 using API.Interfaces.Procurement;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace API.Services.Procurements
 {
@@ -148,24 +148,41 @@ namespace API.Services.Procurements
                 procurements = procurements.Where(x => x.Category.Id == getProcurementsDto.Id);
             }
 
-            procurementList = await procurements.ToListAsync();
+            procurementList = await procurements
+                .Include(x => x.Quotations)
+                .ThenInclude(x => x.Supplier)
+                .ToListAsync();
 
             var procurementListRes = new List<ProcurementResDto>();
 
             foreach (var procs in procurementList)
             {
-                procurementListRes.Add(
-                    new ProcurementResDto()
-                    {
-                        Id = procs.Id,
-                        Title = procs.Title,
-                        Category = procs.Category.Name,
-                        IssuingDate = procs.IssuingDate,
-                        TenderDeadline = procs.Deadline,
-                        EstimatedTotalPrice = procs.EstimatedTotalPrice
-                    }
-                );
+                var procurementRes = new ProcurementResDto()
+                {
+                    Id = procs.Id,
+                    Title = procs.Title,
+                    Category = procs.Category.Name,
+                    IssuingDate = procs.IssuingDate,
+                    TenderDeadline = procs.Deadline,
+                    EstimatedTotalPrice = procs.EstimatedTotalPrice,
+                    Quotations = new List<QuotationResDto>()
+                };
+
+                foreach (var quotation in procs.Quotations)
+                {
+                    procurementRes.Quotations.Add(
+                        new QuotationResDto()
+                        {
+                            Id = quotation.Id,
+                            SupplierId = quotation.Supplier.Id,
+                            QuotedTotalPrice = quotation.QuotedTotalPrice
+                        }
+                    );
+                }
+
+                procurementListRes.Add(procurementRes);
             }
+
             return procurementListRes;
         }
     }

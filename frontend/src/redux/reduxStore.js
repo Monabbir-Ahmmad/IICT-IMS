@@ -20,7 +20,9 @@ import {
   procurementCreateReducer,
   procurementDeleteReducer,
   procurementListReducer,
+  singleProcurementReducer,
 } from "./reducers/procurement.reducers";
+import { quotationCreateReducer } from "./reducers/quotation.reducers";
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -34,7 +36,9 @@ const reducer = combineReducers({
   productCategoryUpdate: productCategoryUpdateReducer,
   procurementCreate: procurementCreateReducer,
   procurementList: procurementListReducer,
+  singleProcurement: singleProcurementReducer,
   procurementDelete: procurementDeleteReducer,
+  quotationCreate: quotationCreateReducer,
 });
 
 const initialState = {

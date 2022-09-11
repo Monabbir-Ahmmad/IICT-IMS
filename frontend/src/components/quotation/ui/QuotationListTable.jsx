@@ -1,58 +1,69 @@
 import { Button, Chip } from "@mui/material";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { MdDelete as DeleteIcon } from "react-icons/md";
+import { DataGrid } from "@mui/x-data-grid";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function QuotationListTable({ data = [] }) {
+function QuotationListTable({ data = [], onRowOpenClick }) {
   const columns = useMemo(
     () => [
       {
         field: "title",
         headerName: "Title",
         width: 300,
+        headerAlign: "center",
+        align: "center",
         renderCell: RenderCellExpand,
       },
       {
-        field: "issueDate",
+        field: "issuingDate",
         headerName: "Issue Date",
-        width: 150,
         type: "date",
+        width: 150,
+        headerAlign: "center",
+        align: "center",
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
-        field: "tenderingDeadline",
+        field: "tenderDeadline",
         headerName: "Deadline",
-        width: 150,
         type: "date",
+        width: 150,
+        headerAlign: "center",
+        align: "center",
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
         field: "estimatedTotalPrice",
         headerName: "Estimated Total Price",
-        valueFormatter: ({ value }) => currencyFormatter().format(value),
         type: "number",
         width: 200,
+        headerAlign: "center",
+        align: "center",
+        valueFormatter: ({ value }) => currencyFormatter().format(value),
       },
       {
-        field: "offeredTotalPrice",
+        field: "quotedTotalPrice",
         headerName: "Offered Total Price",
-        valueFormatter: ({ value }) =>
-          value ? currencyFormatter().format(value) : "N/A",
         type: "number",
         width: 200,
+        headerAlign: "center",
+        align: "center",
+        valueFormatter: ({ value }) =>
+          value ? currencyFormatter().format(value) : "N/A",
       },
       {
         field: "status",
         headerName: "Status",
         width: 150,
+        headerAlign: "center",
+        align: "center",
         renderCell: (props) => (
           <Chip
             variant="outlined"
-            label={props.value}
+            label={props.value || "Pending"}
             color={props.value === "Completed" ? "success" : "warning"}
           />
         ),
@@ -62,13 +73,13 @@ function QuotationListTable({ data = [] }) {
         headerName: "Actions",
         type: "actions",
         getActions: (params) => [
-          <Button variant="contained" onClick={() => console.log(params.id)}>
+          <Button variant="contained" onClick={() => onRowOpenClick(params.id)}>
             Open
           </Button>,
         ],
       },
     ],
-    []
+    [onRowOpenClick]
   );
 
   return (

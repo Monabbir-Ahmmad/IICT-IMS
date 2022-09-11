@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RiAddLine as AddIcon } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProcurementListItem from "../ui/ProcurementListTable";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -17,6 +17,7 @@ import {
 } from "../../../redux/actions/procurement.actions";
 function ProcurementPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { procurements, loading, error } = useSelector(
     (state) => state.procurementList
@@ -31,7 +32,7 @@ function ProcurementPage() {
   };
 
   const onRowClick = (id) => {
-    console.log(id);
+    navigate("./" + id);
   };
 
   return (

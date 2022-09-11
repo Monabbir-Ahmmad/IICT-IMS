@@ -68,7 +68,7 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         renderCell: (props) => (
           <Chip
             variant="outlined"
-            label={props.value}
+            label={props.value || "Pending"}
             color={props.value === "Completed" ? "success" : "warning"}
           />
         ),

@@ -10,6 +10,8 @@ function FloatingAlerts() {
 
   const procurementDelete = useSelector((state) => state.procurementDelete);
 
+  const quotationCreate = useSelector((state) => state.quotationCreate);
+
   return (
     <>
       <AlertSnackbar
@@ -31,6 +33,11 @@ function FloatingAlerts() {
         open={procurementDelete?.success}
         severity={"success"}
         message={"Procurement deleted successfully"}
+      />
+      <AlertSnackbar
+        open={quotationCreate?.success}
+        severity={"success"}
+        message={"Quotation sent successfully"}
       />
       <AlertSnackbar
         open={procurementDelete?.error}

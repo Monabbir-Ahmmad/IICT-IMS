@@ -8,9 +8,12 @@ import {
   DELETE_PROCUREMENT_REQUEST,
   DELETE_PROCUREMENT_RESET,
   DELETE_PROCUREMENT_SUCCESS,
+  GET_PROCUREMENT_FAIL,
   GET_PROCUREMENT_LIST_FAIL,
   GET_PROCUREMENT_LIST_REQUEST,
   GET_PROCUREMENT_LIST_SUCCESS,
+  GET_PROCUREMENT_REQUEST,
+  GET_PROCUREMENT_SUCCESS,
 } from "../action_types/procurement";
 
 export const createProcurement = (data) => async (dispatch) => {
@@ -51,6 +54,27 @@ export const getProcurementList = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GET_PROCUREMENT_LIST_FAIL,
+      payload:
+        error.response && error.response.data?.message
+          ? error.response.data?.message
+          : error.message,
+    });
+  }
+};
+
+export const getProcurement = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_PROCUREMENT_REQUEST });
+
+    const res = await procurementService.get(id);
+
+    dispatch({
+      type: GET_PROCUREMENT_SUCCESS,
+      payload: res.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_PROCUREMENT_FAIL,
       payload:
         error.response && error.response.data?.message
           ? error.response.data?.message

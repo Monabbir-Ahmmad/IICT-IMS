@@ -69,17 +69,17 @@ const columns = [
   {
     field: "estimatedPrice",
     headerName: "Estimated Price",
-    valueFormatter: ({ value }) => currencyFormatter().format(value),
     type: "number",
     width: 150,
+    valueFormatter: ({ value }) => currencyFormatter().format(value),
   },
   { field: "quantity", headerName: "Quantity", type: "number", width: 150 },
   {
     field: "estimatedTotalPrice",
     headerName: "Estimated Total Price",
-    valueFormatter: ({ value }) => currencyFormatter().format(value),
     type: "number",
     width: 200,
+    valueFormatter: ({ value }) => currencyFormatter().format(value),
   },
 ];
 

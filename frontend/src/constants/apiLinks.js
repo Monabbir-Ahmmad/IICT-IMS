@@ -25,4 +25,8 @@ export const CREATE_PROCUREMENT = "/procurement/create";
 
 export const GET_PROCUREMENTS = "/procurement";
 
+export const GET_PROCUREMENT = "/procurement";
+
 export const DELETE_PROCUREMENT = "/procurement";
+
+export const CREATE_QUOTATION = "/supplier/quotation/create";
