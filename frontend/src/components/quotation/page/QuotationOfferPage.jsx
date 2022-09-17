@@ -114,7 +114,7 @@ function QuotationOfferPage() {
           <Typography variant={"body1"}>
             Issuing Date:{" "}
             <strong>
-              {moment(singleProcurement.procurement?.issuingDate).format(
+              {moment(singleProcurement.procurement?.createdAt).format(
                 "MMM Do, YYYY"
               )}
             </strong>
@@ -123,7 +123,7 @@ function QuotationOfferPage() {
           <Typography variant={"body1"}>
             Tender Deadling:{" "}
             <strong>
-              {moment(singleProcurement.procurement?.tenderDeadline).format(
+              {moment(singleProcurement.procurement?.deadline).format(
                 "MMM Do, YYYY"
               )}
             </strong>

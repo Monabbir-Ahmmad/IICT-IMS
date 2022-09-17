@@ -1,6 +1,8 @@
-﻿using API.Database;
+﻿using System.Net;
+using API.Database;
 using API.DTOs.Response;
 using API.Entities;
+using API.Errors;
 using API.Interfaces.ProductCategory;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +20,9 @@ namespace API.Services.ProductCategories
         public async Task<ProductCategoryResDto> CreateCategory(string categoryName)
         {
             if (_context.ProductCategories.Where(x => x.Name == categoryName).Any())
-                return null;
+                throw new ApiException(HttpStatusCode.Conflict, "Category already exists.");
 
-            var category = new ProductCategory() { Name = categoryName };
+            var category = new ProductCategory { Name = categoryName };
 
             _context.ProductCategories.Add(category);
             await _context.SaveChangesAsync();
@@ -35,28 +37,23 @@ namespace API.Services.ProductCategories
             );
 
             if (category == null)
-            {
-                return false;
-            }
+                throw new NotFoundException("Category not found.");
 
             _context.ProductCategories.Remove(category);
             var result = await _context.SaveChangesAsync();
+
             return result > 0;
         }
 
         public async Task<List<ProductCategoryResDto>> GetCategories()
         {
-            List<ProductCategoryResDto> categories = new List<ProductCategoryResDto>();
-
             var categoryList = await _context.ProductCategories.ToListAsync();
 
-            foreach (var category in categoryList)
-            {
-                categories.Add(
-                    new ProductCategoryResDto() { Id = category.Id, Name = category.Name }
-                );
-            }
-            return categories;
+            var categoryListResDto = categoryList.ConvertAll(
+                x => new ProductCategoryResDto { Id = x.Id, Name = x.Name }
+            );
+
+            return categoryListResDto;
         }
 
         public async Task<ProductCategoryResDto> GetCategory(int categoryId)
@@ -64,15 +61,17 @@ namespace API.Services.ProductCategories
             var category = await _context.ProductCategories
                 .Where(x => x.Id == categoryId)
                 .FirstOrDefaultAsync();
-            if (category == null)
-                return null;
 
-            var categoryRes = new ProductCategoryResDto()
+            if (category == null)
+                throw new NotFoundException("Category not found.");
+
+            var categoryResDto = new ProductCategoryResDto()
             {
                 Id = category.Id,
                 Name = category.Name
             };
-            return categoryRes;
+
+            return categoryResDto;
         }
     }
 }

@@ -15,6 +15,7 @@ import {
   GET_PROCUREMENT_REQUEST,
   GET_PROCUREMENT_SUCCESS,
 } from "../action_types/procurement";
+import { showErrorAlert, showSuccessAlert } from "./alertSnackbar.actions";
 
 export const createProcurement = (data) => async (dispatch) => {
   try {
@@ -26,14 +27,20 @@ export const createProcurement = (data) => async (dispatch) => {
       type: CREATE_PROCUREMENT_SUCCESS,
       payload: res.data,
     });
+
+    dispatch(showSuccessAlert("Procurement created successfully"));
   } catch (error) {
+    const errorMessage =
+      error.response && error.response.data?.message
+        ? error.response.data?.message
+        : error.message;
+
     dispatch({
       type: CREATE_PROCUREMENT_FAIL,
-      payload:
-        error.response && error.response.data?.message
-          ? error.response.data?.message
-          : error.message,
+      payload: errorMessage,
     });
+
+    dispatch(showErrorAlert(errorMessage));
   }
 
   setTimeout(() => {
@@ -52,12 +59,14 @@ export const getProcurementList = () => async (dispatch) => {
       payload: res.data,
     });
   } catch (error) {
+    const errorMessage =
+      error.response && error.response.data?.message
+        ? error.response.data?.message
+        : error.message;
+
     dispatch({
       type: GET_PROCUREMENT_LIST_FAIL,
-      payload:
-        error.response && error.response.data?.message
-          ? error.response.data?.message
-          : error.message,
+      payload: errorMessage,
     });
   }
 };
@@ -73,12 +82,14 @@ export const getProcurement = (id) => async (dispatch) => {
       payload: res.data,
     });
   } catch (error) {
+    const errorMessage =
+      error.response && error.response.data?.message
+        ? error.response.data?.message
+        : error.message;
+
     dispatch({
       type: GET_PROCUREMENT_FAIL,
-      payload:
-        error.response && error.response.data?.message
-          ? error.response.data?.message
-          : error.message,
+      payload: errorMessage,
     });
   }
 };
@@ -101,15 +112,20 @@ export const deleteProcurement = (id) => async (dispatch, getState) => {
         (procurement) => procurement.id !== id
       ),
     });
+
+    dispatch(showSuccessAlert("Procurement deleted successfully"));
   } catch (error) {
-    console.log(error);
+    const errorMessage =
+      error.response && error.response.data?.message
+        ? error.response.data?.message
+        : error.message;
+
     dispatch({
       type: DELETE_PROCUREMENT_FAIL,
-      payload:
-        error.response && error.response.data?.message
-          ? error.response.data?.message
-          : error.message,
+      payload: errorMessage,
     });
+
+    dispatch(showErrorAlert(errorMessage));
   }
 
   setTimeout(() => {

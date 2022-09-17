@@ -51,14 +51,14 @@ function SingleProcurementPage() {
           <Typography variant={"body1"}>
             Issuing Date:{" "}
             <strong>
-              {moment(procurement?.issuingDate).format("MMM Do, YYYY")}
+              {moment(procurement?.createdAt).format("MMM Do, YYYY")}
             </strong>
           </Typography>
           <Divider />
           <Typography variant={"body1"}>
             Tender Deadling:{" "}
             <strong>
-              {moment(procurement?.tenderDeadline).format("MMM Do, YYYY")}
+              {moment(procurement?.deadline).format("MMM Do, YYYY")}
             </strong>
           </Typography>
           <Divider />

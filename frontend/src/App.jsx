@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import AuthPage from "./components/authentication/page/AuthPage";
 import ProcurementCreatePage from "./components/procurement/page/ProcurementCreatePage";
@@ -7,8 +7,33 @@ import SingleProcurementPage from "./components/procurement/page/SingleProcureme
 import QuotationOfferPage from "./components/quotation/page/QuotationOfferPage";
 import QuotationPage from "./components/quotation/page/QuotationPage";
 import NavDrawer from "./components/shared/nav/NavDrawer";
+import { useSnackbar } from "notistack";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { RiCloseLine as CloseIcon } from "react-icons/ri";
 
 function App() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const alertSnackbar = useSelector((state) => state.alertSnackbar);
+
+  useEffect(() => {
+    if (alertSnackbar.open) {
+      enqueueSnackbar(alertSnackbar.message, {
+        variant: alertSnackbar.severity,
+        autoHideDuration: 4000,
+        anchorOrigin: { vertical: "bottom", horizontal: "center" },
+        action: (snackbarId) => (
+          <IconButton
+            sx={{ color: "#fff" }}
+            onClick={() => closeSnackbar(snackbarId)}
+          >
+            <CloseIcon />
+          </IconButton>
+        ),
+      });
+    }
+  }, [alertSnackbar, closeSnackbar, enqueueSnackbar]);
+
   return (
     <Routes>
       <Route index element={<AuthPage />} />

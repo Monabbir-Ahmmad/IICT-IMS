@@ -17,6 +17,6 @@ namespace API.DTOs.Request
         public DateTime TenderDeadline { get; set; }
 
         [Required]
-        public List<ProcurementProductDto> Products { get; set; }
+        public List<ProcurementProductReqDto> Products { get; set; }
     }
 }

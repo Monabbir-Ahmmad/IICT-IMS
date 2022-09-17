@@ -1,8 +1,11 @@
+using System.Net;
 using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
+using API.Errors;
 using API.Interfaces.Quotation;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services.Quotations
@@ -10,45 +13,58 @@ namespace API.Services.Quotations
     public class QuotationService : IQuotationService
     {
         private readonly DatabaseContext _context;
+        private readonly IMapper _mapper;
 
-        public QuotationService(DatabaseContext context)
+        public QuotationService(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<bool> CreateQuotation(QuotationCreateReqDto createQuotationDto)
+        public async Task<QuotationResDto> CreateQuotation(
+            QuotationCreateReqDto quotationCreateReqDto
+        )
         {
-            var procurement = await _context.Procurements
-                .Where(x => x.Id == createQuotationDto.ProcurementId)
-                .Include(x => x.Category)
-                .FirstOrDefaultAsync();
-
             if (
                 await _context.Quotations.AnyAsync(
                     x =>
-                        x.Procurement.Id == createQuotationDto.ProcurementId
-                        && x.Supplier.Id == createQuotationDto.SupplierId
+                        x.Procurement.Id == quotationCreateReqDto.ProcurementId
+                        && x.Supplier.Id == quotationCreateReqDto.SupplierId
                 )
             )
-            {
-                return false;
-            }
+                throw new ApiException(HttpStatusCode.Conflict, "Quotation already exists.");
 
             var supplier = await _context.Suppliers
-                .Where(x => x.Id == createQuotationDto.SupplierId)
+                .Where(x => x.Id == quotationCreateReqDto.SupplierId)
                 .FirstOrDefaultAsync();
+
+            if (supplier == null)
+                throw new NotFoundException("Supplier not found.");
+
+            var procurement = await _context.Procurements
+                .Where(x => x.Id == quotationCreateReqDto.ProcurementId)
+                .Include(x => x.Category)
+                .FirstOrDefaultAsync();
+
+            if (procurement == null)
+                throw new NotFoundException("Procurement not found.");
 
             var quotation = new Quotation
             {
                 Procurement = procurement,
                 Supplier = supplier,
-                QuotedTotalPrice = createQuotationDto.QuotedTotalPrice
+                QuotedTotalPrice = quotationCreateReqDto.QuotedTotalPrice
             };
 
             await _context.Quotations.AddAsync(quotation);
             var created = await _context.SaveChangesAsync();
 
-            return created > 0;
+            return created > 0
+                ? _mapper.Map<QuotationResDto>(quotation)
+                : throw new ApiException(
+                    HttpStatusCode.InternalServerError,
+                    "Quotation not created."
+                );
         }
 
         public async Task<QuotationResDto> GetQuotation(int quotationId)
@@ -60,19 +76,11 @@ namespace API.Services.Quotations
                 .FirstOrDefaultAsync();
 
             if (quotation == null)
-                return null;
+                throw new NotFoundException("Quotation not found.");
 
-            var quotationResponseDto = new QuotationResDto
-            {
-                Id = quotation.Id,
-                ProcurementId = quotation.Procurement.Id,
-                ProcurementName = quotation.Procurement.Title,
-                SupplierId = quotation.Supplier.Id,
-                SupplierName = quotation.Supplier.CompanyName,
-                QuotedTotalPrice = quotation.QuotedTotalPrice
-            };
+            var quotationResDto = _mapper.Map<QuotationResDto>(quotation);
 
-            return quotationResponseDto;
+            return quotationResDto;
         }
 
         public async Task<List<QuotationResDto>> GetQuotations(int procurementId)
@@ -83,27 +91,9 @@ namespace API.Services.Quotations
                 .Where(q => q.Procurement.Id == procurementId)
                 .ToListAsync();
 
-            if (quotations == null)
-                return null;
+            var quotationListResDto = _mapper.Map<List<QuotationResDto>>(quotations);
 
-            var quotationResponseDtos = new List<QuotationResDto>();
-
-            foreach (var quotation in quotations)
-            {
-                var quotationResponseDto = new QuotationResDto
-                {
-                    Id = quotation.Id,
-                    ProcurementId = quotation.Procurement.Id,
-                    ProcurementName = quotation.Procurement.Title,
-                    SupplierId = quotation.Supplier.Id,
-                    SupplierName = quotation.Supplier.CompanyName,
-                    QuotedTotalPrice = quotation.QuotedTotalPrice
-                };
-
-                quotationResponseDtos.Add(quotationResponseDto);
-            }
-
-            return quotationResponseDtos;
+            return quotationListResDto;
         }
     }
 }

@@ -23,8 +23,10 @@ import {
   singleProcurementReducer,
 } from "./reducers/procurement.reducers";
 import { quotationCreateReducer } from "./reducers/quotation.reducers";
+import { alertSnackbarReducer } from "./reducers/alertSnackbar.reducers";
 
 const reducer = combineReducers({
+  alertSnackbar: alertSnackbarReducer,
   userRegister: userRegisterReducer,
   userLogin: userLoginReducer,
   userDetails: userDetailsReducer,

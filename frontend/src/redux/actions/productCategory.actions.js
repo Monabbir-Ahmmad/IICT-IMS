@@ -12,6 +12,7 @@ import {
   UPDATE_PRODUCT_CATEGORY_RESET,
   UPDATE_PRODUCT_CATEGORY_SUCCESS,
 } from "../action_types/productCategory";
+import { showErrorAlert } from "./alertSnackbar.actions";
 
 export const createProductCategory = (name) => async (dispatch) => {
   try {
@@ -49,13 +50,16 @@ export const getAllProductCategories = () => async (dispatch) => {
       payload: res.data,
     });
   } catch (error) {
+    const errorMessage =
+      error.response && error.response.data?.message
+        ? error.response.data?.message
+        : error.message;
     dispatch({
       type: GET_PRODUCT_CATEGORY_LIST_FAIL,
-      payload:
-        error.response && error.response.data?.message
-          ? error.response.data?.message
-          : error.message,
+      payload: errorMessage,
     });
+
+    dispatch(showErrorAlert("Unable to fetch categories. " + errorMessage));
   }
 };
 

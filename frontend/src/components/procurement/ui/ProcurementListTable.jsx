@@ -33,7 +33,7 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         align: "center",
       },
       {
-        field: "issueingDate",
+        field: "createdAt",
         headerName: "Issue Date",
         width: 150,
         type: "date",
@@ -42,7 +42,7 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
-        field: "tenderDeadline",
+        field: "deadline",
         headerName: "Deadline",
         width: 150,
         type: "date",

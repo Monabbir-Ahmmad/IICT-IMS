@@ -1,26 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
-using API.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace API.DTOs.Request
+namespace API.DTOs.Response
 {
-    public class ProcurementProductReqDto
+    public class ProcurementProductResDto
     {
-        [Required]
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
-        [Required]
+        public string Category { get; set; }
+
         public string Manufacturer { get; set; }
 
-        [Required]
         public string Details { get; set; }
 
-        [Required]
         public float EstimatedPrice { get; set; }
 
-        [Required]
         public int Quantity { get; set; }
 
-        [Required]
         public float EstimatedTotalPrice { get; set; }
     }
 }

@@ -9,7 +9,7 @@ import {
 } from "../action_types/auth";
 import authService from "../../services/auth.service";
 
-export const register = (registrationData) => async (dispatch) => {
+export const signup = (registrationData) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
 
@@ -35,7 +35,7 @@ export const register = (registrationData) => async (dispatch) => {
   }
 };
 
-export const login = (email, password) => async (dispatch) => {
+export const signin = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
 

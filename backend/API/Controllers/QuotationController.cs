@@ -11,15 +11,9 @@ namespace API.Controllers
     {
         private readonly IQuotationService _quotationService;
 
-        private readonly ILogger<QuotationController> _logger;
-
-        public QuotationController(
-            IQuotationService quotationService,
-            ILogger<QuotationController> logger
-        )
+        public QuotationController(IQuotationService quotationService)
         {
             _quotationService = quotationService;
-            _logger = logger;
         }
 
         [HttpPost("create")]
@@ -27,61 +21,19 @@ namespace API.Controllers
             QuotationCreateReqDto createQuotationDto
         )
         {
-            try
-            {
-                var result = await _quotationService.CreateQuotation(createQuotationDto);
-
-                return result ? Ok("Quotation created") : BadRequest("Quotation not be created");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Ok(await _quotationService.CreateQuotation(createQuotationDto));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<QuotationResDto>> GetQuotation(int id)
         {
-            try
-            {
-                var result = await _quotationService.GetQuotation(id);
-
-                return result != null ? Ok(result) : BadRequest("Quotation not found");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Ok(await _quotationService.GetQuotation(id));
         }
 
         [HttpGet()]
         public async Task<ActionResult<List<QuotationResDto>>> GetQuotations(int procurementId)
         {
-            try
-            {
-                var result = await _quotationService.GetQuotations(procurementId);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Ok(await _quotationService.GetQuotations(procurementId));
         }
     }
 }
