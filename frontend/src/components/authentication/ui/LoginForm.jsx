@@ -14,8 +14,7 @@ import {
 } from "@mui/material";
 import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-
-import { login } from "../../../redux/actions/auth.actions";
+import { signin } from "../../../redux/actions/auth.actions";
 import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -48,7 +47,7 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (values) => {
-    dispatch(login(values.email, values.password));
+    dispatch(signin(values.email, values.password));
   };
 
   return (

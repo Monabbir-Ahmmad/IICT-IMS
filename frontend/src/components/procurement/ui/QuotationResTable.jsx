@@ -33,7 +33,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const columns = [
   {
-    field: "id",
+    field: "supplierId",
     headerName: "Supplier Id",
     headerAlign: "center",
     align: "center",

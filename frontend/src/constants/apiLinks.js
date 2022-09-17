@@ -3,9 +3,9 @@ export const API_URL = "https://localhost:5001";
 
 export const POST_REFRESH_TOKEN = "/auth/refreshtoken";
 
-export const POST_USER_REGISTER = `/auth/signup`;
+export const POST_USER_REGISTER = `/Auth/register`;
 
-export const POST_USER_LOGIN = `/auth/signin`;
+export const POST_USER_LOGIN = `/auth/login`;
 
 export const GET_USER_PROFILE = "/user/profile";
 

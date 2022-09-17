@@ -4,7 +4,6 @@ import AppBar from "@mui/material/AppBar";
 import AppIcon from "../icon/AppIcon";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import FloatingAlerts from "../snackbar/FloatingAlerts";
 import IconButton from "@mui/material/IconButton";
 import { FiMenu as MenuOpenIcon, FiX as MenuCloseIcon } from "react-icons/fi";
 import NavMenu from "./NavMenu";
@@ -124,7 +123,6 @@ function NavDrawer({ window }) {
       >
         <Toolbar />
         <Outlet />
-        <FloatingAlerts />
       </Box>
     </Box>
   );

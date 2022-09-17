@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220910194631_Mig1")]
+    [Migration("20220917190442_Mig1")]
     partial class Mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,8 +25,11 @@ namespace API.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("TEXT");
@@ -34,15 +37,21 @@ namespace API.Database.Migrations
                     b.Property<float>("EstimatedTotalPrice")
                         .HasColumnType("REAL");
 
-                    b.Property<DateTime>("IssuingDate")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("ProductCategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ProductCategoryId");
 
                     b.ToTable("Procurements");
                 });
@@ -53,10 +62,11 @@ namespace API.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Details")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<float>("EstimatedPrice")
@@ -66,12 +76,17 @@ namespace API.Database.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<string>("Manufacturer")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ProcurementId")
+                    b.Property<int>("ProcurementId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ProductCategoryId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -83,6 +98,8 @@ namespace API.Database.Migrations
 
                     b.HasIndex("ProcurementId");
 
+                    b.HasIndex("ProductCategoryId");
+
                     b.ToTable("ProcurementProducts");
                 });
 
@@ -93,6 +110,7 @@ namespace API.Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -109,14 +127,20 @@ namespace API.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ProcurementId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProcurementId")
                         .HasColumnType("INTEGER");
 
                     b.Property<float>("QuotedTotalPrice")
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("SupplierId")
+                    b.Property<int>("SupplierId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -137,22 +161,29 @@ namespace API.Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("BIN")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CompanyName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ContactNumber")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("ProductCategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Website")
                         .HasColumnType("TEXT");
@@ -160,6 +191,8 @@ namespace API.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ProductCategoryId");
 
                     b.ToTable("Suppliers");
                 });
@@ -171,12 +204,15 @@ namespace API.Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -188,7 +224,14 @@ namespace API.Database.Migrations
                 {
                     b.HasOne("API.Entities.ProductCategory", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.ProductCategory", null)
+                        .WithMany()
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Category");
                 });
@@ -197,11 +240,20 @@ namespace API.Database.Migrations
                 {
                     b.HasOne("API.Entities.ProductCategory", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("API.Entities.Procurement", "Procurement")
                         .WithMany("Products")
-                        .HasForeignKey("ProcurementId");
+                        .HasForeignKey("ProcurementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.ProductCategory", null)
+                        .WithMany()
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Category");
 
@@ -212,11 +264,15 @@ namespace API.Database.Migrations
                 {
                     b.HasOne("API.Entities.Procurement", "Procurement")
                         .WithMany("Quotations")
-                        .HasForeignKey("ProcurementId");
+                        .HasForeignKey("ProcurementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("API.Entities.Supplier", "Supplier")
                         .WithMany("Quotations")
-                        .HasForeignKey("SupplierId");
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Procurement");
 
@@ -227,7 +283,14 @@ namespace API.Database.Migrations
                 {
                     b.HasOne("API.Entities.ProductCategory", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.ProductCategory", null)
+                        .WithMany()
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Category");
                 });

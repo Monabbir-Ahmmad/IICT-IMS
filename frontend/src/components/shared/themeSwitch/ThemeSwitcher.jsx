@@ -12,7 +12,7 @@ const StyledSwitch = styled((props) => <Switch {...props} />)(({ theme }) => ({
     boxSizing: "border-box",
     width: 22,
     height: 22,
-    backgroundColor: "#FFA500",
+    backgroundColor: theme.palette.mode === "light" ? "#FFA500" : "#000a72",
     "&:before": {
       content: "''",
       position: "absolute",

@@ -1,21 +1,25 @@
-﻿namespace API.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace API.Entities
 {
-    public class Procurement
+    public class Procurement : BaseEntity
     {
         public int Id { get; set; }
 
+        [Required]
         public string Title { get; set; }
 
+        [Required]
         public ProductCategory Category { get; set; }
 
-        public DateTime IssuingDate { get; set; }
-
+        [Required]
         public DateTime Deadline { get; set; }
 
-        public List<ProcurementProduct> Products { get; set; }
-
-        public List<Quotation> Quotations { get; set; }
-
+        [Required]
         public float EstimatedTotalPrice { get; set; }
+
+        public ICollection<ProcurementProduct> Products { get; set; }
+
+        public ICollection<Quotation> Quotations { get; set; }
     }
 }

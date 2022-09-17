@@ -18,7 +18,7 @@ class AuthService {
   }
 
   async register(data) {
-    const res = await api("multipart/form-data").post(POST_USER_REGISTER, data);
+    const res = await api().post(POST_USER_REGISTER, data);
 
     tokenService.setUser({
       id: res.data.id,

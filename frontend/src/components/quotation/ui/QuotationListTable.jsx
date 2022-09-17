@@ -18,7 +18,7 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         renderCell: RenderCellExpand,
       },
       {
-        field: "issuingDate",
+        field: "createdAt",
         headerName: "Issue Date",
         type: "date",
         width: 150,
@@ -27,7 +27,7 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
-        field: "tenderDeadline",
+        field: "deadline",
         headerName: "Deadline",
         type: "date",
         width: 150,

@@ -1,6 +1,5 @@
 using API.DTOs.Request;
 using API.DTOs.Response;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Interfaces.Auth
 {

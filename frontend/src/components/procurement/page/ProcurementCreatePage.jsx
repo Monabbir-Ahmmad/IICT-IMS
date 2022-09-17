@@ -35,7 +35,7 @@ function ProcurementCreatePage() {
   const { handleSubmit, control, formState, reset } = useForm({
     defaultValues: {
       title: "",
-      tenderDeadline: "",
+      deadline: "",
       procurementCategoryId: "",
     },
   });
@@ -119,7 +119,7 @@ function ProcurementCreatePage() {
           <Stack
             direction={{ xs: "column", lg: "row" }}
             spacing={1}
-            mb={2}
+            mb={3}
             justifyContent={"space-between"}
           >
             <Typography variant="subtitle1">
@@ -181,7 +181,7 @@ function ProcurementCreatePage() {
             />
 
             <Controller
-              name="tenderDeadline"
+              name="deadline"
               control={control}
               rules={{ required: "Tender deadline is required" }}
               render={({ field, fieldState }) => (
