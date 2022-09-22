@@ -18,15 +18,11 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { currencyFormatter } from "../../../utils/utilities";
-import { getAllProductCategories } from "../../../redux/actions/productCategory.actions";
 import { createProcurement } from "../../../redux/actions/procurement.actions";
+import autoCompleteService from "../../../services/autoComplete.service";
 
 function ProcurementCreatePage() {
   const dispatch = useDispatch();
-
-  const { productCategories } = useSelector(
-    (state) => state.productCategoryList
-  );
 
   const { loading, success, error } = useSelector(
     (state) => state.procurementCreate
@@ -43,10 +39,20 @@ function ProcurementCreatePage() {
 
   const [products, setProducts] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [productCategories, setProductCategories] = useState([]);
 
   useEffect(() => {
-    dispatch(getAllProductCategories());
-  }, [dispatch]);
+    const fetchProductCategories = async () => {
+      try {
+        const { data } = await autoCompleteService.getProductCategories();
+        setProductCategories(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProductCategories();
+  }, []);
 
   useEffect(() => {
     if (success) {
@@ -77,15 +83,6 @@ function ProcurementCreatePage() {
   };
 
   const onSubmit = (data) => {
-    console.log({
-      ...data,
-      estimatedTotalPrice: products.reduce(
-        (acc, item) => acc + item.estimatedTotalPrice,
-        0
-      ),
-      products,
-    });
-
     dispatch(
       createProcurement({
         ...data,
@@ -190,7 +187,9 @@ function ProcurementCreatePage() {
                     disablePast
                     label="Tender Deadline"
                     value={field.value}
-                    onChange={(newValue) => field.onChange(newValue)}
+                    onChange={(newValue) =>
+                      field.onChange(newValue.format("YYYY-MM-DD"))
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}

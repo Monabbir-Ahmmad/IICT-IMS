@@ -16,11 +16,6 @@ namespace API.MapperProfiles
                 .ForMember(
                     dest => dest.ProcurementName,
                     opt => opt.MapFrom(src => src.Procurement.Title)
-                )
-                .ForMember(dest => dest.SupplierId, opt => opt.MapFrom(src => src.Supplier.Id))
-                .ForMember(
-                    dest => dest.SupplierName,
-                    opt => opt.MapFrom(src => src.Supplier.CompanyName)
                 );
         }
     }

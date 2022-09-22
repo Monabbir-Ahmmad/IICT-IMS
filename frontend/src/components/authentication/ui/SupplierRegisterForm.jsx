@@ -14,8 +14,8 @@ import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../../redux/actions/auth.actions";
-import { getAllProductCategories } from "../../../redux/actions/productCategory.actions";
 import { UserRoles } from "../../../constants/userRoles";
+import autoCompleteService from "../../../services/autoComplete.service";
 
 const FormContainer = styled.form`
   display: flex;
@@ -44,20 +44,27 @@ function SupplierRegisterForm() {
 
   const dispatch = useDispatch();
 
-  const { loading, error } = useSelector((state) => state.userLogin);
-
-  const { productCategories: supplierCategories } = useSelector(
-    (state) => state.productCategoryList
-  );
+  const { loading, error } = useSelector((state) => state.userRegister);
 
   const [showPassword, setShowPassword] = useState({
     password: false,
     confirmPassword: false,
   });
 
+  const [supplierCategories, setSupplierCategories] = useState([]);
+
   useEffect(() => {
-    dispatch(getAllProductCategories());
-  }, [dispatch]);
+    const fetchSupplierCategories = async () => {
+      try {
+        const { data } = await autoCompleteService.getProductCategories();
+        setSupplierCategories(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSupplierCategories();
+  }, []);
 
   const handlePasswordShowClick = (value) => {
     setShowPassword({ ...showPassword, [value]: !showPassword[value] });

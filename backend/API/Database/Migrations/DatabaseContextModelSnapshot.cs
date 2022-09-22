@@ -125,7 +125,13 @@ namespace API.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DeliveryDeadline")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProcurementId")

@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { MdPublish as SendQuotationIcon } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getProcurement } from "../../../redux/actions/procurement.actions";
 import { createQuotation } from "../../../redux/actions/quotation.actions";
 import { currencyFormatter } from "../../../utils/utilities";
@@ -25,12 +25,8 @@ function QuotationOfferPage() {
   const dispatch = useDispatch();
   const { procurementId } = useParams();
 
-  const [searchParams] = useSearchParams();
-
-  const supplierId = parseInt(searchParams.get("sid") || "1");
-
+  const { userAuth } = useSelector((state) => state.userLogin);
   const singleProcurement = useSelector((state) => state.singleProcurement);
-
   const quotationCreate = useSelector((state) => state.quotationCreate);
 
   const { handleSubmit, control, reset } = useForm({
@@ -48,7 +44,9 @@ function QuotationOfferPage() {
   }, [quotationCreate.success, reset]);
 
   const onSubmit = (values) => {
-    dispatch(createQuotation({ ...values, procurementId, supplierId }));
+    dispatch(
+      createQuotation({ ...values, procurementId, supplierId: userAuth.id })
+    );
   };
 
   return (
@@ -59,10 +57,6 @@ function QuotationOfferPage() {
 
       {singleProcurement.error && (
         <Alert severity="error">{singleProcurement.error}</Alert>
-      )}
-
-      {quotationCreate.error && (
-        <Alert severity="error">{quotationCreate.error}</Alert>
       )}
 
       <Paper>
@@ -134,6 +128,19 @@ function QuotationOfferPage() {
             <strong>
               {currencyFormatter().format(
                 singleProcurement.procurement?.estimatedTotalPrice
+              )}
+            </strong>
+          </Typography>
+
+          <Divider />
+
+          <Typography variant={"body1"}>
+            Your Quoted Total Price:{" "}
+            <strong>
+              {currencyFormatter().format(
+                singleProcurement.procurement?.quotations.find(
+                  (quotation) => quotation.supplier.id === Number(userAuth.id)
+                )?.quotedTotalPrice
               )}
             </strong>
           </Typography>

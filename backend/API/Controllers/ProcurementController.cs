@@ -51,5 +51,13 @@ namespace API.Controllers
         {
             return await _procurementService.GetProcurements(procurementsGetParams);
         }
+
+        [HttpPut("acceptQuotation")]
+        public async Task<ActionResult<ProcurementResDto>> AcceptProcurementQuotation(
+            QuotationAcceptReqDto quotationAcceptReqDto
+        )
+        {
+            return await _procurementService.AcceptProcurementQuotation(quotationAcceptReqDto);
+        }
     }
 }

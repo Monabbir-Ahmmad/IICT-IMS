@@ -24,9 +24,6 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthResDto>> Register(RegisterReqDto registerDto)
         {
-            if (await _authService.UserExists(registerDto.Email))
-                throw new ApiException(HttpStatusCode.Conflict, "User already exists.");
-
             var result = await _authService.RegisterUser(registerDto);
 
             HttpContext.Response.Cookies.Append(
@@ -57,15 +54,6 @@ namespace API.Controllers
             SupplierRegisterReqDto supplierRegisterDto
         )
         {
-            if (
-                await _authService.SupplierExists(
-                    supplierRegisterDto.BIN,
-                    supplierRegisterDto.Email,
-                    supplierRegisterDto.CompanyName
-                )
-            )
-                throw new ApiException(HttpStatusCode.Conflict, "Supplier already exists.");
-
             var result = await _authService.RegisterSupplier(supplierRegisterDto);
 
             HttpContext.Response.Cookies.Append(

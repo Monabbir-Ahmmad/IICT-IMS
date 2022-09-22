@@ -13,12 +13,14 @@ class AuthService {
 
     const decodedToken = tokenService.decodeToken(res.data.token);
 
-    tokenService.setUser({
+    res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
       refreshToken: res.data.token,
       accessToken: res.data.token,
-    });
+    };
+
+    tokenService.setUser(res.data);
 
     return res;
   }
@@ -28,12 +30,14 @@ class AuthService {
 
     const decodedToken = tokenService.decodeToken(res.data.token);
 
-    tokenService.setUser({
+    res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
       refreshToken: res.data.token,
       accessToken: res.data.token,
-    });
+    };
+
+    tokenService.setUser(res.data);
 
     return res;
   }
@@ -43,12 +47,14 @@ class AuthService {
 
     const decodedToken = tokenService.decodeToken(res.data.token);
 
-    tokenService.setUser({
+    res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
       refreshToken: res.data.token,
       accessToken: res.data.token,
-    });
+    };
+
+    tokenService.setUser(res.data);
 
     return res;
   }
@@ -58,12 +64,14 @@ class AuthService {
 
     const decodedToken = tokenService.decodeToken(res.data.token);
 
-    tokenService.setUser({
+    res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
       refreshToken: res.data.token,
       accessToken: res.data.token,
-    });
+    };
+
+    tokenService.setUser(res.data);
 
     return res;
   }

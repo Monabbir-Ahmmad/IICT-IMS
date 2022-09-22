@@ -14,7 +14,7 @@ namespace API.DTOs.Request
         public float EstimatedTotalPrice { get; set; }
 
         [Required]
-        public DateTime TenderDeadline { get; set; }
+        public DateTime Deadline { get; set; }
 
         [Required]
         public List<ProcurementProductReqDto> Products { get; set; }

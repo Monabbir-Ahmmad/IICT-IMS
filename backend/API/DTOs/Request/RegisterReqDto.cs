@@ -10,6 +10,9 @@ namespace API.DTOs.Request
         [Required, EmailAddress]
         public string Email { get; set; }
 
+        [Required]
+        public int UserRoleId { get; set; }
+
         [
             Required,
             RegularExpression(

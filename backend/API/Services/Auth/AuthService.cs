@@ -1,3 +1,4 @@
+using System.Net;
 using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
@@ -22,10 +23,21 @@ namespace API.Services.Auth
 
         public async Task<AuthResDto> RegisterUser(RegisterReqDto registerDto)
         {
+            if (await this.UserExists(registerDto.Email))
+                throw new ApiException(HttpStatusCode.Conflict, "User already exists.");
+
+            var userRole = await _context.UserRoles.FirstOrDefaultAsync(
+                ur => ur.Id == registerDto.UserRoleId
+            );
+
+            if (userRole == null)
+                throw new ApiException(HttpStatusCode.NotFound, "User role does not exist.");
+
             var user = new User
             {
                 Username = registerDto.Username,
                 Email = registerDto.Email,
+                Role = userRole,
                 Password = BCrypt.Net.BCrypt.HashPassword(registerDto.Password)
             };
 
@@ -34,18 +46,27 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                Token = _tokenService.CreateToken(user.Id, user.Email, "User")
+                Token = _tokenService.CreateToken(user.Id, user.Email, user.Role.RoleName),
             };
         }
 
         public async Task<AuthResDto> RegisterSupplier(SupplierRegisterReqDto supplierRegisterDto)
         {
+            if (
+                await this.SupplierExists(
+                    supplierRegisterDto.BIN,
+                    supplierRegisterDto.Email,
+                    supplierRegisterDto.CompanyName
+                )
+            )
+                throw new ApiException(HttpStatusCode.Conflict, "Supplier already exists.");
+
             var supplierCategory = await _context.ProductCategories
                 .Where(x => x.Id == supplierRegisterDto.SupplierCategoryId)
                 .FirstOrDefaultAsync();
 
             if (supplierCategory == null)
-                throw new BadRequestException("Supplier category not found");
+                throw new ApiException(HttpStatusCode.NotFound, "Supplier category not found");
 
             var supplier = new Supplier
             {
@@ -73,7 +94,10 @@ namespace API.Services.Auth
 
         public async Task<AuthResDto> LoginUser(LoginReqDto loginDto)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email);
+            var user = await _context.Users
+                .Where(x => x.Email == loginDto.Email)
+                .Include(x => x.Role)
+                .SingleOrDefaultAsync();
 
             if (user == null)
                 throw new UnauthorizedException("Invalid email address.");

@@ -11,5 +11,9 @@ namespace API.Interfaces.Procurement
         Task<List<ProcurementResDto>> GetProcurements(ProcurementsGetParams procurementsGetParams);
 
         Task<ProcurementResDto> GetProcurement(int id);
+
+        Task<ProcurementResDto> AcceptProcurementQuotation(
+            QuotationAcceptReqDto quotationAcceptReqDto
+        );
     }
 }

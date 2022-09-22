@@ -44,7 +44,7 @@ const reducer = combineReducers({
 });
 
 const initialState = {
-  userLogin: { userAuthInfo: tokenService.getUser() },
+  userLogin: { userAuth: tokenService.getUser() },
 };
 
 const reduxStore = configureStore({ reducer, preloadedState: initialState });

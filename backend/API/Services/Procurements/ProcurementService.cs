@@ -35,7 +35,7 @@ namespace API.Services.Procurements
                 Title = procurementReqDto.Title,
                 Category = procurementCategory,
                 EstimatedTotalPrice = procurementReqDto.EstimatedTotalPrice,
-                Deadline = procurementReqDto.TenderDeadline,
+                Deadline = procurementReqDto.Deadline,
                 Products = procurementReqDto.Products.ConvertAll<ProcurementProduct>(
                     x =>
                         new ProcurementProduct
@@ -81,6 +81,7 @@ namespace API.Services.Procurements
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Quotations)
                 .ThenInclude(x => x.Supplier)
+                .ThenInclude(s => s.Category)
                 .FirstOrDefaultAsync();
 
             if (procurement == null)
@@ -113,6 +114,40 @@ namespace API.Services.Procurements
             var procurementListResDto = _mapper.Map<List<ProcurementResDto>>(procurementList);
 
             return procurementListResDto;
+        }
+
+        public async Task<ProcurementResDto> AcceptProcurementQuotation(
+            QuotationAcceptReqDto quotationAcceptReqDto
+        )
+        {
+            if (
+                await _context.Quotations.AnyAsync(
+                    x =>
+                        x.Procurement.Id == quotationAcceptReqDto.ProcurementId
+                        && x.Accepted == true
+                )
+            )
+                throw new ApiException(
+                    HttpStatusCode.Conflict,
+                    "A quotation has already been selected for this procurement."
+                );
+
+            var quotation = await _context.Quotations.SingleOrDefaultAsync(
+                x =>
+                    x.Id == quotationAcceptReqDto.QuotationId
+                    && x.Procurement.Id == quotationAcceptReqDto.ProcurementId
+            );
+
+            if (quotation == null)
+                throw new NotFoundException("Quotation not found.");
+
+            quotation.Accepted = true;
+            quotation.DeliveryDeadline = quotationAcceptReqDto.DeliveryDeadline;
+
+            _context.Quotations.Update(quotation);
+            await _context.SaveChangesAsync();
+
+            return await GetProcurement(quotationAcceptReqDto.ProcurementId);
         }
     }
 }

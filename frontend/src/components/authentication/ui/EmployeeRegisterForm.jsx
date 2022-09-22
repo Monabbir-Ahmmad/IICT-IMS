@@ -5,15 +5,17 @@ import {
   IconButton,
   InputAdornment,
   LinearProgress,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../../redux/actions/auth.actions";
 import { UserRoles } from "../../../constants/userRoles";
+import autoCompleteService from "../../../services/autoComplete.service";
 
 const FormContainer = styled.form`
   display: flex;
@@ -30,6 +32,7 @@ function EmployeeRegisterForm() {
     defaultValues: {
       username: "",
       email: "",
+      userRoleId: "",
       password: "",
       confirmPassword: "",
     },
@@ -37,12 +40,27 @@ function EmployeeRegisterForm() {
 
   const dispatch = useDispatch();
 
-  const { loading, error } = useSelector((state) => state.userLogin);
+  const { loading, error } = useSelector((state) => state.userRegister);
 
   const [showPassword, setShowPassword] = useState({
     password: false,
     confirmPassword: false,
   });
+
+  const [userRoles, setUserRoles] = useState([]);
+
+  useEffect(() => {
+    const fetchUserRoles = async () => {
+      try {
+        const { data } = await autoCompleteService.getUserRoles();
+        setUserRoles(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserRoles();
+  }, []);
 
   const handlePasswordShowClick = (value) => {
     setShowPassword({ ...showPassword, [value]: !showPassword[value] });
@@ -86,6 +104,28 @@ function EmployeeRegisterForm() {
             error={!!fieldState.error}
             helperText={fieldState.error?.message}
           />
+        )}
+      />
+
+      <Controller
+        name="userRoleId"
+        control={control}
+        rules={{ required: "User role is required" }}
+        render={({ field, fieldState }) => (
+          <TextField
+            {...field}
+            select
+            label="Role"
+            variant="outlined"
+            error={!!fieldState.error}
+            helperText={fieldState.error?.message}
+          >
+            {userRoles.map((role) => (
+              <MenuItem key={role.id} value={role.id}>
+                {role.roleName}
+              </MenuItem>
+            ))}
+          </TextField>
         )}
       />
 

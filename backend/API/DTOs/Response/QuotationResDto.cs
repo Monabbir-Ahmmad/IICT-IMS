@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace API.DTOs.Response
 {
     public class QuotationResDto
@@ -13,12 +8,14 @@ namespace API.DTOs.Response
 
         public string ProcurementName { get; set; }
 
-        public int SupplierId { get; set; }
-
-        public string SupplierName { get; set; }
-
         public DateTime CreatedAt { get; set; }
 
         public float QuotedTotalPrice { get; set; }
+
+        public bool Accepted { get; set; }
+
+        public DateTime DeliveryDeadline { get; set; }
+
+        public SupplierDetailsResDto Supplier { get; set; }
     }
 }

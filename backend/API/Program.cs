@@ -1,11 +1,13 @@
 using API.Database;
 using API.Database.Seed;
 using API.Interfaces.Auth;
+using API.Interfaces.AutoComplete;
 using API.Interfaces.Procurement;
 using API.Interfaces.ProductCategory;
 using API.Interfaces.Quotation;
 using API.Middlewares;
 using API.Services.Auth;
+using API.Services.AutoComplete;
 using API.Services.Procurements;
 using API.Services.ProductCategories;
 using API.Services.Quotations;
@@ -24,6 +26,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // Dependency injections
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
 builder.Services.AddScoped<IProcurementService, ProcurementService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IQuotationService, QuotationService>();

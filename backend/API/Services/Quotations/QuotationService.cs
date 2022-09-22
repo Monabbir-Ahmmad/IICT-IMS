@@ -32,7 +32,7 @@ namespace API.Services.Quotations
                         && x.Supplier.Id == quotationCreateReqDto.SupplierId
                 )
             )
-                throw new ApiException(HttpStatusCode.Conflict, "Quotation already exists.");
+                throw new ApiException(HttpStatusCode.Conflict, "Quotation already offered.");
 
             var supplier = await _context.Suppliers
                 .Where(x => x.Id == quotationCreateReqDto.SupplierId)
@@ -73,6 +73,7 @@ namespace API.Services.Quotations
                 .Where(q => q.Id == quotationId)
                 .Include(q => q.Procurement)
                 .Include(q => q.Supplier)
+                .ThenInclude(s => s.Category)
                 .FirstOrDefaultAsync();
 
             if (quotation == null)
@@ -88,6 +89,7 @@ namespace API.Services.Quotations
             var quotations = await _context.Quotations
                 .Include(q => q.Procurement)
                 .Include(q => q.Supplier)
+                .ThenInclude(s => s.Category)
                 .Where(q => q.Procurement.Id == procurementId)
                 .ToListAsync();
 

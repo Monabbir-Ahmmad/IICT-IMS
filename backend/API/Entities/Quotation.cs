@@ -14,5 +14,9 @@ namespace API.Entities
 
         [Required]
         public float QuotedTotalPrice { get; set; }
+
+        public bool Accepted { get; set; }
+
+        public DateTime? DeliveryDeadline { get; set; }
     }
 }

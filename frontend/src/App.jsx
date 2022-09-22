@@ -12,6 +12,9 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { RiCloseLine as CloseIcon } from "react-icons/ri";
 import RegisterPage from "./components/authentication/page/RegisterPage";
+import AuthGuard from "./components/shared/authGuard/AuthGurad";
+import { UserRoles } from "./constants/userRoles";
+import InventoryPage from "./components/inventory/page/InventoryPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -38,24 +41,52 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+
       <Route path="/register" element={<RegisterPage />} />
 
-      <Route path="/" element={<NavDrawer />}>
-        <Route path="procurements" element={<ProcurementPage />} />
-        <Route
-          path="procurements/:procurementId"
-          element={<SingleProcurementPage />}
-        />
-        <Route path="procurements/create" element={<ProcurementCreatePage />} />
-        <Route path="quotations" element={<QuotationPage />} />
-        <Route
-          path="quotations/:procurementId"
-          element={<QuotationOfferPage />}
-        />
-        <Route
-          path="*"
-          element={<Typography variant="h4">Sorry! Page Not Found</Typography>}
-        />
+      <Route element={<AuthGuard />}>
+        <Route path="/" element={<NavDrawer />}>
+          <Route element={<AuthGuard allowedRoles={[UserRoles.EMPLOYEE]} />}>
+            <Route path="inventory" element={<InventoryPage />} />
+
+            <Route path="procurements" element={<ProcurementPage />} />
+
+            <Route
+              path="procurements/:procurementId"
+              element={<SingleProcurementPage />}
+            />
+
+            <Route
+              path="procurements/create"
+              element={<ProcurementCreatePage />}
+            />
+          </Route>
+
+          <Route element={<AuthGuard allowedRoles={[UserRoles.SUPPLIER]} />}>
+            <Route path="quotations" element={<QuotationPage />} />
+
+            <Route
+              path="quotations/:procurementId"
+              element={<QuotationOfferPage />}
+            />
+          </Route>
+
+          <Route
+            path="unauthorized"
+            element={
+              <Typography variant="h4">
+                You are not authorized to access this page
+              </Typography>
+            }
+          />
+
+          <Route
+            path="*"
+            element={
+              <Typography variant="h4">Sorry! Page Not Found</Typography>
+            }
+          />
+        </Route>
       </Route>
     </Routes>
   );

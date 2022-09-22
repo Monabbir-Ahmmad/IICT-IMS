@@ -169,6 +169,8 @@ namespace API.Database.Migrations
                     ProcurementId = table.Column<int>(type: "INTEGER", nullable: false),
                     SupplierId = table.Column<int>(type: "INTEGER", nullable: false),
                     QuotedTotalPrice = table.Column<float>(type: "REAL", nullable: false),
+                    Accepted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeliveryDeadline = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

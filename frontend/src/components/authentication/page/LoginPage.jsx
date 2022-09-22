@@ -1,10 +1,5 @@
 import { Box, Link, Paper, Stack, Typography, useTheme } from "@mui/material";
-import {
-  Link as RouterLink,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import AuthIntro from "../ui/AuthIntro";
 import LoginForm from "../ui/LoginForm";
 import styled from "@emotion/styled";
@@ -24,17 +19,16 @@ function LoginPage() {
   const theme = useTheme();
 
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const redirect = location?.state?.from?.pathname || "/";
 
-  const redirect = searchParams.get("redirect");
-
-  const { userAuthInfo } = useSelector((state) => state.userLogin);
+  const { userAuth } = useSelector((state) => state.userLogin);
 
   useEffect(() => {
-    if (userAuthInfo?.id) {
-      navigate(redirect ? `/${redirect}` : "/home", { replace: true });
+    if (userAuth?.id) {
+      navigate(redirect, { replace: true });
     }
-  }, [navigate, redirect, userAuthInfo]);
+  }, [navigate, redirect, userAuth]);
 
   return (
     <Stack
