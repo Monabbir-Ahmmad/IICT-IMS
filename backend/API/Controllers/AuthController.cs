@@ -1,6 +1,8 @@
+using System.Net;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
+using API.Errors;
 using API.Interfaces.Auth;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,59 +24,32 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthResDto>> Register(RegisterReqDto registerDto)
         {
-            try
-            {
-                if (await _authService.UserExists(registerDto.Email))
-                    return Conflict("User already exists");
+            if (await _authService.UserExists(registerDto.Email))
+                throw new ApiException(HttpStatusCode.Conflict, "User already exists.");
 
-                var result = await _authService.RegisterUser(registerDto);
+            var result = await _authService.RegisterUser(registerDto);
 
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                result.Token.ToString(),
+                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+            );
 
-                return Created("User created", result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Created("User created", result);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<AuthResDto>> Login(LoginReqDto loginDto)
         {
-            try
-            {
-                var result = await _authService.LoginUser(loginDto);
+            var result = await _authService.LoginUser(loginDto);
 
-                if (result == null)
-                    return Unauthorized("Invalid credentials");
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                result.Token.ToString(),
+                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+            );
 
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Ok(result);
         }
 
         [HttpPost("supplier/register")]
@@ -82,68 +57,38 @@ namespace API.Controllers
             SupplierRegisterReqDto supplierRegisterDto
         )
         {
-            try
-            {
-                if (
-                    await _authService.SupplierExists(
-                        supplierRegisterDto.BIN,
-                        supplierRegisterDto.Email,
-                        supplierRegisterDto.CompanyName
-                    )
+            if (
+                await _authService.SupplierExists(
+                    supplierRegisterDto.BIN,
+                    supplierRegisterDto.Email,
+                    supplierRegisterDto.CompanyName
                 )
-                    return Conflict("Supplier already exists");
+            )
+                throw new ApiException(HttpStatusCode.Conflict, "Supplier already exists.");
 
-                var result = await _authService.RegisterSupplier(supplierRegisterDto);
+            var result = await _authService.RegisterSupplier(supplierRegisterDto);
 
-                if (result == null)
-                    return BadRequest("Failed to create supplier");
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                result.Token.ToString(),
+                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+            );
 
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
-
-                return Created("Supplier created", result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Created("Supplier created", result);
         }
 
         [HttpPost("supplier/login")]
         public async Task<ActionResult<AuthResDto>> SupplierLogin(LoginReqDto loginDto)
         {
-            try
-            {
-                var result = await _authService.LoginUser(loginDto);
+            var result = await _authService.LoginSupplier(loginDto);
 
-                if (result == null)
-                    return Unauthorized("Invalid credentials");
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                result.Token.ToString(),
+                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+            );
 
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Ok(result);
         }
     }
 }

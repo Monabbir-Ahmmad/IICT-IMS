@@ -1,5 +1,9 @@
-import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Box, Link, Paper, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Link as RouterLink,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 
 import AuthIntro from "../ui/AuthIntro";
 import LoginForm from "../ui/LoginForm";
@@ -16,7 +20,7 @@ const Wrapper = styled(Box)`
   padding: 2rem;
 `;
 
-function LoginRegPage() {
+function LoginPage() {
   const theme = useTheme();
 
   const navigate = useNavigate();
@@ -34,18 +38,15 @@ function LoginRegPage() {
 
   return (
     <Stack
-      direction={{ xs: "column", lg: "row" }}
+      spacing={2}
       minHeight={"100vh"}
       bgcolor={theme.palette.backgroundColor}
-      position={"relative"}
     >
       <Stack
         width={1}
         direction={"row"}
         gap={1}
         alignItems={"center"}
-        position={{ xs: "relative", md: "absolute" }}
-        top={0}
         px={4}
         pt={3}
       >
@@ -66,19 +67,50 @@ function LoginRegPage() {
         <ThemeSwitcher />
       </Stack>
 
-      <Wrapper style={{ flex: 1.3 }} display={{ xs: "none", lg: "flex" }}>
-        <AuthIntro />
-      </Wrapper>
-      <Wrapper style={{ flex: 1 }}>
-        <Paper
-          variant="outlined"
-          sx={{ px: { xs: 3, sm: 6 }, py: { xs: 5, sm: 10 } }}
-        >
-          <LoginForm />
-        </Paper>
-      </Wrapper>
+      <Stack direction={{ xs: "column", lg: "row" }}>
+        <Wrapper style={{ flex: 1.3 }} display={{ xs: "none", lg: "flex" }}>
+          <AuthIntro />
+        </Wrapper>
+        <Wrapper style={{ flex: 1 }}>
+          <Paper
+            variant="outlined"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+              px: { xs: 3, sm: 6 },
+              py: { xs: 5, sm: 7 },
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{ textTransform: "uppercase" }}
+              color="primary"
+              textAlign={"center"}
+            >
+              Login
+            </Typography>
+
+            <Typography
+              variant="h6"
+              textAlign={"center"}
+              color={"text.secondary"}
+            >
+              Login to continue using the app
+            </Typography>
+
+            <LoginForm />
+            <Typography>
+              Don't have an account?{" "}
+              <Link component={RouterLink} to="/register" underline="hover">
+                Sign up
+              </Link>
+            </Typography>
+          </Paper>
+        </Wrapper>
+      </Stack>
     </Stack>
   );
 }
 
-export default LoginRegPage;
+export default LoginPage;

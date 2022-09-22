@@ -5,6 +5,7 @@ namespace API.Database
 {
     public class DatabaseContext : DbContext
     {
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }

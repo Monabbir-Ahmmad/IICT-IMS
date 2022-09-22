@@ -14,5 +14,8 @@ namespace API.Entities
 
         [Required]
         public string Password { get; set; }
+
+        [Required]
+        public UserRole Role { get; set; }
     }
 }
