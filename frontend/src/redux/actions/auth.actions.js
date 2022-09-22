@@ -8,21 +8,27 @@ import {
   USER_REGISTER_SUCCESS,
 } from "../action_types/auth";
 import authService from "../../services/auth.service";
+import { UserRoles } from "../../constants/userRoles";
 
-export const signup = (registrationData) => async (dispatch) => {
+export const signup = (registrationData, userType) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
 
-    const res = await authService.register(registrationData);
+    let res;
+    if (userType === UserRoles.EMPLOYEE) {
+      res = await authService.register(registrationData);
+    } else if (userType === UserRoles.SUPPLIER) {
+      res = await authService.registerSupplier(registrationData);
+    }
 
     dispatch({
       type: USER_REGISTER_SUCCESS,
-      payload: res.data,
+      payload: res?.data,
     });
 
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: res.data,
+      payload: res?.data,
     });
   } catch (error) {
     dispatch({
@@ -35,11 +41,17 @@ export const signup = (registrationData) => async (dispatch) => {
   }
 };
 
-export const signin = (email, password) => async (dispatch) => {
+export const signin = (email, password, userType) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
 
-    const res = await authService.login(email, password);
+    let res;
+
+    if (userType === UserRoles.EMPLOYEE) {
+      res = await authService.login(email, password);
+    } else if (userType === UserRoles.SUPPLIER) {
+      res = await authService.loginSupplier(email, password);
+    }
 
     dispatch({
       type: USER_LOGIN_SUCCESS,

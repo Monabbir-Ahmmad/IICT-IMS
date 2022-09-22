@@ -1,4 +1,5 @@
 using API.Database;
+using API.Database.Seed;
 using API.Interfaces.Auth;
 using API.Interfaces.Procurement;
 using API.Interfaces.ProductCategory;
@@ -51,5 +52,20 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+try
+{
+    var context = services.GetRequiredService<DatabaseContext>();
+    await context.Database.MigrateAsync();
+    await SeedDatabase.SeedDataAsync(context);
+}
+catch (Exception ex)
+{
+    var logger = loggerFactory.CreateLogger<Program>();
+    logger.LogError(ex, "An error occurred during migration");
+}
 
 app.Run();

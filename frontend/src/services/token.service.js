@@ -1,4 +1,10 @@
+import jwt_decode from "jwt-decode";
+
 class TokenService {
+  decodeToken(token) {
+    return jwt_decode(token);
+  }
+
   getLocalRefreshToken() {
     const user = JSON.parse(localStorage.getItem("user"));
     return user?.refreshToken;

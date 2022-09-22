@@ -20,7 +20,7 @@ namespace API.Services.Auth
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, Id.ToString()),
+                new Claim("id", Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, Email),
                 new Claim(ClaimTypes.Role, role)
             };

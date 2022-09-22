@@ -1,4 +1,9 @@
-import { POST_USER_LOGIN, POST_USER_REGISTER } from "../constants/apiLinks";
+import {
+  POST_SUPPLIER_LOGIN,
+  POST_SUPPLIER_REGISTER,
+  POST_USER_LOGIN,
+  POST_USER_REGISTER,
+} from "../constants/apiLinks";
 import api from "./api";
 import tokenService from "./token.service";
 
@@ -6,12 +11,13 @@ class AuthService {
   async login(email, password) {
     const res = await api().post(POST_USER_LOGIN, { email, password });
 
+    const decodedToken = tokenService.decodeToken(res.data.token);
+
     tokenService.setUser({
-      id: res.data.id,
-      name: res.data.name,
-      profileImage: res.data.profileImage,
-      refreshToken: res.data.refreshToken,
-      accessToken: res.data.accessToken,
+      id: decodedToken.id,
+      role: decodedToken.role,
+      refreshToken: res.data.token,
+      accessToken: res.data.token,
     });
 
     return res;
@@ -20,12 +26,43 @@ class AuthService {
   async register(data) {
     const res = await api().post(POST_USER_REGISTER, data);
 
+    const decodedToken = tokenService.decodeToken(res.data.token);
+
     tokenService.setUser({
-      id: res.data.id,
-      name: res.data.name,
-      profileImage: res.data.profileImage,
-      refreshToken: res.data.refreshToken,
-      accessToken: res.data.accessToken,
+      id: decodedToken.id,
+      role: decodedToken.role,
+      refreshToken: res.data.token,
+      accessToken: res.data.token,
+    });
+
+    return res;
+  }
+
+  async loginSupplier(email, password) {
+    const res = await api().post(POST_SUPPLIER_LOGIN, { email, password });
+
+    const decodedToken = tokenService.decodeToken(res.data.token);
+
+    tokenService.setUser({
+      id: decodedToken.id,
+      role: decodedToken.role,
+      refreshToken: res.data.token,
+      accessToken: res.data.token,
+    });
+
+    return res;
+  }
+
+  async registerSupplier(data) {
+    const res = await api().post(POST_SUPPLIER_REGISTER, data);
+
+    const decodedToken = tokenService.decodeToken(res.data.token);
+
+    tokenService.setUser({
+      id: decodedToken.id,
+      role: decodedToken.role,
+      refreshToken: res.data.token,
+      accessToken: res.data.token,
     });
 
     return res;

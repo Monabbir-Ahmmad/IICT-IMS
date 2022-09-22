@@ -1,6 +1,6 @@
 import { IconButton, Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
-import AuthPage from "./components/authentication/page/AuthPage";
+import LoginPage from "./components/authentication/page/LoginPage";
 import ProcurementCreatePage from "./components/procurement/page/ProcurementCreatePage";
 import ProcurementPage from "./components/procurement/page/ProcurementPage";
 import SingleProcurementPage from "./components/procurement/page/SingleProcurementPage";
@@ -11,6 +11,7 @@ import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { RiCloseLine as CloseIcon } from "react-icons/ri";
+import RegisterPage from "./components/authentication/page/RegisterPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -36,7 +37,8 @@ function App() {
 
   return (
     <Routes>
-      <Route index element={<AuthPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
 
       <Route path="/" element={<NavDrawer />}>
         <Route path="procurements" element={<ProcurementPage />} />

@@ -2,6 +2,8 @@ using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
+using API.Enums;
+using API.Errors;
 using API.Interfaces.Auth;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,32 +38,6 @@ namespace API.Services.Auth
             };
         }
 
-        public async Task<AuthResDto> LoginUser(LoginReqDto loginDto)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email);
-
-            if (user == null)
-                return null;
-
-            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
-                return null;
-
-            return new AuthResDto
-            {
-                Token = _tokenService.CreateToken(user.Id, user.Email, "User")
-            };
-        }
-
-        public async Task<bool> UserExists(string email)
-        {
-            return await _context.Users.AnyAsync(x => x.Email == email);
-        }
-
-        public Task<bool> PasswordMatch(string username, string password)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<AuthResDto> RegisterSupplier(SupplierRegisterReqDto supplierRegisterDto)
         {
             var supplierCategory = await _context.ProductCategories
@@ -69,9 +45,7 @@ namespace API.Services.Auth
                 .FirstOrDefaultAsync();
 
             if (supplierCategory == null)
-            {
-                return null;
-            }
+                throw new BadRequestException("Supplier category not found");
 
             var supplier = new Supplier
             {
@@ -89,8 +63,55 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                Token = _tokenService.CreateToken(supplier.Id, supplier.Email, "Supplier")
+                Token = _tokenService.CreateToken(
+                    supplier.Id,
+                    supplier.Email,
+                    UserRoleEnum.Supplier
+                )
             };
+        }
+
+        public async Task<AuthResDto> LoginUser(LoginReqDto loginDto)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email);
+
+            if (user == null)
+                throw new UnauthorizedException("Invalid email address.");
+
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+                throw new UnauthorizedException("Invalid password.");
+
+            return new AuthResDto
+            {
+                Token = _tokenService.CreateToken(user.Id, user.Email, user.Role.RoleName)
+            };
+        }
+
+        public async Task<AuthResDto> LoginSupplier(LoginReqDto loginDto)
+        {
+            var supplier = await _context.Suppliers.SingleOrDefaultAsync(
+                x => x.Email == loginDto.Email
+            );
+
+            if (supplier == null)
+                throw new UnauthorizedException("Invalid email address.");
+
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, supplier.Password))
+                throw new UnauthorizedException("Invalid password.");
+
+            return new AuthResDto
+            {
+                Token = _tokenService.CreateToken(
+                    supplier.Id,
+                    supplier.Email,
+                    UserRoleEnum.Supplier
+                )
+            };
+        }
+
+        public async Task<bool> UserExists(string email)
+        {
+            return await _context.Users.AnyAsync(x => x.Email == email);
         }
 
         public async Task<bool> SupplierExists(string BIN, string email, string companyName)

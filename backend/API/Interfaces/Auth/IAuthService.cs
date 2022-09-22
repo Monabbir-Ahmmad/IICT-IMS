@@ -8,8 +8,8 @@ namespace API.Interfaces.Auth
         Task<AuthResDto> RegisterUser(RegisterReqDto registerDto);
         Task<AuthResDto> RegisterSupplier(SupplierRegisterReqDto supplierRegisterDto);
         Task<AuthResDto> LoginUser(LoginReqDto loginDto);
+        Task<AuthResDto> LoginSupplier(LoginReqDto loginDto);
         Task<bool> UserExists(string email);
         Task<bool> SupplierExists(string BIN, string email, string companyName);
-        Task<bool> PasswordMatch(string username, string password);
     }
 }
