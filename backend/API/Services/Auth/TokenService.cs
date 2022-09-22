@@ -40,5 +40,26 @@ namespace API.Services.Auth
 
             return tokenHandler.WriteToken(token);
         }
+
+        public string? DecodeToken(HttpContext httpContext)
+        {
+            try
+            {
+                var token = httpContext.Request.Cookies["authorization"];
+                if (token == null) { return null; }
+
+                token = token.Split(" ").Last();
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(token);
+
+                var userId = jwtSecurityToken.Claims.First(claim => claim.Type == "").Value;
+
+                return userId;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

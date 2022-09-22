@@ -5,21 +5,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Database;
 using API.Interfaces.Auth;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Middlewares
 {
     public class AuthenticationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly DatabaseContext _context;
+        private readonly DatabaseContext _dbContext;
 
-        public AuthenticationMiddleware(RequestDelegate next, DatabaseContext context)
+        public AuthenticationMiddleware(RequestDelegate next, DatabaseContext dbContext)
         {
             _next = next;
-            _context = context;
+            _dbContext = dbContext;
         }
 
-        public async Task Invoke(HttpContext httpContext, IAuthService authService)
+        public async Task Invoke(HttpContext httpContext, IAuthService authService, ITokenService tokenService)
         {
             var request = httpContext.Request;
             if (request.Path.HasValue && request.Path.Value.ToLower() is "/api/auth/login" or "/api/auth/register")
@@ -28,8 +29,8 @@ namespace API.Middlewares
                 return;
             }
 
-            var userId = DecodeAccessToken(httpContext);
-
+            var userId = tokenService.DecodeToken(httpContext);
+            var user = _dbContext.Users.Where(x => x.Id.ToString() == userId).FirstOrDefaultAsync();
 
             if (user == null)
             {
@@ -40,26 +41,6 @@ namespace API.Middlewares
 
             httpContext.Items["User"] = userId;
             await _next.Invoke(httpContext);
-        }
-        private static string? DecodeAccessToken(HttpContext httpContext)
-        {
-            try
-            {
-                var token = httpContext.Request.Cookies["authorization"];
-                if (token == null) { return null; }
-
-                token = token.Split(" ").Last();
-                var handler = new JwtSecurityTokenHandler();
-                var jwtSecurityToken = handler.ReadJwtToken(token);
-
-                var userId = jwtSecurityToken.Claims.First(claim => claim.Type == "").Value;
-
-                return userId;
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 }
