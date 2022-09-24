@@ -61,46 +61,52 @@ function QuotationOfferPage() {
 
       <Paper variant="outlined">
         <Stack p={2} spacing={2}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Box display={"flex"} gap={2} alignItems={"center"}>
-              <Typography variant={"body1"}>Total Price Offer:</Typography>
-              <Controller
-                name="quotedTotalPrice"
-                control={control}
-                rules={{
-                  required: "Total price offer is required",
-                  pattern: {
-                    value: /^(?:[1-9]\d*|0(?!(?:\.0+)?$))?(?:\.\d+)?$/,
-                    message: "Invalid price",
-                  },
-                }}
-                render={({ field, fieldState }) => (
-                  <TextField
-                    {...field}
-                    variant="outlined"
-                    placeholder="Enter total price offer"
-                    type={"number"}
-                    size={"small"}
-                    error={!!fieldState.error}
-                    helperText={fieldState.error?.message}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">BDT</InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-              <Button
-                variant="contained"
-                type="submit"
-                startIcon={<SendQuotationIcon />}
-              >
-                Send offer
-              </Button>
-            </Box>
-          </form>
-          <Divider />
+          {!singleProcurement.procurement?.quotations.find(
+            (quotation) => quotation.supplier.id === Number(userAuth.id)
+          ) && (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Box display={"flex"} gap={2} alignItems={"center"} mb={2}>
+                <Typography variant={"body1"}>Total Price Offer:</Typography>
+                <Controller
+                  name="quotedTotalPrice"
+                  control={control}
+                  rules={{
+                    required: "Total price offer is required",
+                    pattern: {
+                      value: /^(?:[1-9]\d*|0(?!(?:\.0+)?$))?(?:\.\d+)?$/,
+                      message: "Invalid price",
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      {...field}
+                      variant="outlined"
+                      placeholder="Enter total price offer"
+                      type={"number"}
+                      size={"small"}
+                      error={!!fieldState.error}
+                      helperText={fieldState.error?.message}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">BDT</InputAdornment>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+                <Button
+                  variant="contained"
+                  type="submit"
+                  startIcon={<SendQuotationIcon />}
+                >
+                  Send offer
+                </Button>
+              </Box>
+
+              <Divider />
+            </form>
+          )}
+
           <Typography variant={"body1"}>
             Title: <strong>{singleProcurement.procurement?.title}</strong>
           </Typography>

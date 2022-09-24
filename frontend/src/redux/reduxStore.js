@@ -20,6 +20,7 @@ import {
   procurementCreateReducer,
   procurementDeleteReducer,
   procurementListReducer,
+  procurementQuotationAcceptReducer,
   singleProcurementReducer,
 } from "./reducers/procurement.reducers";
 import { quotationCreateReducer } from "./reducers/quotation.reducers";
@@ -41,6 +42,7 @@ const reducer = combineReducers({
   singleProcurement: singleProcurementReducer,
   procurementDelete: procurementDeleteReducer,
   quotationCreate: quotationCreateReducer,
+  procurementQuotationAccept: procurementQuotationAcceptReducer,
 });
 
 const initialState = {

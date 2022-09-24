@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import { RiCloseLine as CloseIcon } from "react-icons/ri";
 import RegisterPage from "./components/authentication/page/RegisterPage";
 import AuthGuard from "./components/shared/authGuard/AuthGurad";
-import { UserRoles } from "./constants/userRoles";
+import { UserRoles } from "./constants/enums";
 import InventoryPage from "./components/inventory/page/InventoryPage";
 import OrderRequestPage from "./components/purchaseOrder/page/OrderRequestPage";
 import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage";

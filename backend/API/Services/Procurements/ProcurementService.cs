@@ -3,6 +3,7 @@ using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
+using API.Enums;
 using API.Errors;
 using API.Interfaces.Procurement;
 using AutoMapper;
@@ -121,16 +122,23 @@ namespace API.Services.Procurements
         )
         {
             if (
-                await _context.Quotations.AnyAsync(
+                await _context.PurchaseOrders.AnyAsync(
                     x =>
                         x.Procurement.Id == quotationAcceptReqDto.ProcurementId
-                        && x.Accepted == true
+                        && x.Quotation.Id == quotationAcceptReqDto.QuotationId
                 )
             )
                 throw new ApiException(
                     HttpStatusCode.Conflict,
-                    "A quotation has already been selected for this procurement."
+                    "A quotation has already been accepted for this procurement."
                 );
+
+            var procurement = await _context.Procurements.SingleOrDefaultAsync(
+                x => x.Id == quotationAcceptReqDto.ProcurementId
+            );
+
+            if (procurement == null)
+                throw new NotFoundException("Procurement not found.");
 
             var quotation = await _context.Quotations.SingleOrDefaultAsync(
                 x =>
@@ -141,10 +149,20 @@ namespace API.Services.Procurements
             if (quotation == null)
                 throw new NotFoundException("Quotation not found.");
 
+            var purchaseOrder = new PurchaseOrder
+            {
+                Procurement = procurement,
+                Quotation = quotation,
+                DeliveryDeadline = quotationAcceptReqDto.DeliveryDeadline,
+                Status = StatusEnum.Pending,
+            };
+
             quotation.Accepted = true;
-            quotation.DeliveryDeadline = quotationAcceptReqDto.DeliveryDeadline;
 
             _context.Quotations.Update(quotation);
+
+            _context.PurchaseOrders.Add(purchaseOrder);
+
             await _context.SaveChangesAsync();
 
             return await GetProcurement(quotationAcceptReqDto.ProcurementId);

@@ -1,4 +1,5 @@
 import quotationService from "../../services/quotation.service";
+import { GET_PROCUREMENT_SUCCESS } from "../action_types/procurement";
 import {
   CREATE_QUOTATION_FAIL,
   CREATE_QUOTATION_REQUEST,
@@ -13,10 +14,9 @@ export const createQuotation = (data) => async (dispatch) => {
 
     const res = await quotationService.create(data);
 
-    dispatch({
-      type: CREATE_QUOTATION_SUCCESS,
-      payload: res.data,
-    });
+    dispatch({ type: CREATE_QUOTATION_SUCCESS });
+
+    dispatch({ type: GET_PROCUREMENT_SUCCESS, payload: res.data });
 
     dispatch(showSuccessAlert("Quotation created successfully"));
   } catch (error) {

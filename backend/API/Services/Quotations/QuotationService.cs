@@ -21,7 +21,7 @@ namespace API.Services.Quotations
             _mapper = mapper;
         }
 
-        public async Task<QuotationResDto> CreateQuotation(
+        public async Task<ProcurementResDto> CreateQuotation(
             QuotationCreateReqDto quotationCreateReqDto
         )
         {
@@ -36,6 +36,7 @@ namespace API.Services.Quotations
 
             var supplier = await _context.Suppliers
                 .Where(x => x.Id == quotationCreateReqDto.SupplierId)
+                .Include(x => x.Category)
                 .FirstOrDefaultAsync();
 
             if (supplier == null)
@@ -44,6 +45,11 @@ namespace API.Services.Quotations
             var procurement = await _context.Procurements
                 .Where(x => x.Id == quotationCreateReqDto.ProcurementId)
                 .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Category)
+                .Include(x => x.Quotations)
+                .ThenInclude(x => x.Supplier)
+                .ThenInclude(s => s.Category)
                 .FirstOrDefaultAsync();
 
             if (procurement == null)
@@ -51,20 +57,16 @@ namespace API.Services.Quotations
 
             var quotation = new Quotation
             {
-                Procurement = procurement,
                 Supplier = supplier,
                 QuotedTotalPrice = quotationCreateReqDto.QuotedTotalPrice
             };
 
-            await _context.Quotations.AddAsync(quotation);
-            var created = await _context.SaveChangesAsync();
+            procurement.Quotations.Add(quotation);
 
-            return created > 0
-                ? _mapper.Map<QuotationResDto>(quotation)
-                : throw new ApiException(
-                    HttpStatusCode.InternalServerError,
-                    "Quotation not created."
-                );
+            _context.Procurements.Update(procurement);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<ProcurementResDto>(procurement);
         }
 
         public async Task<QuotationResDto> GetQuotation(int quotationId)

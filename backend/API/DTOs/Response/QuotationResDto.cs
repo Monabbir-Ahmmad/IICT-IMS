@@ -12,10 +12,8 @@ namespace API.DTOs.Response
 
         public float QuotedTotalPrice { get; set; }
 
-        public bool Accepted { get; set; }
-
-        public DateTime DeliveryDeadline { get; set; }
-
         public SupplierDetailsResDto Supplier { get; set; }
+
+        public bool Accepted { get; set; }
     }
 }

@@ -2,15 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.Request
 {
-    public class QuotationCreateReqDto
+    public class PurchaseOrderCreateReqDto
     {
         [Required]
         public int ProcurementId { get; set; }
 
         [Required]
-        public int SupplierId { get; set; }
+        public int QuotationId { get; set; }
 
         [Required]
-        public float QuotedTotalPrice { get; set; }
+        public DateTime DeliveryDeadline { get; set; }
     }
 }

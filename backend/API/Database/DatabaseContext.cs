@@ -12,6 +12,7 @@ namespace API.Database
         public DbSet<Procurement> Procurements { get; set; }
         public DbSet<ProcurementProduct> ProcurementProducts { get; set; }
         public DbSet<Quotation> Quotations { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options) { }
 

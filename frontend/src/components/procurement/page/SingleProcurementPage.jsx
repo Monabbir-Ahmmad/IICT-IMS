@@ -11,7 +11,10 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getProcurement } from "../../../redux/actions/procurement.actions";
+import {
+  getProcurement,
+  procurementQuotationAccept,
+} from "../../../redux/actions/procurement.actions";
 import { currencyFormatter } from "../../../utils/utilities";
 import QuotationOfferProductTable from "../../quotation/ui/QuotationOfferProductTable";
 import QuotationAccepter from "../ui/QuotationAccepter";
@@ -35,6 +38,22 @@ function SingleProcurementPage() {
   const onQuotationAcceptClick = (quotation) => {
     setOpenQuotationAccepter(true);
     setSelectedQuotation(quotation);
+  };
+
+  const onQuotationAcceptSubmit = (value) => {
+    console.log({
+      ...value,
+      procurementId: procurement.id,
+      quotationId: selectedQuotation.id,
+    });
+    dispatch(
+      procurementQuotationAccept({
+        ...value,
+        procurementId: procurement.id,
+        quotationId: selectedQuotation.id,
+      })
+    );
+    setOpenQuotationAccepter(false);
   };
 
   return (
@@ -109,7 +128,7 @@ function SingleProcurementPage() {
         open={openQuotationAccepter}
         quotation={selectedQuotation}
         onCancel={() => setOpenQuotationAccepter(false)}
-        onSubmit={() => setOpenQuotationAccepter(false)}
+        onSubmit={onQuotationAcceptSubmit}
       />
     </Stack>
   );

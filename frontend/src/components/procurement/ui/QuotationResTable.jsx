@@ -53,9 +53,10 @@ function QuotationResTable({ data = [], onQuotationAccept }) {
         getActions: (params) => [
           <Button
             variant="contained"
+            color={params.row.accepted ? "success" : "primary"}
             onClick={() => onQuotationAccept(params.row)}
           >
-            Accept
+            {params.row.accepted ? "Accepted" : "Accept"}
           </Button>,
         ],
       },

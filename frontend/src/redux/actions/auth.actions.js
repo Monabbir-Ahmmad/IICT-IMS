@@ -8,7 +8,7 @@ import {
   USER_REGISTER_SUCCESS,
 } from "../action_types/auth";
 import authService from "../../services/auth.service";
-import { UserRoles } from "../../constants/userRoles";
+import { UserRoles } from "../../constants/enums";
 
 export const signup = (registrationData, userType) => async (dispatch) => {
   try {

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220923170000_Mig1")]
+    [Migration("20220924204542_Mig1")]
     partial class Mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,6 +121,33 @@ namespace API.Database.Migrations
                     b.ToTable("ProductCategories");
                 });
 
+            modelBuilder.Entity("API.Entities.PurchaseOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DeliveryDeadline")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ProcurementId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("QuotationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProcurementId");
+
+                    b.HasIndex("QuotationId");
+
+                    b.ToTable("PurchaseOrders");
+                });
+
             modelBuilder.Entity("API.Entities.Quotation", b =>
                 {
                     b.Property<int>("Id")
@@ -131,9 +158,6 @@ namespace API.Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeliveryDeadline")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProcurementId")
@@ -284,6 +308,21 @@ namespace API.Database.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Procurement");
+                });
+
+            modelBuilder.Entity("API.Entities.PurchaseOrder", b =>
+                {
+                    b.HasOne("API.Entities.Procurement", "Procurement")
+                        .WithMany()
+                        .HasForeignKey("ProcurementId");
+
+                    b.HasOne("API.Entities.Quotation", "Quotation")
+                        .WithMany()
+                        .HasForeignKey("QuotationId");
+
+                    b.Navigation("Procurement");
+
+                    b.Navigation("Quotation");
                 });
 
             modelBuilder.Entity("API.Entities.Quotation", b =>

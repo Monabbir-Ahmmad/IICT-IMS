@@ -8,7 +8,7 @@ import { forwardRef } from "react";
 import { RiCheckboxBlankCircleLine as DefaultIcon } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { UserRoles } from "../../../constants/userRoles";
+import { UserRoles } from "../../../constants/enums";
 
 const LinkBehavior = forwardRef((props, ref) => (
   <NavLink ref={ref} to="/" {...props} role={undefined} />

@@ -18,7 +18,7 @@ import { signin } from "../../../redux/actions/auth.actions";
 import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { UserRoles } from "../../../constants/userRoles";
+import { UserRoles } from "../../../constants/enums";
 
 const FormContainer = styled.form`
   display: flex;

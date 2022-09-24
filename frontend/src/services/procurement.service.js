@@ -3,6 +3,7 @@ import {
   DELETE_PROCUREMENT,
   GET_PROCUREMENT,
   GET_PROCUREMENTS,
+  PROCUREMENT_QUOTATION_ACCEPT,
 } from "../constants/apiLinks";
 import api from "./api";
 
@@ -21,6 +22,10 @@ class ProcurementService {
 
   async delete(id) {
     return await api().delete(`${DELETE_PROCUREMENT}/${id}`);
+  }
+
+  async acceptQuotation(data) {
+    return await api().post(PROCUREMENT_QUOTATION_ACCEPT, data);
   }
 }
 

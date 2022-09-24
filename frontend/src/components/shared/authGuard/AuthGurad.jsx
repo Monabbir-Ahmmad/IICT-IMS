@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { UserRoles } from "../../../constants/userRoles";
+import { UserRoles } from "../../../constants/enums";
 
 function AuthGuard({ allowedRoles = Object.values(UserRoles) }) {
   const location = useLocation();

@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  LinearProgress,
   TextField,
   Typography,
 } from "@mui/material";
@@ -13,9 +14,12 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { currencyFormatter } from "../../../utils/utilities";
 
 function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
+  const { loading } = useSelector((state) => state.procurementQuotationAccept);
+
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       deliveryDeadline: "",
@@ -42,6 +46,8 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
       <DialogContent dividers>
         <form id="accept-quotation-form" onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4} pt={2}>
+            {loading && <LinearProgress />}
+
             <Typography variant="body1">
               Supplier BIN: <strong>{quotation?.supplier?.bin}</strong>
             </Typography>
@@ -108,7 +114,7 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
-        <Button type="submit" form="add-procurement-item-form">
+        <Button type="submit" form="accept-quotation-form">
           Confirm
         </Button>
       </DialogActions>

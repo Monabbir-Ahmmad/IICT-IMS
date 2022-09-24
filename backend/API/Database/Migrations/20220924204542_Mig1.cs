@@ -170,7 +170,6 @@ namespace API.Database.Migrations
                     SupplierId = table.Column<int>(type: "INTEGER", nullable: false),
                     QuotedTotalPrice = table.Column<float>(type: "REAL", nullable: false),
                     Accepted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    DeliveryDeadline = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -189,6 +188,32 @@ namespace API.Database.Migrations
                         principalTable: "Suppliers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PurchaseOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ProcurementId = table.Column<int>(type: "INTEGER", nullable: true),
+                    QuotationId = table.Column<int>(type: "INTEGER", nullable: true),
+                    DeliveryDeadline = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PurchaseOrders_Procurements_ProcurementId",
+                        column: x => x.ProcurementId,
+                        principalTable: "Procurements",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PurchaseOrders_Quotations_QuotationId",
+                        column: x => x.QuotationId,
+                        principalTable: "Quotations",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -223,6 +248,16 @@ namespace API.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_PurchaseOrders_ProcurementId",
+                table: "PurchaseOrders",
+                column: "ProcurementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PurchaseOrders_QuotationId",
+                table: "PurchaseOrders",
+                column: "QuotationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Quotations_ProcurementId",
                 table: "Quotations",
                 column: "ProcurementId");
@@ -254,19 +289,22 @@ namespace API.Database.Migrations
                 name: "ProcurementProducts");
 
             migrationBuilder.DropTable(
-                name: "Quotations");
+                name: "PurchaseOrders");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Quotations");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Procurements");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
-
-            migrationBuilder.DropTable(
-                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "ProductCategories");

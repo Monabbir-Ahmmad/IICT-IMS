@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import NavLinkItem from "./NavLinkItem";
 import { logout } from "../../../redux/actions/auth.actions";
 import { useNavigate } from "react-router-dom";
-import { UserRoles } from "../../../constants/userRoles";
+import { UserRoles } from "../../../constants/enums";
 
 function NavMenu() {
   const dispatch = useDispatch();

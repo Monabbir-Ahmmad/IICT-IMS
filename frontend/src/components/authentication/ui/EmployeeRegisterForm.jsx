@@ -14,7 +14,7 @@ import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../../redux/actions/auth.actions";
-import { UserRoles } from "../../../constants/userRoles";
+import { UserRoles } from "../../../constants/enums";
 import autoCompleteService from "../../../services/autoComplete.service";
 
 const FormContainer = styled.form`
