@@ -30,21 +30,18 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
     <Dialog
       fullWidth
       maxWidth={"sm"}
+      scroll={"paper"}
       open={open}
       onClose={onCancel}
       PaperProps={{
         sx: { bgcolor: "background.paper", backgroundImage: "none" },
       }}
     >
-      <DialogTitle>Create Purchase Order</DialogTitle>
+      <DialogTitle>Purchase Order: {quotation?.procurementName}</DialogTitle>
 
-      <DialogContent>
+      <DialogContent dividers>
         <form id="accept-quotation-form" onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={4} pt={3}>
-            <Typography variant="body1">
-              Procurement Title: <strong>{quotation?.procurementName}</strong>
-            </Typography>
-
+          <Stack spacing={4} pt={2}>
             <Typography variant="body1">
               Supplier BIN: <strong>{quotation?.supplier?.bin}</strong>
             </Typography>

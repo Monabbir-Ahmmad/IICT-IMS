@@ -170,7 +170,7 @@ namespace API.Database.Migrations
                     SupplierId = table.Column<int>(type: "INTEGER", nullable: false),
                     QuotedTotalPrice = table.Column<float>(type: "REAL", nullable: false),
                     Accepted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    DeliveryDeadline = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DeliveryDeadline = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

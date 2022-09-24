@@ -15,6 +15,8 @@ import RegisterPage from "./components/authentication/page/RegisterPage";
 import AuthGuard from "./components/shared/authGuard/AuthGurad";
 import { UserRoles } from "./constants/userRoles";
 import InventoryPage from "./components/inventory/page/InventoryPage";
+import OrderRequestPage from "./components/purchaseOrder/page/OrderRequestPage";
+import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -49,6 +51,11 @@ function App() {
           <Route element={<AuthGuard allowedRoles={[UserRoles.EMPLOYEE]} />}>
             <Route path="inventory" element={<InventoryPage />} />
 
+            <Route
+              path="procurements/create"
+              element={<ProcurementCreatePage />}
+            />
+
             <Route path="procurements" element={<ProcurementPage />} />
 
             <Route
@@ -56,19 +63,18 @@ function App() {
               element={<SingleProcurementPage />}
             />
 
-            <Route
-              path="procurements/create"
-              element={<ProcurementCreatePage />}
-            />
+            <Route path="purchase-orders" element={<PurchaseOrderPage />} />
           </Route>
 
-          <Route element={<AuthGuard allowedRoles={[UserRoles.SUPPLIER]} />}>
+          <Route element={<AuthGuard />}>
             <Route path="quotations" element={<QuotationPage />} />
 
             <Route
               path="quotations/:procurementId"
               element={<QuotationOfferPage />}
             />
+
+            <Route path="order-requests" element={<OrderRequestPage />} />
           </Route>
 
           <Route

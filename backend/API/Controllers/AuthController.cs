@@ -1,8 +1,5 @@
-using System.Net;
 using API.DTOs.Request;
 using API.DTOs.Response;
-using API.Entities;
-using API.Errors;
 using API.Interfaces.Auth;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +25,7 @@ namespace API.Controllers
 
             HttpContext.Response.Cookies.Append(
                 "authorization",
-                result.Token.ToString(),
+                result.AccessToken,
                 new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
             );
 
@@ -42,7 +39,7 @@ namespace API.Controllers
 
             HttpContext.Response.Cookies.Append(
                 "authorization",
-                result.Token.ToString(),
+                result.AccessToken,
                 new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
             );
 
@@ -58,7 +55,7 @@ namespace API.Controllers
 
             HttpContext.Response.Cookies.Append(
                 "authorization",
-                result.Token.ToString(),
+                result.AccessToken,
                 new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
             );
 
@@ -72,7 +69,21 @@ namespace API.Controllers
 
             HttpContext.Response.Cookies.Append(
                 "authorization",
-                result.Token.ToString(),
+                result.AccessToken,
+                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+            );
+
+            return Ok(result);
+        }
+
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult<AuthResDto>> RefreshToken(string refreshToken)
+        {
+            var result = await _authService.RefreshToken(refreshToken);
+
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                result.AccessToken,
                 new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
             );
 

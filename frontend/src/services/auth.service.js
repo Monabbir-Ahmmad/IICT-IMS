@@ -11,13 +11,13 @@ class AuthService {
   async login(email, password) {
     const res = await api().post(POST_USER_LOGIN, { email, password });
 
-    const decodedToken = tokenService.decodeToken(res.data.token);
+    const decodedToken = tokenService.decodeToken(res.data.accessToken);
 
     res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
-      refreshToken: res.data.token,
-      accessToken: res.data.token,
+      refreshToken: res.data.refreshToken,
+      accessToken: res.data.accessToken,
     };
 
     tokenService.setUser(res.data);
@@ -28,13 +28,13 @@ class AuthService {
   async register(data) {
     const res = await api().post(POST_USER_REGISTER, data);
 
-    const decodedToken = tokenService.decodeToken(res.data.token);
+    const decodedToken = tokenService.decodeToken(res.data.accessToken);
 
     res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
-      refreshToken: res.data.token,
-      accessToken: res.data.token,
+      refreshToken: res.data.refreshToken,
+      accessToken: res.data.accessToken,
     };
 
     tokenService.setUser(res.data);
@@ -45,13 +45,13 @@ class AuthService {
   async loginSupplier(email, password) {
     const res = await api().post(POST_SUPPLIER_LOGIN, { email, password });
 
-    const decodedToken = tokenService.decodeToken(res.data.token);
+    const decodedToken = tokenService.decodeToken(res.data.accessToken);
 
     res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
-      refreshToken: res.data.token,
-      accessToken: res.data.token,
+      refreshToken: res.data.refreshToken,
+      accessToken: res.data.accessToken,
     };
 
     tokenService.setUser(res.data);
@@ -62,13 +62,13 @@ class AuthService {
   async registerSupplier(data) {
     const res = await api().post(POST_SUPPLIER_REGISTER, data);
 
-    const decodedToken = tokenService.decodeToken(res.data.token);
+    const decodedToken = tokenService.decodeToken(res.data.accessToken);
 
     res.data = {
       id: decodedToken.id,
       role: decodedToken.role,
-      refreshToken: res.data.token,
-      accessToken: res.data.token,
+      refreshToken: res.data.refreshToken,
+      accessToken: res.data.accessToken,
     };
 
     tokenService.setUser(res.data);

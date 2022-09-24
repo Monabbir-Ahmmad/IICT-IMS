@@ -11,5 +11,6 @@ namespace API.Interfaces.Auth
         Task<AuthResDto> LoginSupplier(LoginReqDto loginDto);
         Task<bool> UserExists(string email);
         Task<bool> SupplierExists(string BIN, string email, string companyName);
+        Task<AuthResDto> RefreshToken(string refreshToken);
     }
 }

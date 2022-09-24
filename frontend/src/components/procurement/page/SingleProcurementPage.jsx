@@ -38,20 +38,14 @@ function SingleProcurementPage() {
   };
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={2}>
       {loading && <LinearProgress />}
 
       {error && <Alert severity="error">{error}</Alert>}
 
       <Paper variant="outlined">
-        <Stack p={2} spacing={2}>
-          <Typography variant={"body1"}>
-            Procurement ID: <strong>{procurement?.id}</strong>
-          </Typography>
-
-          <Divider />
-
-          <Typography variant={"body1"}>
+        <Stack p={3} spacing={3}>
+          <Typography variant={"h5"}>
             Procurement Title: <strong>{procurement?.title}</strong>
           </Typography>
 
@@ -100,16 +94,10 @@ function SingleProcurementPage() {
       </Typography>
 
       {procurement?.quotations?.length ? (
-        <Paper variant="outlined">
-          <QuotationResTable
-            data={procurement?.quotations?.map((q) => ({
-              ...q,
-              supplierName: q.supplier.companyName,
-              supplierId: q.supplier.id,
-            }))}
-            onQuotationAccept={onQuotationAcceptClick}
-          />
-        </Paper>
+        <QuotationResTable
+          data={procurement?.quotations}
+          onQuotationAccept={onQuotationAcceptClick}
+        />
       ) : (
         <Alert severity="info">
           <AlertTitle>Info</AlertTitle>

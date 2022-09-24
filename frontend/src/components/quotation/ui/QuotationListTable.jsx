@@ -1,18 +1,36 @@
-import { Button, Chip } from "@mui/material";
+import { Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { useCallback } from "react";
 
 function QuotationListTable({ data = [], onRowOpenClick }) {
+  const { userAuth } = useSelector((state) => state.userLogin);
+
+  const getStatus = useCallback(
+    (quotations = []) => {
+      const quotationOffered = quotations?.find(
+        (quotation) => quotation.supplier.id === Number(userAuth.id)
+      );
+
+      if (quotationOffered?.accepted) return "Offer Accepted";
+      else if (quotationOffered) return "Offered";
+      else return "Pending";
+    },
+    [userAuth.id]
+  );
+
   const columns = useMemo(
     () => [
       {
         field: "title",
         headerName: "Title",
-        width: 300,
+        flex: 1,
+        minWidth: 100,
         headerAlign: "center",
         align: "center",
         renderCell: RenderCellExpand,
@@ -21,7 +39,8 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         field: "createdAt",
         headerName: "Issue Date",
         type: "date",
-        width: 150,
+        flex: 1,
+        minWidth: 100,
         headerAlign: "center",
         align: "center",
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
@@ -30,7 +49,8 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         field: "deadline",
         headerName: "Deadline",
         type: "date",
-        width: 150,
+        flex: 1,
+        minWidth: 100,
         headerAlign: "center",
         align: "center",
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
@@ -39,7 +59,8 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         field: "estimatedTotalPrice",
         headerName: "Estimated Total Price",
         type: "number",
-        width: 200,
+        flex: 1,
+        minWidth: 100,
         headerAlign: "center",
         align: "center",
         valueFormatter: ({ value }) => currencyFormatter().format(value),
@@ -48,42 +69,45 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         field: "quotedTotalPrice",
         headerName: "Offered Total Price",
         type: "number",
-        width: 200,
+        flex: 1,
+        minWidth: 100,
         headerAlign: "center",
         align: "center",
+        valueGetter: (params) =>
+          params.row.quotations?.find(
+            (quotation) => quotation.supplier.id === Number(userAuth.id)
+          )?.quotedTotalPrice,
         valueFormatter: ({ value }) =>
           value ? currencyFormatter().format(value) : "N/A",
       },
       {
         field: "status",
         headerName: "Status",
-        width: 150,
+        flex: 1,
+        minWidth: 100,
         headerAlign: "center",
         align: "center",
-        renderCell: (props) => (
+        valueGetter: (params) => getStatus(params.row.quotations),
+        renderCell: ({ value }) => (
           <Chip
             variant="outlined"
-            label={props.value || "Pending"}
-            color={props.value === "Completed" ? "success" : "warning"}
+            label={value}
+            color={
+              value === "Pending"
+                ? "warning"
+                : value === "Offered"
+                ? "info"
+                : "success"
+            }
           />
         ),
       },
-      {
-        field: "actions",
-        headerName: "Actions",
-        type: "actions",
-        getActions: (params) => [
-          <Button variant="contained" onClick={() => onRowOpenClick(params.id)}>
-            Open
-          </Button>,
-        ],
-      },
     ],
-    [onRowOpenClick]
+    [getStatus, userAuth.id]
   );
 
   return (
-    <div style={{ height: 650, width: "100%" }}>
+    <Paper variant="outlined" sx={{ height: 650 }}>
       <DataGrid
         rows={data}
         columns={columns}
@@ -91,9 +115,10 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}
+        onRowClick={(params) => onRowOpenClick(params.id)}
         sx={{ border: 0 }}
       />
-    </div>
+    </Paper>
   );
 }
 

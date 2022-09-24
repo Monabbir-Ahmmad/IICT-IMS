@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import InventroyProductListTable from "../ui/InventoryProductListTable";
 import { RiAddLine as AddIcon } from "react-icons/ri";
@@ -24,13 +24,11 @@ function InventoryPage() {
         Product list
       </Typography>
 
-      <Paper variant="outlined">
-        <InventroyProductListTable
-          data={[]}
-          onRowOpenClick={onRowClick}
-          onRowDeleteClick={onRowDelete}
-        />
-      </Paper>
+      <InventroyProductListTable
+        data={[]}
+        onRowOpenClick={onRowClick}
+        onRowDeleteClick={onRowDelete}
+      />
     </Stack>
   );
 }

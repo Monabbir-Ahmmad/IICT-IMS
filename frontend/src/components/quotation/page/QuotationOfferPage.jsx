@@ -59,7 +59,7 @@ function QuotationOfferPage() {
         <Alert severity="error">{singleProcurement.error}</Alert>
       )}
 
-      <Paper>
+      <Paper variant="outlined">
         <Stack p={2} spacing={2}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box display={"flex"} gap={2} alignItems={"center"}>
@@ -137,11 +137,16 @@ function QuotationOfferPage() {
           <Typography variant={"body1"}>
             Your Quoted Total Price:{" "}
             <strong>
-              {currencyFormatter().format(
-                singleProcurement.procurement?.quotations.find(
-                  (quotation) => quotation.supplier.id === Number(userAuth.id)
-                )?.quotedTotalPrice
-              )}
+              {singleProcurement.procurement?.quotations.find(
+                (quotation) => quotation.supplier.id === Number(userAuth.id)
+              )
+                ? currencyFormatter().format(
+                    singleProcurement.procurement?.quotations.find(
+                      (quotation) =>
+                        quotation.supplier.id === Number(userAuth.id)
+                    )?.quotedTotalPrice
+                  )
+                : "N/A"}
             </strong>
           </Typography>
         </Stack>

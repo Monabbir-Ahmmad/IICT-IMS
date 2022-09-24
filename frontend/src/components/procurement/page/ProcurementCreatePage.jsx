@@ -42,16 +42,14 @@ function ProcurementCreatePage() {
   const [productCategories, setProductCategories] = useState([]);
 
   useEffect(() => {
-    const fetchProductCategories = async () => {
+    (async () => {
       try {
         const { data } = await autoCompleteService.getProductCategories();
         setProductCategories(data);
       } catch (error) {
         console.log(error);
       }
-    };
-
-    fetchProductCategories();
+    })();
   }, []);
 
   useEffect(() => {
@@ -135,24 +133,7 @@ function ProcurementCreatePage() {
               <strong>{moment(Date.now()).format("MMM Do, YYYY")}</strong>
             </Typography>
           </Stack>
-          <Stack direction={{ xs: "column", lg: "row" }} spacing={4}>
-            <Controller
-              name="title"
-              control={control}
-              rules={{ required: "Procurement title is required" }}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Procurement Title"
-                  variant="outlined"
-                  placeholder="Enter procurement title"
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
-                  sx={{ flex: 2 }}
-                />
-              )}
-            />
-
+          <Stack direction={{ xs: "column", lg: "row" }} spacing={3}>
             <Controller
               name="procurementCategoryId"
               control={control}
@@ -174,6 +155,23 @@ function ProcurementCreatePage() {
                     </MenuItem>
                   ))}
                 </TextField>
+              )}
+            />
+
+            <Controller
+              name="title"
+              control={control}
+              rules={{ required: "Procurement title is required" }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label="Procurement Title"
+                  variant="outlined"
+                  placeholder="Enter procurement title"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  sx={{ flex: 2 }}
+                />
               )}
             />
 
@@ -217,15 +215,13 @@ function ProcurementCreatePage() {
         Product List
       </Typography>
 
-      <Paper variant="outlined">
-        <ProcurementProductTable
-          data={products}
-          selectedRows={selectedRows}
-          onAddNewRowClick={() => setOpenAddNew(true)}
-          onRowSelectionChange={onRowSelectionChange}
-          onSelectedRowDeleteClick={onDeleteSelected}
-        />
-      </Paper>
+      <ProcurementProductTable
+        data={products}
+        selectedRows={selectedRows}
+        onAddNewRowClick={() => setOpenAddNew(true)}
+        onRowSelectionChange={onRowSelectionChange}
+        onSelectedRowDeleteClick={onDeleteSelected}
+      />
     </Stack>
   );
 }

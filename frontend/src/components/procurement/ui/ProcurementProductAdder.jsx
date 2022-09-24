@@ -37,6 +37,7 @@ function ProcurementProductAdder({ open, onSubmit, onCancel }) {
     <Dialog
       fullWidth
       maxWidth={"sm"}
+      scroll={"paper"}
       open={open}
       onClose={onCancel}
       PaperProps={{
@@ -44,9 +45,9 @@ function ProcurementProductAdder({ open, onSubmit, onCancel }) {
       }}
     >
       <DialogTitle>Add item</DialogTitle>
-      <DialogContent>
+      <DialogContent dividers>
         <form id="add-procurement-item-form" onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={4} pt={3}>
+          <Stack spacing={4} pt={2}>
             <Controller
               name="name"
               control={control}

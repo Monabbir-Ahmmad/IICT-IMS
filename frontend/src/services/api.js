@@ -1,6 +1,8 @@
 import {
   API_URL,
   POST_REFRESH_TOKEN,
+  POST_SUPPLIER_LOGIN,
+  POST_SUPPLIER_REGISTER,
   POST_USER_LOGIN,
   POST_USER_REGISTER,
 } from "../constants/apiLinks";
@@ -9,7 +11,13 @@ import { USER_LOGOUT } from "../redux/action_types/auth";
 import axios from "axios";
 import reduxStore from "../redux/reduxStore";
 
-const publicUrls = [POST_USER_LOGIN, POST_USER_REGISTER, POST_REFRESH_TOKEN];
+const publicUrls = [
+  POST_USER_LOGIN,
+  POST_SUPPLIER_LOGIN,
+  POST_USER_REGISTER,
+  POST_SUPPLIER_REGISTER,
+  POST_REFRESH_TOKEN,
+];
 
 const instance = axios.create({
   baseURL: `${API_URL}/api`,
@@ -66,11 +74,11 @@ const refreshAccessToken = async (err) => {
       originalConfig._retry = true;
 
       try {
-        const rs = await instance.post(POST_REFRESH_TOKEN, {
+        const res = await instance.post(POST_REFRESH_TOKEN, {
           refreshToken: tokenService.getLocalRefreshToken(),
         });
 
-        const { accessToken } = rs.data;
+        const { accessToken } = res.data;
 
         tokenService.updateLocalAccessToken(accessToken);
 

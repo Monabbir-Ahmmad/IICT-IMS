@@ -2,7 +2,7 @@
 export const API_URL = "https://localhost:5001";
 
 //Authentication
-export const POST_REFRESH_TOKEN = "/auth/refreshtoken";
+export const POST_REFRESH_TOKEN = "/auth/refreshToken";
 export const POST_USER_REGISTER = `/auth/register`;
 export const POST_SUPPLIER_REGISTER = `/auth/supplier/register`;
 export const POST_USER_LOGIN = `/auth/login`;

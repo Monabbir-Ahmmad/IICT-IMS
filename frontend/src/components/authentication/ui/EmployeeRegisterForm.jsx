@@ -50,16 +50,14 @@ function EmployeeRegisterForm() {
   const [userRoles, setUserRoles] = useState([]);
 
   useEffect(() => {
-    const fetchUserRoles = async () => {
+    (async () => {
       try {
         const { data } = await autoCompleteService.getUserRoles();
         setUserRoles(data);
       } catch (error) {
         console.log(error);
       }
-    };
-
-    fetchUserRoles();
+    })();
   }, []);
 
   const handlePasswordShowClick = (value) => {
@@ -72,10 +70,6 @@ function EmployeeRegisterForm() {
 
   return (
     <FormContainer onSubmit={handleSubmit(onSubmit)}>
-      {loading && <LinearProgress />}
-
-      {error && <Alert severity="error">{error}</Alert>}
-
       <Controller
         name="username"
         control={control}
@@ -200,6 +194,10 @@ function EmployeeRegisterForm() {
       <Button variant="contained" size="large" type="submit">
         Sign up as IICT employee
       </Button>
+
+      {loading && <LinearProgress />}
+
+      {error && <Alert severity="error">{error}</Alert>}
     </FormContainer>
   );
 }

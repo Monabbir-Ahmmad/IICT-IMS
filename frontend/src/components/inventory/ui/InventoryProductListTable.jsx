@@ -1,61 +1,65 @@
-import { Chip } from "@mui/material";
+import { Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useMemo } from "react";
 import { currencyFormatter } from "../../../utils/utilities";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 
-function InventroyProductListTable({
-  data = [],
-  onRowDeleteClick,
-  onRowOpenClick,
-}) {
+function InventroyProductListTable({ data = [], onRowOpenClick }) {
   const columns = useMemo(
     () => [
       {
         field: "id",
         headerName: "ID",
-        width: 100,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: "name",
         headerName: "Name",
-        width: 300,
         renderCell: RenderCellExpand,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: "category",
         headerName: "Category",
-        width: 200,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: "manufacturer",
         headerName: "Manufacturer",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 100,
         renderCell: RenderCellExpand,
-        width: 200,
       },
 
       {
         field: "price",
         headerName: " Price",
-        valueFormatter: ({ value }) => currencyFormatter().format(value),
         type: "number",
-        width: 200,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
+        valueFormatter: ({ value }) => currencyFormatter().format(value),
       },
       {
         field: "status",
         headerName: "Status",
-        width: 150,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
         renderCell: (props) => (
           <Chip
             variant="outlined"
@@ -69,7 +73,7 @@ function InventroyProductListTable({
   );
 
   return (
-    <div style={{ height: 650, width: "100%" }}>
+    <Paper variant="outlined" sx={{ height: 650 }}>
       <DataGrid
         rows={data}
         columns={columns}
@@ -80,7 +84,7 @@ function InventroyProductListTable({
         onRowClick={(params) => onRowOpenClick(params.id)}
         sx={{ border: 0 }}
       />
-    </div>
+    </Paper>
   );
 }
 

@@ -1,5 +1,5 @@
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
-import { alpha, Box, Button, Typography } from "@mui/material";
+import { alpha, Box, Button, Paper, Typography } from "@mui/material";
 import { MdDelete as DeleteIcon, MdAdd as AddIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
@@ -27,11 +27,17 @@ function CustomeToolbar({
         sx={{ m: 1.5, mr: "auto" }}
         onClick={onAddNewRowClick}
       >
-        Add New Product To List
+        Add Product
       </Button>
 
       {selectedRows.length > 0 && (
-        <Box display={"flex"} alignItems={"center"} gap={3} m={1.5}>
+        <Box
+          display={"flex"}
+          flexDirection={{ xs: "row-reverse", sm: "row" }}
+          alignItems={"center"}
+          gap={3}
+          m={1.5}
+        >
           <Typography>{selectedRows.length} Rows Selected</Typography>
           <Button
             startIcon={<DeleteIcon />}
@@ -51,34 +57,57 @@ const columns = [
   {
     field: "name",
     headerName: "Name",
-    width: 300,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     renderCell: RenderCellExpand,
   },
   {
     field: "manufacturer",
     headerName: "Manufacturer",
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     renderCell: RenderCellExpand,
-    width: 200,
   },
   {
     field: "details",
     headerName: "Details",
-    width: 400,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     renderCell: RenderCellExpand,
   },
   {
     field: "estimatedPrice",
     headerName: "Estimated Price",
     type: "number",
-    width: 150,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     valueFormatter: ({ value }) => currencyFormatter().format(value),
   },
-  { field: "quantity", headerName: "Quantity", type: "number", width: 150 },
+  {
+    field: "quantity",
+    headerName: "Quantity",
+    type: "number",
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
+  },
   {
     field: "estimatedTotalPrice",
     headerName: "Estimated Total Price",
     type: "number",
-    width: 200,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     valueFormatter: ({ value }) => currencyFormatter().format(value),
   },
 ];
@@ -91,7 +120,7 @@ function ProcurementProductTable({
   selectedRows,
 }) {
   return (
-    <div style={{ height: 650, width: "100%" }}>
+    <Paper variant="outlined" sx={{ height: 650 }}>
       <DataGrid
         rows={data}
         columns={columns}
@@ -112,7 +141,7 @@ function ProcurementProductTable({
         onSelectionModelChange={onRowSelectionChange}
         sx={{ border: 0 }}
       />
-    </div>
+    </Paper>
   );
 }
 

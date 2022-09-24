@@ -46,7 +46,8 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                Token = _tokenService.CreateToken(user.Id, user.Email, user.Role.RoleName),
+                RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.RoleName),
+                AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.RoleName),
             };
         }
 
@@ -84,11 +85,8 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                Token = _tokenService.CreateToken(
-                    supplier.Id,
-                    supplier.Email,
-                    UserRoleEnum.Supplier
-                )
+                RefreshToken = _tokenService.CreateRefreshToken(supplier.Id, UserRoleEnum.Supplier),
+                AccessToken = _tokenService.CreateAccessToken(supplier.Id, UserRoleEnum.Supplier),
             };
         }
 
@@ -107,7 +105,8 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                Token = _tokenService.CreateToken(user.Id, user.Email, user.Role.RoleName)
+                RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.RoleName),
+                AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.RoleName),
             };
         }
 
@@ -125,11 +124,8 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                Token = _tokenService.CreateToken(
-                    supplier.Id,
-                    supplier.Email,
-                    UserRoleEnum.Supplier
-                )
+                RefreshToken = _tokenService.CreateRefreshToken(supplier.Id, UserRoleEnum.Supplier),
+                AccessToken = _tokenService.CreateAccessToken(supplier.Id, UserRoleEnum.Supplier),
             };
         }
 
@@ -141,8 +137,53 @@ namespace API.Services.Auth
         public async Task<bool> SupplierExists(string BIN, string email, string companyName)
         {
             return await _context.Suppliers.AnyAsync(
-                x => x.BIN == BIN && x.Email == email && x.CompanyName == companyName
+                x => x.BIN == BIN || x.Email == email || x.CompanyName == companyName
             );
+        }
+
+        public async Task<AuthResDto> RefreshToken(string refreshToken)
+        {
+            if (_tokenService.IsRefreshTokenExpired(refreshToken))
+                throw new UnauthorizedException("Refresh token is expired.");
+
+            var userId = _tokenService.GetUserIdFromToken(refreshToken);
+            var role = _tokenService.GetRoleFromToken(refreshToken);
+
+            if (role == UserRoleEnum.Supplier)
+            {
+                var supplier = await _context.Suppliers.FindAsync(userId);
+
+                if (supplier == null)
+                    throw new UnauthorizedException("Invalid refresh token.");
+
+                return new AuthResDto
+                {
+                    RefreshToken = _tokenService.CreateRefreshToken(
+                        supplier.Id,
+                        UserRoleEnum.Supplier
+                    ),
+                    AccessToken = _tokenService.CreateAccessToken(
+                        supplier.Id,
+                        UserRoleEnum.Supplier
+                    ),
+                };
+            }
+            else
+            {
+                var user = await _context.Users
+                    .Where(x => x.Id == userId)
+                    .Include(x => x.Role)
+                    .SingleOrDefaultAsync();
+
+                if (user == null)
+                    throw new UnauthorizedException("Invalid refresh token.");
+
+                return new AuthResDto
+                {
+                    RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.RoleName),
+                    AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.RoleName),
+                };
+            }
         }
     }
 }

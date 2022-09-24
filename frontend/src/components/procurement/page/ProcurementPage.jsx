@@ -2,7 +2,6 @@ import {
   Alert,
   Button,
   LinearProgress,
-  Paper,
   Stack,
   Typography,
 } from "@mui/material";
@@ -56,13 +55,11 @@ function ProcurementPage() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <Paper variant="outlined">
-        <ProcurementListItem
-          data={procurements}
-          onRowOpenClick={onRowClick}
-          onRowDeleteClick={onRowDelete}
-        />
-      </Paper>
+      <ProcurementListItem
+        data={procurements}
+        onRowOpenClick={onRowClick}
+        onRowDeleteClick={onRowDelete}
+      />
     </Stack>
   );
 }

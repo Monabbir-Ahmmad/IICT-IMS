@@ -131,7 +131,7 @@ namespace API.Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DeliveryDeadline")
+                    b.Property<DateTime?>("DeliveryDeadline")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProcurementId")

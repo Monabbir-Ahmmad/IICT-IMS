@@ -54,16 +54,14 @@ function SupplierRegisterForm() {
   const [supplierCategories, setSupplierCategories] = useState([]);
 
   useEffect(() => {
-    const fetchSupplierCategories = async () => {
+    (async () => {
       try {
         const { data } = await autoCompleteService.getProductCategories();
         setSupplierCategories(data);
       } catch (error) {
         console.log(error);
       }
-    };
-
-    fetchSupplierCategories();
+    })();
   }, []);
 
   const handlePasswordShowClick = (value) => {
@@ -76,10 +74,6 @@ function SupplierRegisterForm() {
 
   return (
     <FormContainer onSubmit={handleSubmit(onSubmit)}>
-      {loading && <LinearProgress />}
-
-      {error && <Alert severity="error">{error}</Alert>}
-
       <Controller
         name="companyName"
         control={control}
@@ -262,6 +256,10 @@ function SupplierRegisterForm() {
       <Button variant="contained" size="large" type="submit">
         Sign up as supplier
       </Button>
+
+      {loading && <LinearProgress />}
+
+      {error && <Alert severity="error">{error}</Alert>}
     </FormContainer>
   );
 }

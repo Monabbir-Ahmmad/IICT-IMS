@@ -2,11 +2,12 @@ import { Button, List, Stack, Toolbar } from "@mui/material";
 import {
   RiHome5Line as HomeIcon,
   RiShutDownLine as LogoutIcon,
-  RiTeamLine as PeopleIcon,
   RiArchiveLine as InventoryIcon,
   RiShoppingCartLine as ProcurementIcon,
   RiFileList3Line as QuotationIcon,
   RiUser6Line as UserIcon,
+  RiDraftLine as OrderRequestIcon,
+  RiShoppingBag2Line as PurchaseOrderIcon,
 } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import NavLinkItem from "./NavLinkItem";
@@ -56,7 +57,20 @@ function NavMenu() {
           title={"Quotations"}
           link={"/quotations"}
           icon={QuotationIcon}
-          allowedRoles={[UserRoles.SUPPLIER]}
+          // allowedRoles={[UserRoles.SUPPLIER]}
+        />
+
+        <NavLinkItem
+          title={"Purchase Orders"}
+          link={"/purchase-orders"}
+          icon={PurchaseOrderIcon}
+          // allowedRoles={[UserRoles.SUPPLIER]}
+        />
+        <NavLinkItem
+          title={"Order Requests"}
+          link={"/order-requests"}
+          icon={OrderRequestIcon}
+          // allowedRoles={[UserRoles.SUPPLIER]}
         />
       </List>
 

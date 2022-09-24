@@ -9,8 +9,6 @@ function QuotationPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { userAuth } = useSelector((state) => state.userLogin);
-
   const { procurements, loading, error } = useSelector(
     (state) => state.procurementList
   );
@@ -33,12 +31,7 @@ function QuotationPage() {
 
       <Paper variant="outlined">
         <QuotationListTable
-          data={procurements?.map((procurement) => ({
-            ...procurement,
-            quotedTotalPrice: procurement.quotations.find(
-              (quotation) => quotation.supplier.id === Number(userAuth.id)
-            )?.quotedTotalPrice,
-          }))}
+          data={procurements}
           onRowOpenClick={onRowOpenClick}
         />
       </Paper>

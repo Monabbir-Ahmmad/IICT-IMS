@@ -1,75 +1,99 @@
-import { Chip, IconButton } from "@mui/material";
+import { Chip, IconButton, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { MdDelete as DeleteIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter } from "../../../utils/utilities";
 import moment from "moment/moment";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
+  const getStatus = useCallback((quotations = []) => {
+    const offerAccepted = quotations?.find(
+      (quotation) => quotation?.accepted === true
+    );
+
+    if (offerAccepted) return "Offer Accepted";
+    else if (quotations?.length > 0) return "Offers Received";
+    else return "Pending";
+  }, []);
+
   const columns = useMemo(
     () => [
       {
         field: "id",
         headerName: "ID",
-        width: 100,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: "title",
         headerName: "Title",
-        width: 300,
-        renderCell: RenderCellExpand,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
+        renderCell: RenderCellExpand,
       },
       {
         field: "category",
         headerName: "Category",
-        width: 200,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: "createdAt",
         headerName: "Issue Date",
-        width: 150,
         type: "date",
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
         field: "deadline",
         headerName: "Deadline",
-        width: 150,
         type: "date",
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
         field: "estimatedTotalPrice",
         headerName: "Estimated Total Price",
-        valueFormatter: ({ value }) => currencyFormatter().format(value),
         type: "number",
-        width: 200,
         headerAlign: "center",
         align: "center",
+        flex: 1,
+        minWidth: 100,
+        valueFormatter: ({ value }) => currencyFormatter().format(value),
       },
       {
         field: "status",
         headerName: "Status",
-        width: 150,
         headerAlign: "center",
         align: "center",
-        renderCell: (props) => (
+        flex: 1,
+        minWidth: 100,
+        valueGetter: ({ row }) => getStatus(row?.quotations),
+        renderCell: ({ value }) => (
           <Chip
             variant="outlined"
-            label={props.value || "Pending"}
-            color={props.value === "Completed" ? "success" : "warning"}
+            label={value}
+            color={
+              value === "Offer Accepted"
+                ? "success"
+                : value === "Offers Received"
+                ? "info"
+                : "warning"
+            }
           />
         ),
       },
@@ -77,6 +101,8 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         field: "actions",
         headerName: "Actions",
         type: "actions",
+        flex: 1,
+        minWidth: 100,
         getActions: (params) => [
           <IconButton color="error" onClick={() => onRowDeleteClick(params.id)}>
             <DeleteIcon size={24} />
@@ -84,11 +110,11 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         ],
       },
     ],
-    [onRowDeleteClick]
+    [getStatus, onRowDeleteClick]
   );
 
   return (
-    <div style={{ height: 650, width: "100%" }}>
+    <Paper variant="outlined" sx={{ height: 650 }}>
       <DataGrid
         rows={data}
         columns={columns}
@@ -99,7 +125,7 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         onRowClick={(params) => onRowOpenClick(params.id)}
         sx={{ border: 0 }}
       />
-    </div>
+    </Paper>
   );
 }
 
