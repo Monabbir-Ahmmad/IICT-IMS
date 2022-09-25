@@ -4,32 +4,26 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  LinearProgress,
   TextField,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import moment from "moment";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import { currencyFormatter } from "../../../utils/utilities";
 
-function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
-  const { loading } = useSelector((state) => state.procurementQuotationAccept);
-
+function OrderDeliveryProductInfoAdder({ open, product, onSubmit, onCancel }) {
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
-      deliveryDeadline: "",
+      unitPrice: "",
+      warrantyExpiryDate: "",
     },
   });
 
   useEffect(() => {
     reset();
   }, [open, reset]);
-
   return (
     <Dialog
       fullWidth
@@ -41,57 +35,36 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
         sx: { bgcolor: "background.paper", backgroundImage: "none" },
       }}
     >
-      <DialogTitle>Purchase Order: {quotation?.procurementName}</DialogTitle>
+      <DialogTitle>Product Info</DialogTitle>
 
       <DialogContent dividers>
-        <form id="accept-quotation-form" onSubmit={handleSubmit(onSubmit)}>
+        <form id="delivery-product-form" onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={4} pt={2}>
-            {loading && <LinearProgress />}
-
             <Typography variant="body1">
-              Supplier BIN: <strong>{quotation?.supplier?.bin}</strong>
+              Name: <strong>{product?.name}</strong>
             </Typography>
 
             <Typography variant="body1">
-              Supplier Name: <strong>{quotation?.supplier?.companyName}</strong>
+              Manufacturer: <strong>{product?.manufacturer}</strong>
             </Typography>
 
             <Typography variant="body1">
-              Supplier Email: <strong>{quotation?.supplier?.email}</strong>
+              Details: <strong>{product?.details}</strong>
             </Typography>
 
             <Typography variant="body1">
-              Supplier Contact No:{" "}
-              <strong>{quotation?.supplier?.contactNumber}</strong>
-            </Typography>
-
-            <Typography variant="body1">
-              Supplier Address: <strong>{quotation?.supplier?.address}</strong>
-            </Typography>
-
-            <Typography variant="body1">
-              Quotation Created At:{" "}
-              <strong>
-                {moment(quotation?.createdAt).format("MMM Do, YYYY")}
-              </strong>
-            </Typography>
-
-            <Typography variant="body1">
-              Order Value:{" "}
-              <strong>
-                {currencyFormatter().format(quotation?.quotedTotalPrice)}
-              </strong>
+              Quantity: <strong>{product?.quantity}</strong>
             </Typography>
 
             <Controller
-              name="deliveryDeadline"
+              name="warrantyExpiryDate"
               control={control}
-              rules={{ required: "Delivery deadline is required" }}
+              rules={{ required: "Warranty expiry date is required" }}
               render={({ field, fieldState }) => (
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                   <DatePicker
                     disablePast
-                    label="Delivery Deadline"
+                    label="Warranty Expiry Date"
                     value={field.value}
                     onChange={(newValue) =>
                       field.onChange(newValue?.format("YYYY-MM-DD"))
@@ -109,16 +82,39 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
                 </LocalizationProvider>
               )}
             />
+
+            <Controller
+              name="unitPrice"
+              control={control}
+              rules={{
+                required: "Unit price is required",
+                pattern: {
+                  value: /^(?:[1-9]\d*|0(?!(?:\.0+)?$))?(?:\.\d+)?$/,
+                  message: "Invalid unit price",
+                },
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label="Unit Price"
+                  variant="outlined"
+                  fullWidth
+                  type={"number"}
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                />
+              )}
+            />
           </Stack>
         </form>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
-        <Button type="submit" form="accept-quotation-form">
+        <Button type="submit" form="delivery-product-form">
           Confirm
         </Button>
       </DialogActions>
     </Dialog>
   );
 }
-export default QuotationAccepter;
+export default OrderDeliveryProductInfoAdder;

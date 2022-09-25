@@ -1,25 +1,28 @@
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace API.DTOs.Request
+namespace API.DTOs.Response
 {
-    public class ProductDeliveryReqDto
+    public class ProductResDto
     {
-        [Required]
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
-        [Required]
+        public string Category { get; set; }
+
         public string Manufacturer { get; set; }
 
-        [Required]
         public string Details { get; set; }
 
-        [Required]
         public decimal UnitPrice { get; set; }
 
-        [Required]
         public int Quantity { get; set; }
 
-        [Required]
         public DateTime WarrantyExpiryDate { get; set; }
+
+        public string Status { get; set; }
     }
 }

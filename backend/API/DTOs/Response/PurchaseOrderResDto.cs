@@ -9,8 +9,22 @@ namespace API.DTOs.Response
     {
         public int Id { get; set; }
 
+        public string Category { get; set; }
+
         public ProcurementResDto Procurement { get; set; }
 
         public QuotationResDto Quotation { get; set; }
+
+        public List<ProductResDto> Products { get; set; }
+
+        public decimal TotalPrice { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime DeliveryDeadline { get; set; }
+
+        public DateTime? DeliveryDate { get; set; }
+
+        public string Status { get; set; }
     }
 }

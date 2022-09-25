@@ -1,9 +1,9 @@
 import {
   CREATE_PROCUREMENT,
+  CREATE_PURCHASE_ORDER,
   DELETE_PROCUREMENT,
   GET_PROCUREMENT,
   GET_PROCUREMENTS,
-  PROCUREMENT_QUOTATION_ACCEPT,
 } from "../constants/apiLinks";
 import api from "./api";
 
@@ -25,7 +25,7 @@ class ProcurementService {
   }
 
   async acceptQuotation(data) {
-    return await api().post(PROCUREMENT_QUOTATION_ACCEPT, data);
+    return await api().post(CREATE_PURCHASE_ORDER, data);
   }
 }
 

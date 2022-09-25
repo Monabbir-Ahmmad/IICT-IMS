@@ -16,7 +16,7 @@ namespace API.Entities
         public DateTime Deadline { get; set; }
 
         [Required]
-        public float EstimatedTotalPrice { get; set; }
+        public decimal EstimatedTotalPrice { get; set; }
 
         public ICollection<ProcurementProduct> Products { get; set; }
 

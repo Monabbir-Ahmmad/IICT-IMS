@@ -32,8 +32,8 @@ namespace API.Database.Migrations
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("EstimatedTotalPrice")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("EstimatedTotalPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("ProductCategoryId")
                         .HasColumnType("INTEGER");
@@ -67,11 +67,11 @@ namespace API.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<float>("EstimatedPrice")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("EstimatedPrice")
+                        .HasColumnType("TEXT");
 
-                    b.Property<float>("EstimatedTotalPrice")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("EstimatedTotalPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
@@ -101,6 +101,45 @@ namespace API.Database.Migrations
                     b.ToTable("ProcurementProducts");
                 });
 
+            modelBuilder.Entity("API.Entities.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Manufacturer")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("PurchaseOrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("WarrantyExpiryDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("PurchaseOrderId");
+
+                    b.ToTable("Product");
+                });
+
             modelBuilder.Entity("API.Entities.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -125,6 +164,15 @@ namespace API.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeliveryDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("DeliveryDeadline")
                         .HasColumnType("TEXT");
 
@@ -137,7 +185,15 @@ namespace API.Database.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ProcurementId");
 
@@ -161,8 +217,8 @@ namespace API.Database.Migrations
                     b.Property<int>("ProcurementId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<float>("QuotedTotalPrice")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("QuotedTotalPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SupplierId")
                         .HasColumnType("INTEGER");
@@ -308,8 +364,27 @@ namespace API.Database.Migrations
                     b.Navigation("Procurement");
                 });
 
+            modelBuilder.Entity("API.Entities.Product", b =>
+                {
+                    b.HasOne("API.Entities.ProductCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("API.Entities.PurchaseOrder", "PurchaseOrder")
+                        .WithMany("Products")
+                        .HasForeignKey("PurchaseOrderId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("PurchaseOrder");
+                });
+
             modelBuilder.Entity("API.Entities.PurchaseOrder", b =>
                 {
+                    b.HasOne("API.Entities.ProductCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("API.Entities.Procurement", "Procurement")
                         .WithMany()
                         .HasForeignKey("ProcurementId");
@@ -317,6 +392,8 @@ namespace API.Database.Migrations
                     b.HasOne("API.Entities.Quotation", "Quotation")
                         .WithMany()
                         .HasForeignKey("QuotationId");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Procurement");
 
@@ -374,6 +451,11 @@ namespace API.Database.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("Quotations");
+                });
+
+            modelBuilder.Entity("API.Entities.PurchaseOrder", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("API.Entities.Supplier", b =>

@@ -11,7 +11,7 @@
 
         public DateTime Deadline { get; set; }
 
-        public float EstimatedTotalPrice { get; set; }
+        public decimal EstimatedTotalPrice { get; set; }
 
         public List<ProcurementProductResDto> Products { get; set; }
 

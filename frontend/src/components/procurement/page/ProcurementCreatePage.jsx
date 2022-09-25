@@ -186,7 +186,7 @@ function ProcurementCreatePage() {
                     label="Tender Deadline"
                     value={field.value}
                     onChange={(newValue) =>
-                      field.onChange(newValue.format("YYYY-MM-DD"))
+                      field.onChange(newValue?.format("YYYY-MM-DD"))
                     }
                     renderInput={(params) => (
                       <TextField

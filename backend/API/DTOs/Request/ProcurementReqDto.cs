@@ -11,7 +11,7 @@ namespace API.DTOs.Request
         public int ProcurementCategoryId { get; set; }
 
         [Required]
-        public float EstimatedTotalPrice { get; set; }
+        public decimal EstimatedTotalPrice { get; set; }
 
         [Required]
         public DateTime Deadline { get; set; }

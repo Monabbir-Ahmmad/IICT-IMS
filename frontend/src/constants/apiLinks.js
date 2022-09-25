@@ -28,7 +28,14 @@ export const CREATE_PROCUREMENT = "/procurement/create";
 export const GET_PROCUREMENTS = "/procurement";
 export const GET_PROCUREMENT = "/procurement";
 export const DELETE_PROCUREMENT = "/procurement";
-export const PROCUREMENT_QUOTATION_ACCEPT = "/procurement/acceptQuotation";
 
 //Supplier quotation
 export const CREATE_QUOTATION = "/supplier/quotation/create";
+
+//Purchase order
+export const CREATE_PURCHASE_ORDER = "/purchaseOrder/create";
+export const GET_PURCHASE_ORDER_LIST = "/purchaseOrder";
+export const GET_PURCHASE_ORDER = "/purchaseOrder";
+export const SEND_PURCHASE_ORDER_DELIVERY = "/purchaseOrder/delivery";
+export const CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE =
+  "/purchaseOrder/delivery/receive";

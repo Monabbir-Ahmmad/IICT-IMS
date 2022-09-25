@@ -11,6 +11,6 @@ namespace API.DTOs.Request
         public int SupplierId { get; set; }
 
         [Required]
-        public float QuotedTotalPrice { get; set; }
+        public decimal QuotedTotalPrice { get; set; }
     }
 }

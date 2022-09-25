@@ -6,7 +6,7 @@ import { currencyFormatter } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function OrderRequestTable({ data = [], onRowOpenClick }) {
+function PurchaseOrderTable({ data = [], onRowOpenClick }) {
   const columns = useMemo(
     () => [
       {
@@ -40,6 +40,17 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
+        field: "deliveryDate",
+        headerName: "Delivery Date",
+        type: "date",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+        valueFormatter: ({ value }) =>
+          value ? moment(value).format("MMM Do, YYYY") : "N/A",
+      },
+      {
         field: "totalPrice",
         headerName: "Total Price",
         type: "number",
@@ -49,7 +60,6 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
         align: "center",
         valueFormatter: ({ value }) => currencyFormatter().format(value),
       },
-
       {
         field: "status",
         headerName: "Status",
@@ -64,7 +74,7 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
             color={
               value === "Pending"
                 ? "warning"
-                : value === "Offered"
+                : value === "Delivery Sent"
                 ? "info"
                 : "success"
             }
@@ -90,4 +100,4 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
     </Paper>
   );
 }
-export default OrderRequestTable;
+export default PurchaseOrderTable;

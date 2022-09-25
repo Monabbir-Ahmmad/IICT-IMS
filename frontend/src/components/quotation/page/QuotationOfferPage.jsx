@@ -1,6 +1,5 @@
 import {
   Alert,
-  Box,
   Button,
   Divider,
   InputAdornment,
@@ -59,54 +58,58 @@ function QuotationOfferPage() {
         <Alert severity="error">{singleProcurement.error}</Alert>
       )}
 
+      {!singleProcurement.procurement?.quotations.find(
+        (quotation) => quotation.supplier.id === Number(userAuth.id)
+      ) && (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={3} alignItems={"start"}>
+            <Button
+              variant="contained"
+              type="submit"
+              startIcon={<SendQuotationIcon />}
+            >
+              Send quotation offer
+            </Button>
+
+            <Controller
+              name="quotedTotalPrice"
+              control={control}
+              rules={{
+                required: "Total price offer is required",
+                pattern: {
+                  value: /^(?:[1-9]\d*|0(?!(?:\.0+)?$))?(?:\.\d+)?$/,
+                  message: "Invalid price",
+                },
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  label="Total price offer"
+                  placeholder="Enter total price offer"
+                  type={"number"}
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  sx={{
+                    maxWidth: 500,
+                    width: "100%",
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">BDT</InputAdornment>
+                    ),
+                  }}
+                />
+              )}
+            />
+          </Stack>
+        </form>
+      )}
+
+      <Typography variant="h5">Procurement Details</Typography>
+
       <Paper variant="outlined">
         <Stack p={2} spacing={2}>
-          {!singleProcurement.procurement?.quotations.find(
-            (quotation) => quotation.supplier.id === Number(userAuth.id)
-          ) && (
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box display={"flex"} gap={2} alignItems={"center"} mb={2}>
-                <Typography variant={"body1"}>Total Price Offer:</Typography>
-                <Controller
-                  name="quotedTotalPrice"
-                  control={control}
-                  rules={{
-                    required: "Total price offer is required",
-                    pattern: {
-                      value: /^(?:[1-9]\d*|0(?!(?:\.0+)?$))?(?:\.\d+)?$/,
-                      message: "Invalid price",
-                    },
-                  }}
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      variant="outlined"
-                      placeholder="Enter total price offer"
-                      type={"number"}
-                      size={"small"}
-                      error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">BDT</InputAdornment>
-                        ),
-                      }}
-                    />
-                  )}
-                />
-                <Button
-                  variant="contained"
-                  type="submit"
-                  startIcon={<SendQuotationIcon />}
-                >
-                  Send offer
-                </Button>
-              </Box>
-
-              <Divider />
-            </form>
-          )}
-
           <Typography variant={"body1"}>
             Title: <strong>{singleProcurement.procurement?.title}</strong>
           </Typography>

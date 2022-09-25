@@ -1,4 +1,4 @@
-import { Alert, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { Alert, LinearProgress, Stack, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -29,12 +29,7 @@ function QuotationPage() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <Paper variant="outlined">
-        <QuotationListTable
-          data={procurements}
-          onRowOpenClick={onRowOpenClick}
-        />
-      </Paper>
+      <QuotationListTable data={procurements} onRowOpenClick={onRowOpenClick} />
     </Stack>
   );
 }

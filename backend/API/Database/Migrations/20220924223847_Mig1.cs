@@ -44,7 +44,7 @@ namespace API.Database.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     Deadline = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    EstimatedTotalPrice = table.Column<float>(type: "REAL", nullable: false),
+                    EstimatedTotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     ProductCategoryId = table.Column<int>(type: "INTEGER", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
@@ -131,9 +131,9 @@ namespace API.Database.Migrations
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     Manufacturer = table.Column<string>(type: "TEXT", nullable: false),
                     Details = table.Column<string>(type: "TEXT", nullable: false),
-                    EstimatedPrice = table.Column<float>(type: "REAL", nullable: false),
+                    EstimatedPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    EstimatedTotalPrice = table.Column<float>(type: "REAL", nullable: false),
+                    EstimatedTotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     ProcurementId = table.Column<int>(type: "INTEGER", nullable: false),
                     ProductCategoryId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -168,7 +168,7 @@ namespace API.Database.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ProcurementId = table.Column<int>(type: "INTEGER", nullable: false),
                     SupplierId = table.Column<int>(type: "INTEGER", nullable: false),
-                    QuotedTotalPrice = table.Column<float>(type: "REAL", nullable: false),
+                    QuotedTotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     Accepted = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
@@ -196,10 +196,15 @@ namespace API.Database.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    CategoryId = table.Column<int>(type: "INTEGER", nullable: true),
                     ProcurementId = table.Column<int>(type: "INTEGER", nullable: true),
                     QuotationId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     DeliveryDeadline = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", nullable: true)
+                    DeliveryDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Status = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -210,9 +215,44 @@ namespace API.Database.Migrations
                         principalTable: "Procurements",
                         principalColumn: "Id");
                     table.ForeignKey(
+                        name: "FK_PurchaseOrders_ProductCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "ProductCategories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_PurchaseOrders_Quotations_QuotationId",
                         column: x => x.QuotationId,
                         principalTable: "Quotations",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Product",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    CategoryId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Manufacturer = table.Column<string>(type: "TEXT", nullable: true),
+                    Details = table.Column<string>(type: "TEXT", nullable: true),
+                    UnitPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    WarrantyExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: true),
+                    PurchaseOrderId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Product_ProductCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "ProductCategories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Product_PurchaseOrders_PurchaseOrderId",
+                        column: x => x.PurchaseOrderId,
+                        principalTable: "PurchaseOrders",
                         principalColumn: "Id");
                 });
 
@@ -242,10 +282,25 @@ namespace API.Database.Migrations
                 column: "ProductCategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Product_CategoryId",
+                table: "Product",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_PurchaseOrderId",
+                table: "Product",
+                column: "PurchaseOrderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductCategories_Name",
                 table: "ProductCategories",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PurchaseOrders_CategoryId",
+                table: "PurchaseOrders",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_ProcurementId",
@@ -289,16 +344,19 @@ namespace API.Database.Migrations
                 name: "ProcurementProducts");
 
             migrationBuilder.DropTable(
-                name: "PurchaseOrders");
+                name: "Product");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Quotations");
+                name: "PurchaseOrders");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "Quotations");
 
             migrationBuilder.DropTable(
                 name: "Procurements");

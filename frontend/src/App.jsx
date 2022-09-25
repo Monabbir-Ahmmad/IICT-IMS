@@ -17,6 +17,7 @@ import { UserRoles } from "./constants/enums";
 import InventoryPage from "./components/inventory/page/InventoryPage";
 import OrderRequestPage from "./components/purchaseOrder/page/OrderRequestPage";
 import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage";
+import OrderRequestDeliveryPage from "./components/purchaseOrder/page/OrderRequestDeliveryPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -75,6 +76,10 @@ function App() {
             />
 
             <Route path="order-requests" element={<OrderRequestPage />} />
+            <Route
+              path="order-requests/:purchaseOrderId"
+              element={<OrderRequestDeliveryPage />}
+            />
           </Route>
 
           <Route

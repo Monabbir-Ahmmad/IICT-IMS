@@ -13,7 +13,7 @@ namespace API.Entities
         public Supplier Supplier { get; set; }
 
         [Required]
-        public float QuotedTotalPrice { get; set; }
+        public decimal QuotedTotalPrice { get; set; }
 
         public bool Accepted { get; set; }
     }

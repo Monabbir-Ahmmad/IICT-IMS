@@ -10,7 +10,7 @@ namespace API.DTOs.Response
 
         public DateTime CreatedAt { get; set; }
 
-        public float QuotedTotalPrice { get; set; }
+        public decimal QuotedTotalPrice { get; set; }
 
         public SupplierDetailsResDto Supplier { get; set; }
 

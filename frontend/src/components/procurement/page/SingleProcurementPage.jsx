@@ -41,11 +41,6 @@ function SingleProcurementPage() {
   };
 
   const onQuotationAcceptSubmit = (value) => {
-    console.log({
-      ...value,
-      procurementId: procurement.id,
-      quotationId: selectedQuotation.id,
-    });
     dispatch(
       procurementQuotationAccept({
         ...value,
@@ -62,9 +57,11 @@ function SingleProcurementPage() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
+      <Typography variant="h5">Procurement Details</Typography>
+
       <Paper variant="outlined">
         <Stack p={3} spacing={3}>
-          <Typography variant={"h5"}>
+          <Typography variant={"body1"}>
             Procurement Title: <strong>{procurement?.title}</strong>
           </Typography>
 

@@ -4,6 +4,8 @@ using API.Interfaces.Auth;
 using API.Interfaces.AutoComplete;
 using API.Interfaces.Procurement;
 using API.Interfaces.ProductCategory;
+using API.Interfaces.PurchaseOrder;
+using API.Interfaces.PurchaseOrders;
 using API.Interfaces.Quotation;
 using API.Middlewares;
 using API.Services.Auth;
@@ -30,6 +32,7 @@ builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
 builder.Services.AddScoped<IProcurementService, ProcurementService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IQuotationService, QuotationService>();
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -38,7 +41,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
