@@ -25,6 +25,11 @@ import {
 } from "./reducers/procurement.reducers";
 import { quotationCreateReducer } from "./reducers/quotation.reducers";
 import { alertSnackbarReducer } from "./reducers/alertSnackbar.reducers";
+import {
+  deliverPurchaseOrderReducer,
+  singlePurchaseOrderReducer,
+  purchaseOrdersReducer,
+} from "./reducers/purchaseOrder.reducer";
 
 const reducer = combineReducers({
   alertSnackbar: alertSnackbarReducer,
@@ -43,6 +48,9 @@ const reducer = combineReducers({
   procurementDelete: procurementDeleteReducer,
   quotationCreate: quotationCreateReducer,
   procurementQuotationAccept: procurementQuotationAcceptReducer,
+  purchaseOrders: purchaseOrdersReducer,
+  singlePurchaseOrder: singlePurchaseOrderReducer,
+  deliverPurchaseOrder: deliverPurchaseOrderReducer,
 });
 
 const initialState = {

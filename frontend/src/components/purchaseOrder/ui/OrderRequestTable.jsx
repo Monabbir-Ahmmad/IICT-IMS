@@ -64,7 +64,7 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
             color={
               value === "Pending"
                 ? "warning"
-                : value === "Offered"
+                : value === "Delivery Sent"
                 ? "info"
                 : "success"
             }

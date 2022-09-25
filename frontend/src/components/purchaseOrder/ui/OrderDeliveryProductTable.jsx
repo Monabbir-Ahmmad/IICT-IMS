@@ -44,7 +44,7 @@ function OrderDeliveryProductTable({ data = [], onEditProductClick }) {
         flex: 1,
         minWidth: 100,
         valueFormatter: ({ value }) =>
-          value ? moment(value).format("MMM Do, YYYY") : "N/A",
+          value ? moment(value).format("MMM Do, YYYY") : "Required",
       },
       {
         field: "unitPrice",
@@ -55,7 +55,7 @@ function OrderDeliveryProductTable({ data = [], onEditProductClick }) {
         flex: 1,
         minWidth: 100,
         valueFormatter: ({ value }) =>
-          value ? currencyFormatter().format(value) : "N/A",
+          value ? currencyFormatter().format(value) : "Required",
       },
       {
         field: "quantity",
@@ -75,7 +75,7 @@ function OrderDeliveryProductTable({ data = [], onEditProductClick }) {
         flex: 1,
         minWidth: 100,
         valueFormatter: ({ value }) =>
-          value ? currencyFormatter().format(value) : "N/A",
+          value ? currencyFormatter().format(value) : "Required",
       },
       {
         field: "actions",

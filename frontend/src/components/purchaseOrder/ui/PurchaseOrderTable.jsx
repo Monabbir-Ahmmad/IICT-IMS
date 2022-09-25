@@ -1,4 +1,4 @@
-import { Chip, Paper } from "@mui/material";
+import { Button, Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
@@ -6,9 +6,21 @@ import { currencyFormatter } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function PurchaseOrderTable({ data = [], onRowOpenClick }) {
+function PurchaseOrderTable({
+  data = [],
+  onRowOpenClick,
+  onDeliveryReceiveConfirmClick,
+}) {
   const columns = useMemo(
     () => [
+      {
+        field: "id",
+        headerName: "ID",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+      },
       {
         field: "title",
         headerName: "Title",
@@ -81,8 +93,24 @@ function PurchaseOrderTable({ data = [], onRowOpenClick }) {
           />
         ),
       },
+      {
+        field: "actions",
+        headerName: "Actions",
+        type: "actions",
+        flex: 1,
+        minWidth: 100,
+        getActions: ({ row }) => [
+          <Button
+            variant="contained"
+            color={row.status === "Delivery Completed" ? "success" : "primary"}
+            onClick={() => onDeliveryReceiveConfirmClick(row.id)}
+          >
+            {row.status === "Delivery Completed" ? "Received" : "Confirm"}
+          </Button>,
+        ],
+      },
     ],
-    []
+    [onDeliveryReceiveConfirmClick]
   );
 
   return (

@@ -61,10 +61,12 @@ namespace API.Controllers
 
         [HttpPost("delivery/receive")]
         public async Task<ActionResult<PurchaseOrderResDto>> ConfirmDeliveryReceive(
-            int purchaseOrderId
+            DeliveryConfirmReqDto deliveryConfirmReqDto
         )
         {
-            return await _purchaseOrderService.ConfirmDeliveryReceive(purchaseOrderId);
+            return await _purchaseOrderService.ConfirmDeliveryReceive(
+                deliveryConfirmReqDto.PurchaseOrderId
+            );
         }
     }
 }
