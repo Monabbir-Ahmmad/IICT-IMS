@@ -227,7 +227,7 @@ namespace API.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -243,14 +243,14 @@ namespace API.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Product_ProductCategories_CategoryId",
+                        name: "FK_Products_ProductCategories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "ProductCategories",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Product_PurchaseOrders_PurchaseOrderId",
+                        name: "FK_Products_PurchaseOrders_PurchaseOrderId",
                         column: x => x.PurchaseOrderId,
                         principalTable: "PurchaseOrders",
                         principalColumn: "Id");
@@ -282,20 +282,20 @@ namespace API.Database.Migrations
                 column: "ProductCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_CategoryId",
-                table: "Product",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Product_PurchaseOrderId",
-                table: "Product",
-                column: "PurchaseOrderId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductCategories_Name",
                 table: "ProductCategories",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CategoryId",
+                table: "Products",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_PurchaseOrderId",
+                table: "Products",
+                column: "PurchaseOrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_CategoryId",
@@ -344,7 +344,7 @@ namespace API.Database.Migrations
                 name: "ProcurementProducts");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Users");

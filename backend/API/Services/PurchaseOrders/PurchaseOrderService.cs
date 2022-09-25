@@ -189,7 +189,7 @@ namespace API.Interfaces.PurchaseOrders
 
             foreach (var product in purchaseOrder.Products)
             {
-                product.Status = StatusEnum.DeliveryCompleted;
+                product.Status = StatusEnum.InInventory;
             }
 
             purchaseOrder.Status = StatusEnum.DeliveryCompleted;

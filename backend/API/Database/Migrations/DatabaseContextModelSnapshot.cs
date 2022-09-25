@@ -137,7 +137,7 @@ namespace API.Database.Migrations
 
                     b.HasIndex("PurchaseOrderId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("API.Entities.ProductCategory", b =>

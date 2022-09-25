@@ -64,7 +64,7 @@ function NavMenu() {
           title={"Purchase Orders"}
           link={"/purchase-orders"}
           icon={PurchaseOrderIcon}
-          // allowedRoles={[UserRoles.SUPPLIER]}
+          allowedRoles={[UserRoles.EMPLOYEE, UserRoles.ADMIN]}
         />
         <NavLinkItem
           title={"Order Requests"}

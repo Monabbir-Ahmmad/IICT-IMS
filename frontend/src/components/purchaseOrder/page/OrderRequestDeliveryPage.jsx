@@ -79,24 +79,24 @@ function OrderRequestDeliveryPage() {
   };
 
   const onDeliverySubmit = (values) => {
-    if (
-      orderedProducts.reduce((acc, p) => acc + p.totalPrice, 0) ===
-      purchaseOrder.quotation.quotedTotalPrice
-    )
-      dispatch(
-        sendDelivery({ ...values, purchaseOrderId, products: orderedProducts })
-      );
-    else
-      dispatch(
-        showErrorAlert(
-          "Total price of the products should be equal to the quoted total price"
-        )
-      );
+    // if (
+    //   orderedProducts.reduce((acc, p) => acc + p.totalPrice, 0) ===
+    //   purchaseOrder.quotation.quotedTotalPrice
+    // )
+    dispatch(
+      sendDelivery({ ...values, purchaseOrderId, products: orderedProducts })
+    );
+    // else
+    //   dispatch(
+    //     showErrorAlert(
+    //       "Total price of the products should be equal to the quoted total price"
+    //     )
+    //   );
   };
 
   return (
     <Stack spacing={2}>
-      {purchaseOrder.status === "Pending" && (
+      {purchaseOrder?.status === "Pending" && (
         <form onSubmit={handleSubmit(onDeliverySubmit)}>
           <Stack spacing={3} alignItems={"start"}>
             <Button

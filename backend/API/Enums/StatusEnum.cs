@@ -18,5 +18,6 @@ namespace API.Enums
         public static readonly string Verified = "Verified";
         public static readonly string DeliverySent = "Delivery Sent";
         public static readonly string DeliveryCompleted = "Delivery Completed";
+        public static readonly string InInventory = "In Inventory";
     }
 }
