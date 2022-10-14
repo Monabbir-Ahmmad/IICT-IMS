@@ -46,6 +46,7 @@ namespace API.Services.Quotations
                 .Where(x => x.Id == quotationCreateReqDto.ProcurementId)
                 .Include(x => x.Category)
                 .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Quotations)
                 .ThenInclude(x => x.Supplier)

@@ -37,19 +37,21 @@ namespace API.Services.Procurements
                 Category = procurementCategory,
                 EstimatedTotalPrice = procurementReqDto.EstimatedTotalPrice,
                 Deadline = procurementReqDto.Deadline,
-                Products = procurementReqDto.Products.ConvertAll<ProcurementProduct>(
-                    x =>
-                        new ProcurementProduct
+                Products = procurementReqDto.Products.ConvertAll<ProcurementProduct>(x =>
+                {
+                    return new ProcurementProduct
+                    {
+                        Product = new Product
                         {
                             Name = x.Name,
                             Category = procurementCategory,
                             Manufacturer = x.Manufacturer,
                             Details = x.Details,
-                            EstimatedPrice = x.EstimatedPrice,
-                            Quantity = x.Quantity,
-                            EstimatedTotalPrice = x.EstimatedTotalPrice
-                        }
-                )
+                        },
+                        EstimatedPrice = x.EstimatedPrice,
+                        Quantity = x.Quantity,
+                    };
+                })
             };
 
             _context.Procurements.Add(procurement);
@@ -79,6 +81,7 @@ namespace API.Services.Procurements
                 .Where(x => x.Id == id)
                 .Include(x => x.Category)
                 .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Quotations)
                 .ThenInclude(x => x.Supplier)
@@ -115,57 +118,6 @@ namespace API.Services.Procurements
             var procurementListResDto = _mapper.Map<List<ProcurementResDto>>(procurementList);
 
             return procurementListResDto;
-        }
-
-        public async Task<ProcurementResDto> AcceptProcurementQuotation(
-            QuotationAcceptReqDto quotationAcceptReqDto
-        )
-        {
-            if (
-                await _context.PurchaseOrders.AnyAsync(
-                    x =>
-                        x.Procurement.Id == quotationAcceptReqDto.ProcurementId
-                        && x.Quotation.Id == quotationAcceptReqDto.QuotationId
-                )
-            )
-                throw new ApiException(
-                    HttpStatusCode.Conflict,
-                    "A quotation has already been accepted for this procurement."
-                );
-
-            var procurement = await _context.Procurements.SingleOrDefaultAsync(
-                x => x.Id == quotationAcceptReqDto.ProcurementId
-            );
-
-            if (procurement == null)
-                throw new NotFoundException("Procurement not found.");
-
-            var quotation = await _context.Quotations.SingleOrDefaultAsync(
-                x =>
-                    x.Id == quotationAcceptReqDto.QuotationId
-                    && x.Procurement.Id == quotationAcceptReqDto.ProcurementId
-            );
-
-            if (quotation == null)
-                throw new NotFoundException("Quotation not found.");
-
-            var purchaseOrder = new PurchaseOrder
-            {
-                Procurement = procurement,
-                Quotation = quotation,
-                DeliveryDeadline = quotationAcceptReqDto.DeliveryDeadline,
-                Status = StatusEnum.Pending,
-            };
-
-            quotation.Accepted = true;
-
-            _context.Quotations.Update(quotation);
-
-            _context.PurchaseOrders.Add(purchaseOrder);
-
-            await _context.SaveChangesAsync();
-
-            return await GetProcurement(quotationAcceptReqDto.ProcurementId);
         }
     }
 }

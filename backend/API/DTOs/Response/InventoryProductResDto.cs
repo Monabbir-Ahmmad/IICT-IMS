@@ -1,6 +1,6 @@
 namespace API.DTOs.Response
 {
-    public class ProcurementProductResDto
+    public class InventoryProductResDto
     {
         public int Id { get; set; }
 
@@ -12,13 +12,8 @@ namespace API.DTOs.Response
 
         public string Details { get; set; }
 
-        public decimal EstimatedPrice { get; set; }
+        public decimal Price { get; set; }
 
-        public int Quantity { get; set; }
-
-        public decimal EstimatedTotalPrice
-        {
-            get { return EstimatedPrice * Quantity; }
-        }
+        public DateTime WarrantyExpiryDate { get; set; }
     }
 }

@@ -22,14 +22,15 @@ namespace API.Services.Inventory
             _mapper = mapper;
         }
 
-        public async Task<List<ProductResDto>> GetProductsInInventory()
+        public async Task<List<InventoryProductResDto>> GetProductsInInventory()
         {
-            var products = await _context.Products
-                .Include(x => x.Category)
+            var products = await _context.InventoryProducts
+                .Include(x => x.Product)
+                .ThenInclude(x => x.Category)
                 .Where(x => x.Status == StatusEnum.InInventory)
                 .ToListAsync();
 
-            return _mapper.Map<List<ProductResDto>>(products);
+            return _mapper.Map<List<InventoryProductResDto>>(products);
         }
     }
 }

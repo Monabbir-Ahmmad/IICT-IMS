@@ -17,7 +17,8 @@ namespace API.MapperProfiles
             MapProcurementProduct();
             MapQuotation();
             MapPurchaseOrder();
-            MapProduct();
+            MapPurchaseOrderProduct();
+            MapInventoryProduct();
         }
 
         private void MapUserRole()
@@ -28,7 +29,7 @@ namespace API.MapperProfiles
         private void MapUser()
         {
             CreateMap<User, UserDetailsResDto>()
-                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.RoleName));
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name));
         }
 
         private void MapSupplier()
@@ -53,9 +54,16 @@ namespace API.MapperProfiles
         private void MapProcurementProduct()
         {
             CreateMap<ProcurementProduct, ProcurementProductResDto>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
-
-            CreateMap<ProcurementProductReqDto, ProcurementProduct>();
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(
+                    dest => dest.Category,
+                    opt => opt.MapFrom(src => src.Product.Category.Name)
+                )
+                .ForMember(
+                    dest => dest.Manufacturer,
+                    opt => opt.MapFrom(src => src.Product.Manufacturer)
+                )
+                .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.Product.Details));
         }
 
         private void MapQuotation()
@@ -77,10 +85,34 @@ namespace API.MapperProfiles
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
         }
 
-        private void MapProduct()
+        private void MapPurchaseOrderProduct()
         {
-            CreateMap<Product, ProductResDto>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
+            CreateMap<PurchaseOrderProduct, PurchaseOrderProductResDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(
+                    dest => dest.Category,
+                    opt => opt.MapFrom(src => src.Product.Category.Name)
+                )
+                .ForMember(
+                    dest => dest.Manufacturer,
+                    opt => opt.MapFrom(src => src.Product.Manufacturer)
+                )
+                .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.Product.Details));
+        }
+
+        private void MapInventoryProduct()
+        {
+            CreateMap<InventoryProduct, InventoryProductResDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(
+                    dest => dest.Category,
+                    opt => opt.MapFrom(src => src.Product.Category.Name)
+                )
+                .ForMember(
+                    dest => dest.Manufacturer,
+                    opt => opt.MapFrom(src => src.Product.Manufacturer)
+                )
+                .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.Product.Details));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace API.DTOs.Response
 
         public QuotationResDto Quotation { get; set; }
 
-        public List<ProductResDto> Products { get; set; }
+        public List<PurchaseOrderProductResDto> Products { get; set; }
 
         public decimal TotalPrice { get; set; }
 

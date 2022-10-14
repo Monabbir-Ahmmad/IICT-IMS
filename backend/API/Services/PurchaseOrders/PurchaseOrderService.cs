@@ -47,6 +47,8 @@ namespace API.Interfaces.PurchaseOrders
 
             var procurement = await _context.Procurements
                 .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .SingleOrDefaultAsync(x => x.Id == purchaseOrderCreateReqDto.ProcurementId);
 
             if (procurement == null)
@@ -66,10 +68,23 @@ namespace API.Interfaces.PurchaseOrders
                 Procurement = procurement,
                 Quotation = quotation,
                 Category = procurement.Category,
+                Products = new List<PurchaseOrderProduct>(),
                 DeliveryDeadline = purchaseOrderCreateReqDto.DeliveryDeadline,
                 TotalPrice = quotation.QuotedTotalPrice,
                 Status = StatusEnum.Pending,
             };
+
+            foreach (var product in procurement.Products)
+            {
+                purchaseOrder.Products.Add(
+                    new PurchaseOrderProduct
+                    {
+                        Product = product.Product,
+                        PurchaseOrder = purchaseOrder,
+                        Quantity = product.Quantity,
+                    }
+                );
+            }
 
             quotation.Accepted = true;
 
@@ -89,9 +104,11 @@ namespace API.Interfaces.PurchaseOrders
             var purchaseOrder = await _context.PurchaseOrders
                 .Include(x => x.Category)
                 .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Procurement)
                 .ThenInclude(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .Include(x => x.Quotation)
                 .ThenInclude(x => x.Supplier)
                 .SingleOrDefaultAsync(x => x.Id == id);
@@ -107,6 +124,7 @@ namespace API.Interfaces.PurchaseOrders
             var purchaseOrders = await _context.PurchaseOrders
                 .Include(x => x.Category)
                 .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
@@ -123,6 +141,7 @@ namespace API.Interfaces.PurchaseOrders
             var purchaseOrder = await _context.PurchaseOrders
                 .Include(x => x.Category)
                 .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
@@ -140,22 +159,17 @@ namespace API.Interfaces.PurchaseOrders
 
             foreach (var product in purchaseOrderDeliveryReqDto.Products)
             {
-                for (var i = 0; i < product.Quantity; i++)
-                {
-                    purchaseOrder.Products.Add(
-                        new Product
-                        {
-                            Name = product.Name,
-                            Category = purchaseOrder.Category,
-                            Manufacturer = product.Manufacturer,
-                            Details = product.Details,
-                            UnitPrice = product.UnitPrice,
-                            WarrantyExpiryDate = product.WarrantyExpiryDate,
-                            Status = StatusEnum.DeliverySent,
-                            PurchaseOrder = purchaseOrder,
-                        }
-                    );
-                }
+                var purchaseOrderProduct = purchaseOrder.Products.SingleOrDefault(
+                    x => x.Id == product.Id
+                );
+
+                if (purchaseOrderProduct == null)
+                    throw new NotFoundException("Purchase order product not found.");
+
+                purchaseOrderProduct.UnitPrice = product.UnitPrice;
+                purchaseOrderProduct.WarrantyExpiryDate = product.WarrantyExpiryDate;
+
+                _context.PurchaseOrderProducts.Update(purchaseOrderProduct);
             }
 
             purchaseOrder.Status = StatusEnum.DeliverySent;
@@ -172,6 +186,7 @@ namespace API.Interfaces.PurchaseOrders
             var purchaseOrder = await _context.PurchaseOrders
                 .Include(x => x.Category)
                 .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
@@ -189,7 +204,19 @@ namespace API.Interfaces.PurchaseOrders
 
             foreach (var product in purchaseOrder.Products)
             {
-                product.Status = StatusEnum.InInventory;
+                for (var i = 0; i < product.Quantity; i++)
+                {
+                    var inventory = new InventoryProduct
+                    {
+                        Product = product.Product,
+                        PurchaseOrder = purchaseOrder,
+                        Price = product.UnitPrice,
+                        WarrantyExpiryDate = product.WarrantyExpiryDate,
+                        Status = StatusEnum.InInventory,
+                    };
+
+                    _context.InventoryProducts.Add(inventory);
+                }
             }
 
             purchaseOrder.Status = StatusEnum.DeliveryCompleted;

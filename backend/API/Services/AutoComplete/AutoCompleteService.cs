@@ -30,7 +30,7 @@ namespace API.Services.AutoComplete
         public async Task<List<UserRoleResDto>> GetUserRoles()
         {
             var userRoles = await _context.UserRoles
-                .Where(x => x.RoleName != UserRoleEnum.Supplier)
+                .Where(x => x.Name != UserRoleEnum.Supplier)
                 .ToListAsync();
 
             var userRoleListResDto = _mapper.Map<List<UserRoleResDto>>(userRoles);

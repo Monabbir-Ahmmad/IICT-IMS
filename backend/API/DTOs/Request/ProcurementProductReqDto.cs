@@ -19,8 +19,5 @@ namespace API.DTOs.Request
 
         [Required]
         public int Quantity { get; set; }
-
-        [Required]
-        public decimal EstimatedTotalPrice { get; set; }
     }
 }

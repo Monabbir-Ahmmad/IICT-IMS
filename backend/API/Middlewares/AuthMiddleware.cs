@@ -22,18 +22,20 @@ namespace API.Middlewares
         )
         {
             if (
-                httpContext.Request.Path.HasValue
-                    && httpContext.Request.Path.Value.ToLower().Contains("/auth")
+                httpContext.Request.Path.Value.ToLower().Contains("/auth")
                 || httpContext.Request.Path.Value.ToLower().Contains("/swagger")
+                || httpContext.Request.Path.Value.ToLower().Contains("/autocomplete")
             )
             {
                 await _next(httpContext);
                 return;
             }
 
-            var token = httpContext.Request.Cookies["authorization"]?.Split(" ").Last();
+            var token =
+                httpContext.Request.Cookies["authorization"]?.Split(" ").Last()
+                ?? httpContext.Request.Headers["authorization"].ToString().Split(" ").Last();
 
-            if (token == null)
+            if (string.IsNullOrEmpty(token))
             {
                 throw new UnauthorizedException("No Token Found.");
             }

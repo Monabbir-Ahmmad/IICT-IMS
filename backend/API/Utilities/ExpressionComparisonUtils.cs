@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
-using System.Reflection;
 using API.Enums;
 
 namespace API.Utilities
@@ -13,11 +12,13 @@ namespace API.Utilities
             string value
         )
         {
-            var parameter = Expression.Parameter(typeof(T), "x");
+            var parameter = Expression.Parameter(typeof(T), "");
 
-            var member = Expression.Property(parameter, propertyName);
+            var member = propertyName
+                .Split('.')
+                .Aggregate((Expression)parameter, Expression.Property);
 
-            var propertyType = ((PropertyInfo)member.Member).PropertyType;
+            var propertyType = member.Type;
 
             var converter = TypeDescriptor.GetConverter(propertyType);
 
@@ -36,7 +37,7 @@ namespace API.Utilities
         }
 
         private static Expression MakeComparison(
-            MemberExpression member,
+            Expression member,
             string comparison,
             UnaryExpression value
         )

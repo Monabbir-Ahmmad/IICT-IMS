@@ -20,7 +20,7 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<ProductResDto>>> GetProductsInInventroy()
+        public async Task<ActionResult<List<InventoryProductResDto>>> GetProductsInInventroy()
         {
             return await _inventoryService.GetProductsInInventory();
         }

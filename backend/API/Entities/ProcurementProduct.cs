@@ -1,33 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace API.Entities
+﻿namespace API.Entities
 {
-    public class ProcurementProduct
+    public class ProcurementProduct : BaseEntity
     {
-        public int Id { get; set; }
+        public Product Product { get; set; }
 
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public ProductCategory Category { get; set; }
-
-        [Required]
-        public string Manufacturer { get; set; }
-
-        [Required]
-        public string Details { get; set; }
-
-        [Required]
         public decimal EstimatedPrice { get; set; }
 
-        [Required]
         public int Quantity { get; set; }
 
-        [Required]
-        public decimal EstimatedTotalPrice { get; set; }
-
-        [Required]
         public Procurement Procurement { get; set; }
     }
 }

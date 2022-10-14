@@ -1,12 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace API.Entities
 {
-    public class UserRole
+    public class UserRole : BaseEntity
     {
-        public int Id { get; set; }
-
-        [Required]
-        public string RoleName { get; set; }
+        public string Name { get; set; }
     }
 }

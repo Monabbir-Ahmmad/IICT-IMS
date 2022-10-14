@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace API.DTOs.Response
 {
-    public class ProductResDto
+    public class PurchaseOrderProductResDto
     {
         public int Id { get; set; }
 
@@ -22,7 +17,5 @@ namespace API.DTOs.Response
         public int Quantity { get; set; }
 
         public DateTime WarrantyExpiryDate { get; set; }
-
-        public string Status { get; set; }
     }
 }

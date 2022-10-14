@@ -9,11 +9,13 @@ namespace API.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<Product> Products { get; set; }
         public DbSet<Procurement> Procurements { get; set; }
         public DbSet<ProcurementProduct> ProcurementProducts { get; set; }
         public DbSet<Quotation> Quotations { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<PurchaseOrderProduct> PurchaseOrderProducts { get; set; }
+        public DbSet<InventoryProduct> InventoryProducts { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options) { }
 

@@ -46,8 +46,8 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.RoleName),
-                AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.RoleName),
+                RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.Name),
+                AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.Name),
             };
         }
 
@@ -77,6 +77,7 @@ namespace API.Services.Auth
                 BIN = supplierRegisterDto.BIN,
                 Address = supplierRegisterDto.Address,
                 ContactNumber = supplierRegisterDto.ContactNumber,
+                Website = supplierRegisterDto.Website,
                 Category = supplierCategory
             };
 
@@ -105,8 +106,8 @@ namespace API.Services.Auth
 
             return new AuthResDto
             {
-                RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.RoleName),
-                AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.RoleName),
+                RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.Name),
+                AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.Name),
             };
         }
 
@@ -180,8 +181,8 @@ namespace API.Services.Auth
 
                 return new AuthResDto
                 {
-                    RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.RoleName),
-                    AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.RoleName),
+                    RefreshToken = _tokenService.CreateRefreshToken(user.Id, user.Role.Name),
+                    AccessToken = _tokenService.CreateAccessToken(user.Id, user.Role.Name),
                 };
             }
         }

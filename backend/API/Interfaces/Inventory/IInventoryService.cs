@@ -8,6 +8,6 @@ namespace API.Interfaces.Inventory
 {
     public interface IInventoryService
     {
-        Task<List<ProductResDto>> GetProductsInInventory();
+        Task<List<InventoryProductResDto>> GetProductsInInventory();
     }
 }

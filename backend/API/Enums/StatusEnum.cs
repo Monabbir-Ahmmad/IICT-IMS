@@ -16,6 +16,7 @@ namespace API.Enums
         public static readonly string Expired = "Expired";
         public static readonly string Unverified = "Unverified";
         public static readonly string Verified = "Verified";
+        public static readonly string DeliveryNotSent = "Delivery Not Sent";
         public static readonly string DeliverySent = "Delivery Sent";
         public static readonly string DeliveryCompleted = "Delivery Completed";
         public static readonly string InInventory = "In Inventory";
