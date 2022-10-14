@@ -8,6 +8,7 @@ using API.Interfaces.ProductCategory;
 using API.Interfaces.PurchaseOrder;
 using API.Interfaces.PurchaseOrders;
 using API.Interfaces.Quotation;
+using API.Interfaces.User;
 using API.Middlewares;
 using API.Services.Auth;
 using API.Services.AutoComplete;
@@ -15,6 +16,7 @@ using API.Services.Inventory;
 using API.Services.Procurements;
 using API.Services.ProductCategories;
 using API.Services.Quotations;
+using API.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +32,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // Dependency injections
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
 builder.Services.AddScoped<IProcurementService, ProcurementService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
@@ -52,6 +55,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 

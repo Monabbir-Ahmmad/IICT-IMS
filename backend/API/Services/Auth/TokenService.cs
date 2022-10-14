@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using API.Entities;
 using API.Interfaces.Auth;
 using Microsoft.IdentityModel.Tokens;
 
@@ -80,7 +79,7 @@ namespace API.Services.Auth
         {
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
-            return jwtToken.Claims.SingleOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value;
+            return jwtToken.Claims.SingleOrDefault(claim => claim.Type == "role")?.Value;
         }
     }
 }
