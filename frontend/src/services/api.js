@@ -24,18 +24,19 @@ const instance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 const api = (contentType = "application/json") => {
   instance.defaults.headers["Content-Type"] = contentType;
 
-  instance.interceptors.request.use(attachToken);
-
-  instance.interceptors.response.use((res) => res, refreshAccessToken);
+  instance.interceptors.response.use((res) => res, logError);
 
   instance.interceptors.response.use((res) => res, flatenErrors);
 
-  instance.interceptors.response.use((res) => res, logError);
+  instance.interceptors.request.use(attachToken);
+
+  instance.interceptors.response.use((res) => res, refreshAccessToken);
 
   return instance;
 };
@@ -60,7 +61,7 @@ const flatenErrors = (error) => {
 const attachToken = (config) => {
   const token = tokenService.getLocalAccessToken();
   if (token) {
-    config.headers["Authorization"] = "Bearer " + token;
+    config.headers.authorization = "Bearer " + token;
   }
   return config;
 };

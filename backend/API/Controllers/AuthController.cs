@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Interfaces.Auth;
@@ -23,11 +24,7 @@ namespace API.Controllers
         {
             var result = await _authService.RegisterUser(registerDto);
 
-            HttpContext.Response.Cookies.Append(
-                "authorization",
-                result.AccessToken,
-                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-            );
+            SetHeaderCookie(result.AccessToken);
 
             return Created("User created", result);
         }
@@ -37,11 +34,7 @@ namespace API.Controllers
         {
             var result = await _authService.LoginUser(loginDto);
 
-            HttpContext.Response.Cookies.Append(
-                "authorization",
-                result.AccessToken,
-                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-            );
+            SetHeaderCookie(result.AccessToken);
 
             return Ok(result);
         }
@@ -53,11 +46,7 @@ namespace API.Controllers
         {
             var result = await _authService.RegisterSupplier(supplierRegisterDto);
 
-            HttpContext.Response.Cookies.Append(
-                "authorization",
-                result.AccessToken,
-                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-            );
+            SetHeaderCookie(result.AccessToken);
 
             return Created("Supplier created", result);
         }
@@ -67,11 +56,7 @@ namespace API.Controllers
         {
             var result = await _authService.LoginSupplier(loginDto);
 
-            HttpContext.Response.Cookies.Append(
-                "authorization",
-                result.AccessToken,
-                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-            );
+            SetHeaderCookie(result.AccessToken);
 
             return Ok(result);
         }
@@ -81,13 +66,18 @@ namespace API.Controllers
         {
             var result = await _authService.RefreshToken(refreshToken);
 
-            HttpContext.Response.Cookies.Append(
-                "authorization",
-                result.AccessToken,
-                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-            );
+            SetHeaderCookie(result.AccessToken);
 
             return Ok(result);
+        }
+
+        private void SetHeaderCookie(string token)
+        {
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                new AuthenticationHeaderValue("Bearer", token).ToString(),
+                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+            );
         }
     }
 }

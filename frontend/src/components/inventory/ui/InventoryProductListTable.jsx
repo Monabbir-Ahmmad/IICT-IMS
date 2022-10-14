@@ -44,7 +44,7 @@ function InventroyProductListTable({ data = [], onRowOpenClick }) {
       },
 
       {
-        field: "price",
+        field: "unitPrice",
         headerName: " Price",
         type: "number",
         headerAlign: "center",
