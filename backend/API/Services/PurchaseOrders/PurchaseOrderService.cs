@@ -35,9 +35,7 @@ namespace API.Interfaces.PurchaseOrders
         {
             if (
                 await _context.PurchaseOrders.AnyAsync(
-                    x =>
-                        x.Procurement.Id == purchaseOrderCreateReqDto.ProcurementId
-                        && x.Quotation.Id == purchaseOrderCreateReqDto.QuotationId
+                    x => x.Procurement.Id == purchaseOrderCreateReqDto.ProcurementId
                 )
             )
                 throw new ApiException(
@@ -86,7 +84,11 @@ namespace API.Interfaces.PurchaseOrders
                 );
             }
 
+            procurement.Status = StatusEnum.OfferAccepted;
+
             quotation.Accepted = true;
+
+            _context.Procurements.Update(procurement);
 
             _context.Quotations.Update(quotation);
 
@@ -107,8 +109,6 @@ namespace API.Interfaces.PurchaseOrders
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Procurement)
-                .ThenInclude(x => x.Products)
-                .ThenInclude(x => x.Product)
                 .Include(x => x.Quotation)
                 .ThenInclude(x => x.Supplier)
                 .SingleOrDefaultAsync(x => x.Id == id);
@@ -210,8 +210,8 @@ namespace API.Interfaces.PurchaseOrders
                     {
                         Product = product.Product,
                         PurchaseOrder = purchaseOrder,
-                        Price = product.UnitPrice,
-                        WarrantyExpiryDate = product.WarrantyExpiryDate,
+                        Price = product.UnitPrice ?? 0,
+                        WarrantyExpiryDate = product.WarrantyExpiryDate ?? DateTime.Now,
                         Status = StatusEnum.InInventory,
                     };
 

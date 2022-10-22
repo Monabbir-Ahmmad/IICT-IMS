@@ -11,7 +11,7 @@ import {
   GET_PURCHASE_ORDER_SUCCESS,
 } from "../action_types/purchaseOrder";
 
-export const singlePurchaseOrderReducer = (state = {}, action) => {
+export const purchaseOrderDetailsReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_PURCHASE_ORDER_REQUEST:
       return { loading: true };

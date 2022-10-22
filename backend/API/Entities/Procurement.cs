@@ -10,6 +10,8 @@
 
         public decimal EstimatedTotalPrice { get; set; }
 
+        public string Status { get; set; }
+
         public ICollection<ProcurementProduct> Products { get; set; }
 
         public ICollection<Quotation> Quotations { get; set; }

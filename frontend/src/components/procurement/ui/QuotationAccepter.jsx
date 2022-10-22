@@ -41,7 +41,7 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
         sx: { bgcolor: "background.paper", backgroundImage: "none" },
       }}
     >
-      <DialogTitle>Purchase Order: {quotation?.procurementName}</DialogTitle>
+      <DialogTitle>Purchase Order: {quotation?.procurementTitle}</DialogTitle>
 
       <DialogContent dividers>
         <form id="accept-quotation-form" onSubmit={handleSubmit(onSubmit)}>

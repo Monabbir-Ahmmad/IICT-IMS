@@ -2,7 +2,7 @@ import { Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
@@ -40,8 +40,19 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
+        field: "deliveryDate",
+        headerName: "Delivery Date",
+        type: "date",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+        valueFormatter: ({ value }) =>
+          value ? moment(value).format("MMM Do, YYYY") : "N/A",
+      },
+      {
         field: "totalPrice",
-        headerName: "Total Price",
+        headerName: "Subtotal Price",
         type: "number",
         flex: 1,
         minWidth: 100,
@@ -58,17 +69,7 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
         headerAlign: "center",
         align: "center",
         renderCell: ({ value }) => (
-          <Chip
-            variant="outlined"
-            label={value}
-            color={
-              value === "Pending"
-                ? "warning"
-                : value === "Delivery Sent"
-                ? "info"
-                : "success"
-            }
-          />
+          <Chip variant="outlined" label={value} color={statusColors[value]} />
         ),
       },
     ],

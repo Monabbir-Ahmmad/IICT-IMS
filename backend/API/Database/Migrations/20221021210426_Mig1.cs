@@ -49,6 +49,7 @@ namespace API.Database.Migrations
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: true),
                     Deadline = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EstimatedTotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: true),
                     ProductCategoryId = table.Column<int>(type: "INTEGER", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
@@ -258,7 +259,7 @@ namespace API.Database.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: true),
-                    UnitPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
                     WarrantyExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
                     PurchaseOrderId = table.Column<int>(type: "INTEGER", nullable: true),
@@ -289,8 +290,8 @@ namespace API.Database.Migrations
                     PurchaseOrderId = table.Column<int>(type: "INTEGER", nullable: true),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: true),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "TEXT", nullable: false),
-                    WarrantyExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "TEXT", nullable: true),
+                    WarrantyExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

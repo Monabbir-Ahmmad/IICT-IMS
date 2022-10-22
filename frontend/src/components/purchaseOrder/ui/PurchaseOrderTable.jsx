@@ -1,16 +1,12 @@
-import { Button, Chip, Paper } from "@mui/material";
+import { Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function PurchaseOrderTable({
-  data = [],
-  onRowOpenClick,
-  onDeliveryReceiveConfirmClick,
-}) {
+function PurchaseOrderTable({ data = [], onRowOpenClick }) {
   const columns = useMemo(
     () => [
       {
@@ -64,7 +60,7 @@ function PurchaseOrderTable({
       },
       {
         field: "totalPrice",
-        headerName: "Total Price",
+        headerName: "Subtotal Price",
         type: "number",
         flex: 1,
         minWidth: 100,
@@ -80,37 +76,11 @@ function PurchaseOrderTable({
         headerAlign: "center",
         align: "center",
         renderCell: ({ value }) => (
-          <Chip
-            variant="outlined"
-            label={value}
-            color={
-              value === "Pending"
-                ? "warning"
-                : value === "Delivery Sent"
-                ? "info"
-                : "success"
-            }
-          />
+          <Chip variant="outlined" label={value} color={statusColors[value]} />
         ),
       },
-      {
-        field: "actions",
-        headerName: "Actions",
-        type: "actions",
-        flex: 1,
-        minWidth: 100,
-        getActions: ({ row }) => [
-          <Button
-            variant="contained"
-            color={row.status === "Delivery Completed" ? "success" : "primary"}
-            onClick={() => onDeliveryReceiveConfirmClick(row.id)}
-          >
-            {row.status === "Delivery Completed" ? "Received" : "Confirm"}
-          </Button>,
-        ],
-      },
     ],
-    [onDeliveryReceiveConfirmClick]
+    []
   );
 
   return (

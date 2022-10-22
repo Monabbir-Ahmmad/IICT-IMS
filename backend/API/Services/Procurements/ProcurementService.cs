@@ -37,6 +37,7 @@ namespace API.Services.Procurements
                 Category = procurementCategory,
                 EstimatedTotalPrice = procurementReqDto.EstimatedTotalPrice,
                 Deadline = procurementReqDto.Deadline,
+                Status = StatusEnum.NoOffer,
                 Products = procurementReqDto.Products.ConvertAll<ProcurementProduct>(x =>
                 {
                     return new ProcurementProduct
@@ -55,11 +56,10 @@ namespace API.Services.Procurements
             };
 
             _context.Procurements.Add(procurement);
+
             await _context.SaveChangesAsync();
 
-            var procurementResDto = _mapper.Map<ProcurementResDto>(procurement);
-
-            return procurementResDto;
+            return _mapper.Map<ProcurementResDto>(procurement);
         }
 
         public async Task<bool> DeleteProcurement(int id)
@@ -70,6 +70,7 @@ namespace API.Services.Procurements
                 throw new NotFoundException("Procurement not found.");
 
             _context.Procurements.Remove(procurement);
+
             var result = await _context.SaveChangesAsync();
 
             return result > 0;
@@ -91,9 +92,7 @@ namespace API.Services.Procurements
             if (procurement == null)
                 throw new NotFoundException("Procurement not found.");
 
-            var procurementResDto = _mapper.Map<ProcurementResDto>(procurement);
-
-            return procurementResDto;
+            return _mapper.Map<ProcurementResDto>(procurement);
         }
 
         public async Task<List<ProcurementResDto>> GetProcurements(
@@ -117,7 +116,7 @@ namespace API.Services.Procurements
 
             var procurementListResDto = _mapper.Map<List<ProcurementResDto>>(procurementList);
 
-            return procurementListResDto;
+            return _mapper.Map<List<ProcurementResDto>>(procurementList);
         }
     }
 }

@@ -3,6 +3,7 @@ using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
+using API.Enums;
 using API.Errors;
 using API.Interfaces.Quotation;
 using AutoMapper;
@@ -64,7 +65,11 @@ namespace API.Services.Quotations
 
             procurement.Quotations.Add(quotation);
 
+            if (procurement.Status == StatusEnum.NoOffer)
+                procurement.Status = StatusEnum.OfferAvailable;
+
             _context.Procurements.Update(procurement);
+
             await _context.SaveChangesAsync();
 
             return _mapper.Map<ProcurementResDto>(procurement);

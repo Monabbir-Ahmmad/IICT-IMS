@@ -46,9 +46,7 @@ namespace API.MapperProfiles
         private void MapProcurement()
         {
             CreateMap<Procurement, ProcurementResDto>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
-                .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products))
-                .ForMember(dest => dest.Quotations, opt => opt.MapFrom(src => src.Quotations));
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
         }
 
         private void MapProcurementProduct()
@@ -74,7 +72,7 @@ namespace API.MapperProfiles
                     opt => opt.MapFrom(src => src.Procurement.Id)
                 )
                 .ForMember(
-                    dest => dest.ProcurementName,
+                    dest => dest.ProcurementTitle,
                     opt => opt.MapFrom(src => src.Procurement.Title)
                 );
         }

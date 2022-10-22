@@ -1,11 +1,8 @@
 import { LinearProgress, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  confirmDelivery,
-  getPurchaseOrders,
-} from "../../../redux/actions/purchaseOrder.action";
+import { getPurchaseOrders } from "../../../redux/actions/purchaseOrder.action";
 import PurchaseOrderTable from "../ui/PurchaseOrderTable";
 
 function PurchaseOrderPage() {
@@ -24,10 +21,6 @@ function PurchaseOrderPage() {
     navigate("./" + id);
   };
 
-  const onDeliveryReceiveConfirmClick = (purchaseOrderId) => {
-    dispatch(confirmDelivery(purchaseOrderId));
-  };
-
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Purchase Orders</Typography>
@@ -37,7 +30,6 @@ function PurchaseOrderPage() {
       <PurchaseOrderTable
         data={purchaseOrders}
         onRowOpenClick={onRowOpenClick}
-        onDeliveryReceiveConfirmClick={onDeliveryReceiveConfirmClick}
       />
     </Stack>
   );

@@ -50,13 +50,13 @@ function QuotationResTable({ data = [], onQuotationAccept }) {
         type: "actions",
         flex: 1,
         minWidth: 100,
-        getActions: (params) => [
+        getActions: ({ row }) => [
           <Button
             variant="contained"
-            color={params.row.accepted ? "success" : "primary"}
-            onClick={() => onQuotationAccept(params.row)}
+            disabled={row.accepted}
+            onClick={() => onQuotationAccept(row)}
           >
-            {params.row.accepted ? "Accepted" : "Accept"}
+            {row.accepted ? "Accepted" : "Accept"}
           </Button>,
         ],
       },

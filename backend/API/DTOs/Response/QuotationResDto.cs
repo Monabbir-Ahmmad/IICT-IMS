@@ -6,7 +6,7 @@ namespace API.DTOs.Response
 
         public int ProcurementId { get; set; }
 
-        public string ProcurementName { get; set; }
+        public string ProcurementTitle { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

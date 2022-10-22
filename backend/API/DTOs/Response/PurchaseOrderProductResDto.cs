@@ -12,10 +12,15 @@ namespace API.DTOs.Response
 
         public string Details { get; set; }
 
-        public decimal UnitPrice { get; set; }
+        public decimal? UnitPrice { get; set; }
 
         public int Quantity { get; set; }
 
-        public DateTime WarrantyExpiryDate { get; set; }
+        public DateTime? WarrantyExpiryDate { get; set; }
+
+        public decimal? TotalPrice
+        {
+            get { return UnitPrice * Quantity; }
+        }
     }
 }

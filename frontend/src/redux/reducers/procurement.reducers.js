@@ -50,7 +50,7 @@ export const procurementListReducer = (
   }
 };
 
-export const singleProcurementReducer = (state = {}, action) => {
+export const procurementDetailsReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_PROCUREMENT_REQUEST:
       return { loading: true };

@@ -3,8 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./components/authentication/page/LoginPage";
 import ProcurementCreatePage from "./components/procurement/page/ProcurementCreatePage";
 import ProcurementPage from "./components/procurement/page/ProcurementPage";
-import SingleProcurementPage from "./components/procurement/page/SingleProcurementPage";
-import QuotationOfferPage from "./components/quotation/page/QuotationOfferPage";
+import ProcurementDetailsPage from "./components/procurement/page/ProcurementDetailsPage";
+import QuotationDetailsPage from "./components/quotation/page/QuotationDetailsPage";
 import QuotationPage from "./components/quotation/page/QuotationPage";
 import NavDrawer from "./components/shared/nav/NavDrawer";
 import { useSnackbar } from "notistack";
@@ -15,9 +15,10 @@ import RegisterPage from "./components/authentication/page/RegisterPage";
 import AuthGuard from "./components/shared/authGuard/AuthGurad";
 import { UserRoles } from "./constants/enums";
 import InventoryPage from "./components/inventory/page/InventoryPage";
-import OrderRequestPage from "./components/purchaseOrder/page/OrderRequestPage";
+import OrderRequestPage from "./components/orderRequest/page/OrderRequestPage";
+import OrderRequestDetailsPage from "./components/orderRequest/page/OrderRequestDetailsPage";
 import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage";
-import OrderRequestDeliveryPage from "./components/purchaseOrder/page/OrderRequestDeliveryPage";
+import PurchaseOrderDetailsPage from "./components/purchaseOrder/page/PurchaseOrderDetailsPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -61,10 +62,14 @@ function App() {
 
             <Route
               path="procurements/:procurementId"
-              element={<SingleProcurementPage />}
+              element={<ProcurementDetailsPage />}
             />
 
             <Route path="purchase-orders" element={<PurchaseOrderPage />} />
+            <Route
+              path="purchase-orders/:purchaseOrderId"
+              element={<PurchaseOrderDetailsPage />}
+            />
           </Route>
 
           <Route element={<AuthGuard />}>
@@ -72,13 +77,13 @@ function App() {
 
             <Route
               path="quotations/:procurementId"
-              element={<QuotationOfferPage />}
+              element={<QuotationDetailsPage />}
             />
 
             <Route path="order-requests" element={<OrderRequestPage />} />
             <Route
               path="order-requests/:purchaseOrderId"
-              element={<OrderRequestDeliveryPage />}
+              element={<OrderRequestDetailsPage />}
             />
           </Route>
 

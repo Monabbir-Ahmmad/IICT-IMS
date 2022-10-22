@@ -20,12 +20,12 @@ import QuotationOfferProductTable from "../../quotation/ui/QuotationOfferProduct
 import QuotationAccepter from "../ui/QuotationAccepter";
 import QuotationResTable from "../ui/QuotationResTable";
 
-function SingleProcurementPage() {
+function ProcurementDetailsPage() {
   const dispatch = useDispatch();
   const { procurementId } = useParams();
 
   const { procurement, loading, error } = useSelector(
-    (state) => state.singleProcurement
+    (state) => state.procurementDetails
   );
 
   const [openQuotationAccepter, setOpenQuotationAccepter] = useState(false);
@@ -57,7 +57,7 @@ function SingleProcurementPage() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <Typography variant="h5">Procurement Details</Typography>
+      <Typography variant="h5">Procurement #{procurement?.id}</Typography>
 
       <Paper variant="outlined">
         <Stack p={3} spacing={3}>
@@ -130,4 +130,4 @@ function SingleProcurementPage() {
     </Stack>
   );
 }
-export default SingleProcurementPage;
+export default ProcurementDetailsPage;

@@ -5,7 +5,11 @@ import { useMemo } from "react";
 import { currencyFormatter } from "../../../utils/utilities";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 
-function OrderDeliveryProductTable({ data = [], onEditProductClick }) {
+function OrderDeliveryProductTable({
+  data = [],
+  deliveryNotSent,
+  onEditProductClick,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -86,6 +90,7 @@ function OrderDeliveryProductTable({ data = [], onEditProductClick }) {
         getActions: (params) => [
           <Button
             variant="contained"
+            disabled={!deliveryNotSent}
             onClick={() => onEditProductClick(params.row)}
           >
             Edit
@@ -93,7 +98,7 @@ function OrderDeliveryProductTable({ data = [], onEditProductClick }) {
         ],
       },
     ],
-    [onEditProductClick]
+    [deliveryNotSent, onEditProductClick]
   );
 
   return (

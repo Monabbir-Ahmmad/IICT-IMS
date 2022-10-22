@@ -20,12 +20,12 @@ import { createQuotation } from "../../../redux/actions/quotation.actions";
 import { currencyFormatter } from "../../../utils/utilities";
 import QuotationOfferProductTable from "../ui/QuotationOfferProductTable";
 
-function QuotationOfferPage() {
+function QuotationDetailsPage() {
   const dispatch = useDispatch();
   const { procurementId } = useParams();
 
   const { userAuth } = useSelector((state) => state.userLogin);
-  const singleProcurement = useSelector((state) => state.singleProcurement);
+  const procurementDetails = useSelector((state) => state.procurementDetails);
   const quotationCreate = useSelector((state) => state.quotationCreate);
 
   const { handleSubmit, control, reset } = useForm({
@@ -50,15 +50,15 @@ function QuotationOfferPage() {
 
   return (
     <Stack spacing={3}>
-      {(singleProcurement.loading || quotationCreate.loading) && (
+      {(procurementDetails.loading || quotationCreate.loading) && (
         <LinearProgress />
       )}
 
-      {singleProcurement.error && (
-        <Alert severity="error">{singleProcurement.error}</Alert>
+      {procurementDetails.error && (
+        <Alert severity="error">{procurementDetails.error}</Alert>
       )}
 
-      {!singleProcurement.procurement?.quotations.find(
+      {!procurementDetails.procurement?.quotations.find(
         (quotation) => quotation.supplier.id === Number(userAuth.id)
       ) && (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -75,7 +75,7 @@ function QuotationOfferPage() {
               name="quotedTotalPrice"
               control={control}
               rules={{
-                required: "Total price offer is required",
+                required: "Subtotal price offer is required",
                 pattern: {
                   value: /^(?:[1-9]\d*|0(?!(?:\.0+)?$))?(?:\.\d+)?$/,
                   message: "Invalid price",
@@ -85,7 +85,7 @@ function QuotationOfferPage() {
                 <TextField
                   {...field}
                   variant="outlined"
-                  label="Total price offer"
+                  label="Subtotal price offer"
                   placeholder="Enter total price offer"
                   type={"number"}
                   error={!!fieldState.error}
@@ -106,18 +106,18 @@ function QuotationOfferPage() {
         </form>
       )}
 
-      <Typography variant="h5">Procurement Details</Typography>
+      <Typography variant="h5">Quote Details</Typography>
 
       <Paper variant="outlined">
         <Stack p={2} spacing={2}>
           <Typography variant={"body1"}>
-            Title: <strong>{singleProcurement.procurement?.title}</strong>
+            Title: <strong>{procurementDetails.procurement?.title}</strong>
           </Typography>
           <Divider />
           <Typography variant={"body1"}>
             Issuing Date:{" "}
             <strong>
-              {moment(singleProcurement.procurement?.createdAt).format(
+              {moment(procurementDetails.procurement?.createdAt).format(
                 "MMM Do, YYYY"
               )}
             </strong>
@@ -126,7 +126,7 @@ function QuotationOfferPage() {
           <Typography variant={"body1"}>
             Tender Deadling:{" "}
             <strong>
-              {moment(singleProcurement.procurement?.deadline).format(
+              {moment(procurementDetails.procurement?.deadline).format(
                 "MMM Do, YYYY"
               )}
             </strong>
@@ -136,7 +136,7 @@ function QuotationOfferPage() {
             Estimated Total Price:{" "}
             <strong>
               {currencyFormatter().format(
-                singleProcurement.procurement?.estimatedTotalPrice
+                procurementDetails.procurement?.estimatedTotalPrice
               )}
             </strong>
           </Typography>
@@ -146,11 +146,11 @@ function QuotationOfferPage() {
           <Typography variant={"body1"}>
             Your Quoted Total Price:{" "}
             <strong>
-              {singleProcurement.procurement?.quotations.find(
+              {procurementDetails.procurement?.quotations.find(
                 (quotation) => quotation.supplier.id === Number(userAuth.id)
               )
                 ? currencyFormatter().format(
-                    singleProcurement.procurement?.quotations.find(
+                    procurementDetails.procurement?.quotations.find(
                       (quotation) =>
                         quotation.supplier.id === Number(userAuth.id)
                     )?.quotedTotalPrice
@@ -164,9 +164,9 @@ function QuotationOfferPage() {
         Product List
       </Typography>
       <QuotationOfferProductTable
-        data={singleProcurement.procurement?.products}
+        data={procurementDetails.procurement?.products}
       />
     </Stack>
   );
 }
-export default QuotationOfferPage;
+export default QuotationDetailsPage;

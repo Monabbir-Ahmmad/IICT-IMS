@@ -2,6 +2,7 @@ import { TbTruckDelivery as DeliveryIcon } from "react-icons/tb";
 import {
   Button,
   Divider,
+  LinearProgress,
   Paper,
   Stack,
   TextField,
@@ -23,23 +24,25 @@ import {
 } from "../../../redux/actions/purchaseOrder.action";
 import { showErrorAlert } from "../../../redux/actions/alertSnackbar.actions";
 
-function OrderRequestDeliveryPage() {
+function OrderRequestDetailsPage() {
   const dispatch = useDispatch();
 
   const { purchaseOrder, loading } = useSelector(
-    (state) => state.singlePurchaseOrder
+    (state) => state.purchaseOrderDetails
   );
 
-  const { success } = useSelector((state) => state.deliverPurchaseOrder);
+  const { success, loading: deliveryLoading } = useSelector(
+    (state) => state.deliverPurchaseOrder
+  );
 
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       deliveryDate: "",
     },
   });
+
   const { purchaseOrderId } = useParams();
 
-  // const [orderRequest, setOrderRequest] = useState({});
   const [orderedProducts, setOrderedProducts] = useState([]);
   const [productToEdit, setProductToEdit] = useState({});
   const [openProductEditDialog, setOpenProductEditDialog] = useState(false);
@@ -50,7 +53,7 @@ function OrderRequestDeliveryPage() {
 
   useEffect(() => {
     if (purchaseOrder) {
-      setOrderedProducts(purchaseOrder.procurement.products);
+      setOrderedProducts(purchaseOrder.products);
     }
   }, [purchaseOrder]);
 
@@ -61,7 +64,6 @@ function OrderRequestDeliveryPage() {
   }, [success, reset]);
 
   const onEditProductClick = (product) => {
-    console.log(product);
     setProductToEdit(product);
     setOpenProductEditDialog(true);
   };
@@ -79,23 +81,25 @@ function OrderRequestDeliveryPage() {
   };
 
   const onDeliverySubmit = (values) => {
-    // if (
-    //   orderedProducts.reduce((acc, p) => acc + p.totalPrice, 0) ===
-    //   purchaseOrder.quotation.quotedTotalPrice
-    // )
-    dispatch(
-      sendDelivery({ ...values, purchaseOrderId, products: orderedProducts })
-    );
-    // else
-    //   dispatch(
-    //     showErrorAlert(
-    //       "Total price of the products should be equal to the quoted total price"
-    //     )
-    //   );
+    if (
+      orderedProducts.reduce((acc, p) => acc + p.totalPrice, 0) ===
+      purchaseOrder.totalPrice
+    )
+      dispatch(
+        sendDelivery({ ...values, purchaseOrderId, products: orderedProducts })
+      );
+    else
+      dispatch(
+        showErrorAlert(
+          "Total price of the products should be equal to the order total price"
+        )
+      );
   };
 
   return (
     <Stack spacing={2}>
+      {(loading || deliveryLoading) && <LinearProgress />}
+
       {purchaseOrder?.status === "Pending" && (
         <form onSubmit={handleSubmit(onDeliverySubmit)}>
           <Stack spacing={3} alignItems={"start"}>
@@ -115,9 +119,10 @@ function OrderRequestDeliveryPage() {
               render={({ field, fieldState }) => (
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                   <DatePicker
-                    disablePast
                     label="Delivery Date"
                     value={field.value}
+                    disablePast
+                    maxDate={new Date(purchaseOrder?.deliveryDeadline)}
                     onChange={(newValue) =>
                       field.onChange(newValue?.format("YYYY-MM-DD"))
                     }
@@ -141,7 +146,7 @@ function OrderRequestDeliveryPage() {
         </form>
       )}
 
-      <Typography variant="h6">Order Details</Typography>
+      <Typography variant="h5">Order #{purchaseOrder?.id}</Typography>
 
       <Paper variant="outlined">
         <Stack p={3} spacing={3}>
@@ -176,11 +181,20 @@ function OrderRequestDeliveryPage() {
           <Divider />
 
           <Typography variant={"body1"}>
-            Quoted Total Price:{" "}
+            Delivery Date:{" "}
             <strong>
-              {currencyFormatter().format(
-                purchaseOrder?.quotation?.quotedTotalPrice
-              )}
+              {purchaseOrder?.deliveryDate
+                ? moment(purchaseOrder?.deliveryDate).format("MMM Do, YYYY")
+                : "N/A"}
+            </strong>
+          </Typography>
+
+          <Divider />
+
+          <Typography variant={"body1"}>
+            Subtotal Price:{" "}
+            <strong>
+              {currencyFormatter().format(purchaseOrder?.totalPrice)}
             </strong>
           </Typography>
         </Stack>
@@ -190,6 +204,7 @@ function OrderRequestDeliveryPage() {
       </Typography>
       <OrderDeliveryProductTable
         data={orderedProducts}
+        deliveryNotSent={purchaseOrder?.status === "Pending"}
         onEditProductClick={onEditProductClick}
       />
 
@@ -203,4 +218,4 @@ function OrderRequestDeliveryPage() {
   );
 }
 
-export default OrderRequestDeliveryPage;
+export default OrderRequestDetailsPage;

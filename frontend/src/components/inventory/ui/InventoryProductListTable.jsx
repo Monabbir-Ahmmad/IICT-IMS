@@ -1,7 +1,7 @@
 import { Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useMemo } from "react";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 
@@ -42,9 +42,8 @@ function InventroyProductListTable({ data = [], onRowOpenClick }) {
         minWidth: 100,
         renderCell: RenderCellExpand,
       },
-
       {
-        field: "unitPrice",
+        field: "price",
         headerName: " Price",
         type: "number",
         headerAlign: "center",
@@ -60,12 +59,8 @@ function InventroyProductListTable({ data = [], onRowOpenClick }) {
         align: "center",
         flex: 1,
         minWidth: 100,
-        renderCell: (props) => (
-          <Chip
-            variant="outlined"
-            label={props.value || "Pending"}
-            color={props.value === "Completed" ? "success" : "warning"}
-          />
+        renderCell: ({ value }) => (
+          <Chip variant="outlined" label={value} color={statusColors[value]} />
         ),
       },
     ],

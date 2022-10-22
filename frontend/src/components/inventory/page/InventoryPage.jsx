@@ -1,7 +1,5 @@
-import { Button, Stack, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Stack, Typography } from "@mui/material";
 import InventroyProductListTable from "../ui/InventoryProductListTable";
-import { RiAddLine as AddIcon } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import inventoryService from "../../../services/inventory.service";
 
@@ -24,9 +22,7 @@ function InventoryPage() {
 
   return (
     <Stack spacing={3}>
-      <Typography variant="h5" sx={{ pt: 3 }}>
-        Product list
-      </Typography>
+      <Typography variant="h5">Product list</Typography>
 
       <InventroyProductListTable
         data={data}

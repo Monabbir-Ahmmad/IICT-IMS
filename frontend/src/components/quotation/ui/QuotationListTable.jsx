@@ -2,7 +2,7 @@ import { Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -18,8 +18,8 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
       );
 
       if (quotationOffered?.accepted) return "Offer Accepted";
-      else if (quotationOffered) return "Offered";
-      else return "Pending";
+      else if (quotationOffered) return "Offer Sent";
+      else return "Not Offered";
     },
     [userAuth.id]
   );
@@ -89,17 +89,7 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         align: "center",
         valueGetter: (params) => getStatus(params.row.quotations),
         renderCell: ({ value }) => (
-          <Chip
-            variant="outlined"
-            label={value}
-            color={
-              value === "Pending"
-                ? "warning"
-                : value === "Offered"
-                ? "info"
-                : "success"
-            }
-          />
+          <Chip variant="outlined" label={value} color={statusColors[value]} />
         ),
       },
     ],

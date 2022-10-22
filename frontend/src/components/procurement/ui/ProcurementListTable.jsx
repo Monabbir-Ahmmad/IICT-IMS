@@ -3,21 +3,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import { MdDelete as DeleteIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import moment from "moment/moment";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
-  const getStatus = useCallback((quotations = []) => {
-    const offerAccepted = quotations?.find(
-      (quotation) => quotation?.accepted === true
-    );
-
-    if (offerAccepted) return "Offer Accepted";
-    else if (quotations?.length > 0) return "Offers Received";
-    else return "Pending";
-  }, []);
-
   const columns = useMemo(
     () => [
       {
@@ -82,19 +72,8 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         align: "center",
         flex: 1,
         minWidth: 100,
-        valueGetter: ({ row }) => getStatus(row?.quotations),
         renderCell: ({ value }) => (
-          <Chip
-            variant="outlined"
-            label={value}
-            color={
-              value === "Offer Accepted"
-                ? "success"
-                : value === "Offers Received"
-                ? "info"
-                : "warning"
-            }
-          />
+          <Chip variant="outlined" label={value} color={statusColors[value]} />
         ),
       },
       {
@@ -110,7 +89,7 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         ],
       },
     ],
-    [getStatus, onRowDeleteClick]
+    [onRowDeleteClick]
   );
 
   return (

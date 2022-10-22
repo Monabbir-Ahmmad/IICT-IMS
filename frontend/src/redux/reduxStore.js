@@ -21,13 +21,13 @@ import {
   procurementDeleteReducer,
   procurementListReducer,
   procurementQuotationAcceptReducer,
-  singleProcurementReducer,
+  procurementDetailsReducer,
 } from "./reducers/procurement.reducers";
 import { quotationCreateReducer } from "./reducers/quotation.reducers";
 import { alertSnackbarReducer } from "./reducers/alertSnackbar.reducers";
 import {
   deliverPurchaseOrderReducer,
-  singlePurchaseOrderReducer,
+  purchaseOrderDetailsReducer,
   purchaseOrdersReducer,
 } from "./reducers/purchaseOrder.reducer";
 
@@ -44,12 +44,12 @@ const reducer = combineReducers({
   productCategoryUpdate: productCategoryUpdateReducer,
   procurementCreate: procurementCreateReducer,
   procurementList: procurementListReducer,
-  singleProcurement: singleProcurementReducer,
+  procurementDetails: procurementDetailsReducer,
   procurementDelete: procurementDeleteReducer,
   quotationCreate: quotationCreateReducer,
   procurementQuotationAccept: procurementQuotationAcceptReducer,
   purchaseOrders: purchaseOrdersReducer,
-  singlePurchaseOrder: singlePurchaseOrderReducer,
+  purchaseOrderDetails: purchaseOrderDetailsReducer,
   deliverPurchaseOrder: deliverPurchaseOrderReducer,
 });
 

@@ -14,6 +14,19 @@ const imageArray = [
   "https://www.hostinger.com.br/tutoriais/wp-content/uploads/sites/12/2021/03/O-Que-E-Um-Blog-Uma-Introducao-ao-Blogging.png",
 ];
 
+export const statusColors = {
+  "Not Offered": "warning",
+  "No Offer": "warning",
+  Pending: "warning",
+  "Offer Available": "info",
+  "Offer Sent": "info",
+  "Delivery Sent": "info",
+  "In Inventory": "info",
+  "Offer Accepted": "success",
+  "Delivery Completed": "success",
+  "Offer Rejected": "danger",
+};
+
 export const randomImageById = (id) => {
   return imageArray[id % 10];
 };

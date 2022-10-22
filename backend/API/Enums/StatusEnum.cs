@@ -12,6 +12,9 @@ namespace API.Enums
         public static readonly string Rejected = "Rejected";
         public static readonly string Cancelled = "Cancelled";
         public static readonly string Completed = "Completed";
+        public static readonly string NoOffer = "No Offer";
+        public static readonly string OfferAvailable = "Offer Available";
+        public static readonly string OfferAccepted = "Offer Accepted";
         public static readonly string Deleted = "Deleted";
         public static readonly string Expired = "Expired";
         public static readonly string Unverified = "Unverified";

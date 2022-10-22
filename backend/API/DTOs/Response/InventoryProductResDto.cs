@@ -15,5 +15,7 @@ namespace API.DTOs.Response
         public decimal Price { get; set; }
 
         public DateTime WarrantyExpiryDate { get; set; }
+
+        public string Status { get; set; }
     }
 }

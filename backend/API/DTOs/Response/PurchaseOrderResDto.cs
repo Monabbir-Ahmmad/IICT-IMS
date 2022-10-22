@@ -11,12 +11,6 @@ namespace API.DTOs.Response
 
         public string Category { get; set; }
 
-        public ProcurementResDto Procurement { get; set; }
-
-        public QuotationResDto Quotation { get; set; }
-
-        public List<PurchaseOrderProductResDto> Products { get; set; }
-
         public decimal TotalPrice { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -26,5 +20,11 @@ namespace API.DTOs.Response
         public DateTime? DeliveryDate { get; set; }
 
         public string Status { get; set; }
+
+        public List<PurchaseOrderProductResDto> Products { get; set; }
+
+        public ProcurementResDto Procurement { get; set; }
+
+        public QuotationResDto Quotation { get; set; }
     }
 }
