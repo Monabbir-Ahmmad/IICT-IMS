@@ -1,20 +1,24 @@
-import { Stack, Typography } from "@mui/material";
+import { Button, LinearProgress, Stack, Typography } from "@mui/material";
+import {
+  RiUploadFill as DistributeIcon,
+  RiDownloadFill as ReturnReceiveIcon,
+} from "react-icons/ri";
 import InventroyProductListTable from "../ui/InventoryProductListTable";
-import { useEffect, useState } from "react";
-import inventoryService from "../../../services/inventory.service";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getInventoryList } from "../../../redux/actions/inventory.action";
 
 function InventoryPage() {
-  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+
+  const { inventoryList, loading } = useSelector(
+    (state) => state.inventoryList
+  );
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await inventoryService.getAll();
-        console.log(res.data);
-        setData(res.data);
-      } catch (error) {}
-    })();
-  }, []);
+    dispatch(getInventoryList());
+  }, [dispatch]);
 
   const onRowDelete = (id) => {};
 
@@ -22,10 +26,32 @@ function InventoryPage() {
 
   return (
     <Stack spacing={3}>
+      <Stack direction={"row"} spacing={3}>
+        <Button
+          component={Link}
+          to="./distribute"
+          variant="contained"
+          startIcon={<DistributeIcon />}
+        >
+          Distribute Products
+        </Button>
+
+        <Button
+          component={Link}
+          to="./receive"
+          variant="contained"
+          startIcon={<ReturnReceiveIcon />}
+        >
+          Receive Returned Products
+        </Button>
+      </Stack>
+
+      {loading && <LinearProgress />}
+
       <Typography variant="h5">Product list</Typography>
 
       <InventroyProductListTable
-        data={data}
+        data={inventoryList}
         onRowOpenClick={onRowClick}
         onRowDeleteClick={onRowDelete}
       />

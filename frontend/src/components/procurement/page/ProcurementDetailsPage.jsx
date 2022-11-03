@@ -1,6 +1,7 @@
 import {
   Alert,
   AlertTitle,
+  Chip,
   Divider,
   LinearProgress,
   Paper,
@@ -15,7 +16,7 @@ import {
   getProcurement,
   procurementQuotationAccept,
 } from "../../../redux/actions/procurement.actions";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import QuotationOfferProductTable from "../../quotation/ui/QuotationOfferProductTable";
 import QuotationAccepter from "../ui/QuotationAccepter";
 import QuotationResTable from "../ui/QuotationResTable";
@@ -57,7 +58,14 @@ function ProcurementDetailsPage() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <Typography variant="h5">Procurement #{procurement?.id}</Typography>
+      <Typography variant="h5">
+        Procurement #{procurement?.id}{" "}
+        <Chip
+          variant="outlined"
+          label={procurement?.status}
+          color={statusColors[procurement?.status]}
+        />
+      </Typography>
 
       <Paper variant="outlined">
         <Stack p={3} spacing={3}>
@@ -92,7 +100,7 @@ function ProcurementDetailsPage() {
           <Divider />
 
           <Typography variant={"body1"}>
-            Estimated Total Price:{" "}
+            Estimated Subtotal Price:{" "}
             <strong>
               {currencyFormatter().format(procurement?.estimatedTotalPrice)}
             </strong>

@@ -30,6 +30,12 @@ import {
   purchaseOrderDetailsReducer,
   purchaseOrdersReducer,
 } from "./reducers/purchaseOrder.reducer";
+import {
+  distributableInventoryListReducer,
+  distributeInventoryReducer,
+  inventoryListReducer,
+  receivableInventoryListReducer,
+} from "./reducers/inventory.reducer";
 
 const reducer = combineReducers({
   alertSnackbar: alertSnackbarReducer,
@@ -51,6 +57,10 @@ const reducer = combineReducers({
   purchaseOrders: purchaseOrdersReducer,
   purchaseOrderDetails: purchaseOrderDetailsReducer,
   deliverPurchaseOrder: deliverPurchaseOrderReducer,
+  inventoryList: inventoryListReducer,
+  distributeInventory: distributeInventoryReducer,
+  distributableInventoryList: distributableInventoryListReducer,
+  receivableInventoryList: receivableInventoryListReducer,
 });
 
 const initialState = {

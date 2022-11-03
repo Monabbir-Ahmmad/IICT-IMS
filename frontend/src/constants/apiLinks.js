@@ -1,5 +1,5 @@
 //Host of the api
-export const API_URL = "https://localhost:5001";
+export const API_URL = "http://localhost:5000";
 
 //Authentication
 export const POST_REFRESH_TOKEN = "/auth/refreshToken";
@@ -9,8 +9,8 @@ export const POST_USER_LOGIN = `/auth/login`;
 export const POST_SUPPLIER_LOGIN = `/auth/supplier/login`;
 
 //Auto complete
-export const GET_AUTO_COMPLETE_USER_ROLES = `/autoComplete/userRoles`;
-export const GET_AUTO_COMPLETE_PRODUCT_CATEGORIES = `/autoComplete/productCategories`;
+export const GET_AUTO_COMPLETE_USER_ROLES = `/public/autoComplete/userRoles`;
+export const GET_AUTO_COMPLETE_PRODUCT_CATEGORIES = `/public/autoComplete/productCategories`;
 
 //User
 export const GET_USER_PROFILE = "/user/profile";
@@ -39,3 +39,10 @@ export const GET_PURCHASE_ORDER = "/purchaseOrder";
 export const SEND_PURCHASE_ORDER_DELIVERY = "/purchaseOrder/delivery";
 export const CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE =
   "/purchaseOrder/delivery/receive";
+
+//Inventory
+export const GET_INVENTORY = "/inventory";
+export const GET_INVENTORY_LIST = "/inventory";
+export const GET_DISTRIBUTABLE_INVENTORY = "/inventory/distributable";
+export const DISTRIBUTE_INVENTORY = "/inventory/distribute";
+export const GET_RECEIVABLE_INVENTORY = "/inventory/receivable";

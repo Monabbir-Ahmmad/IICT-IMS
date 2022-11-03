@@ -1,6 +1,7 @@
 import { TbTruckDelivery as DeliveryIcon } from "react-icons/tb";
 import {
   Button,
+  Chip,
   Divider,
   LinearProgress,
   Paper,
@@ -12,7 +13,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import OrderDeliveryProductTable from "../ui/OrderDeliveryProductTable";
 import OrderDeliveryProductInfoAdder from "../ui/OrderDeliveryProductInfoAdder";
 import { Controller, useForm } from "react-hook-form";
@@ -146,7 +147,14 @@ function OrderRequestDetailsPage() {
         </form>
       )}
 
-      <Typography variant="h5">Order #{purchaseOrder?.id}</Typography>
+      <Typography variant="h5">
+        Order #{purchaseOrder?.id}{" "}
+        <Chip
+          variant="outlined"
+          label={purchaseOrder?.status}
+          color={statusColors[purchaseOrder?.status]}
+        />
+      </Typography>
 
       <Paper variant="outlined">
         <Stack p={3} spacing={3}>

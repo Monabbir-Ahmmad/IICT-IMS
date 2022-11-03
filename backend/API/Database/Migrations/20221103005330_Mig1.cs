@@ -217,6 +217,28 @@ namespace API.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Distributions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DistributedToId = table.Column<int>(type: "INTEGER", nullable: true),
+                    DistributionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DistributionRoom = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Distributions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Distributions_Users_DistributedToId",
+                        column: x => x.DistributedToId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PurchaseOrders",
                 columns: table => new
                 {
@@ -260,15 +282,21 @@ namespace API.Database.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: true),
                     Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    WarrantyExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    WarrantyExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
                     PurchaseOrderId = table.Column<int>(type: "INTEGER", nullable: true),
+                    DistributionId = table.Column<int>(type: "INTEGER", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InventoryProducts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InventoryProducts_Distributions_DistributionId",
+                        column: x => x.DistributionId,
+                        principalTable: "Distributions",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_InventoryProducts_Products_ProductId",
                         column: x => x.ProductId,
@@ -309,6 +337,16 @@ namespace API.Database.Migrations
                         principalTable: "PurchaseOrders",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Distributions_DistributedToId",
+                table: "Distributions",
+                column: "DistributedToId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InventoryProducts_DistributionId",
+                table: "InventoryProducts",
+                column: "DistributionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryProducts_ProductId",
@@ -419,7 +457,7 @@ namespace API.Database.Migrations
                 name: "PurchaseOrderProducts");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Distributions");
 
             migrationBuilder.DropTable(
                 name: "Products");
@@ -428,10 +466,13 @@ namespace API.Database.Migrations
                 name: "PurchaseOrders");
 
             migrationBuilder.DropTable(
-                name: "UserRoles");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Quotations");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Procurements");

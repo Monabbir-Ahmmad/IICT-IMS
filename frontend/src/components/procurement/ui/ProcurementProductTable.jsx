@@ -4,6 +4,7 @@ import { MdDelete as DeleteIcon, MdAdd as AddIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter } from "../../../utils/utilities";
+import { useState } from "react";
 
 function CustomeToolbar({
   onAddNewRowClick,
@@ -43,7 +44,7 @@ function CustomeToolbar({
             startIcon={<DeleteIcon />}
             variant="contained"
             color="error"
-            onClick={onSelectedRowDeleteClick}
+            onClick={() => onSelectedRowDeleteClick(selectedRows)}
           >
             Delete
           </Button>
@@ -115,10 +116,14 @@ const columns = [
 function ProcurementProductTable({
   data = [],
   onAddNewRowClick,
-  onRowSelectionChange,
   onSelectedRowDeleteClick,
-  selectedRows,
 }) {
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const onSelectionChange = (newSelectedRows) => {
+    setSelectedRows(newSelectedRows);
+  };
+
   return (
     <Paper variant="outlined" sx={{ height: 650 }}>
       <DataGrid
@@ -138,7 +143,7 @@ function ProcurementProductTable({
             selectedRows,
           },
         }}
-        onSelectionModelChange={onRowSelectionChange}
+        onSelectionModelChange={onSelectionChange}
         sx={{ border: 0 }}
       />
     </Paper>

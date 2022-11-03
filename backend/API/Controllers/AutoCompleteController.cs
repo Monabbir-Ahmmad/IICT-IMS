@@ -15,13 +15,13 @@ namespace API.Controllers
             _autoCompleteService = autoCompleteService;
         }
 
-        [HttpGet("productCategories")]
+        [HttpGet("public/productCategories")]
         public async Task<ActionResult<List<ProductCategoryResDto>>> GetProductCategories()
         {
             return await _autoCompleteService.GetProductCategories();
         }
 
-        [HttpGet("userRoles")]
+        [HttpGet("public/userRoles")]
         public async Task<ActionResult<List<UserRoleResDto>>> GetUserRoles()
         {
             return await _autoCompleteService.GetUserRoles();

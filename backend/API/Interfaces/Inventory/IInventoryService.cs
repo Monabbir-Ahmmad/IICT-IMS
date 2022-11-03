@@ -1,13 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using API.DTOs.Request;
 using API.DTOs.Response;
 
 namespace API.Interfaces.Inventory
 {
     public interface IInventoryService
     {
-        Task<List<InventoryProductResDto>> GetProductsInInventory();
+        Task<List<InventoryProductResDto>> GetProducts();
+
+        Task<InventoryProductResDto> GetProduct(int id);
+
+        Task<List<InventoryProductResDto>> GetDistributableProducts();
+
+        Task<List<InventoryProductResDto>> GetReceivableProducts();
+
+        Task DistributeProducts(DistributionReqDto distributionReqDto);
     }
 }

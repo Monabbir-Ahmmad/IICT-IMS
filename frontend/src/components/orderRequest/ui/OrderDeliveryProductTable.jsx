@@ -48,7 +48,7 @@ function OrderDeliveryProductTable({
         flex: 1,
         minWidth: 100,
         valueFormatter: ({ value }) =>
-          value ? moment(value).format("MMM Do, YYYY") : "Required",
+          value ? moment(value).format("MMM Do, YYYY") : "N/A",
       },
       {
         field: "unitPrice",

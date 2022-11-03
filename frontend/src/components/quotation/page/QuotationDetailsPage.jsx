@@ -1,6 +1,7 @@
 import {
   Alert,
   Button,
+  Chip,
   Divider,
   InputAdornment,
   LinearProgress,
@@ -17,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getProcurement } from "../../../redux/actions/procurement.actions";
 import { createQuotation } from "../../../redux/actions/quotation.actions";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import QuotationOfferProductTable from "../ui/QuotationOfferProductTable";
 
 function QuotationDetailsPage() {
@@ -106,7 +107,14 @@ function QuotationDetailsPage() {
         </form>
       )}
 
-      <Typography variant="h5">Quote Details</Typography>
+      <Typography variant="h5">
+        Quote Details{" "}
+        <Chip
+          variant="outlined"
+          label={procurementDetails.procurement?.status}
+          color={statusColors[procurementDetails.procurement?.status]}
+        />
+      </Typography>
 
       <Paper variant="outlined">
         <Stack p={2} spacing={2}>
@@ -133,7 +141,7 @@ function QuotationDetailsPage() {
           </Typography>
           <Divider />
           <Typography variant={"body1"}>
-            Estimated Total Price:{" "}
+            Estimated Subtotal Price:{" "}
             <strong>
               {currencyFormatter().format(
                 procurementDetails.procurement?.estimatedTotalPrice
@@ -144,7 +152,7 @@ function QuotationDetailsPage() {
           <Divider />
 
           <Typography variant={"body1"}>
-            Your Quoted Total Price:{" "}
+            Your Quoted Subtotal Price:{" "}
             <strong>
               {procurementDetails.procurement?.quotations.find(
                 (quotation) => quotation.supplier.id === Number(userAuth.id)

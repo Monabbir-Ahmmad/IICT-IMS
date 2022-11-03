@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   Divider,
   LinearProgress,
   Paper,
@@ -10,7 +11,7 @@ import moment from "moment";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { currencyFormatter } from "../../../utils/utilities";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import {
   confirmDelivery,
   getPurchaseOrder,
@@ -48,7 +49,14 @@ function PurchaseOrderDetailsPage() {
         </Button>
       )}
 
-      <Typography variant="h5">Order #{purchaseOrder?.id}</Typography>
+      <Typography variant="h5">
+        Order #{purchaseOrder?.id}{" "}
+        <Chip
+          variant="outlined"
+          label={purchaseOrder?.status}
+          color={statusColors[purchaseOrder?.status]}
+        />
+      </Typography>
 
       <Paper variant="outlined">
         <Stack p={3} spacing={3}>

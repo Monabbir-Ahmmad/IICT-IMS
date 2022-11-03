@@ -19,6 +19,8 @@ import OrderRequestPage from "./components/orderRequest/page/OrderRequestPage";
 import OrderRequestDetailsPage from "./components/orderRequest/page/OrderRequestDetailsPage";
 import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage";
 import PurchaseOrderDetailsPage from "./components/purchaseOrder/page/PurchaseOrderDetailsPage";
+import ProductDistributionPage from "./components/inventory/page/ProductDistributionPage";
+import ProductReturnReceivePage from "./components/inventory/page/ProductReturnReceivePage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -52,6 +54,16 @@ function App() {
         <Route path="/" element={<NavDrawer />}>
           <Route element={<AuthGuard allowedRoles={[UserRoles.EMPLOYEE]} />}>
             <Route path="inventory" element={<InventoryPage />} />
+
+            <Route
+              path="inventory/distribute"
+              element={<ProductDistributionPage />}
+            />
+
+            <Route
+              path="inventory/receive"
+              element={<ProductReturnReceivePage />}
+            />
 
             <Route
               path="procurements/create"

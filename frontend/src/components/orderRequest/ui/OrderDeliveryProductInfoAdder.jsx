@@ -59,7 +59,6 @@ function OrderDeliveryProductInfoAdder({ open, product, onSubmit, onCancel }) {
             <Controller
               name="warrantyExpiryDate"
               control={control}
-              rules={{ required: "Warranty expiry date is required" }}
               render={({ field, fieldState }) => (
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                   <DatePicker

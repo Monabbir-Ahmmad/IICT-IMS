@@ -24,7 +24,7 @@ namespace API.Middlewares
             if (
                 httpContext.Request.Path.Value.ToLower().Contains("/auth")
                 || httpContext.Request.Path.Value.ToLower().Contains("/swagger")
-                || httpContext.Request.Path.Value.ToLower().Contains("/autocomplete")
+                || httpContext.Request.Path.Value.ToLower().Contains("/public")
             )
             {
                 await _next(httpContext);

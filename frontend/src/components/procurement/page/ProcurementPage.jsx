@@ -47,9 +47,7 @@ function ProcurementPage() {
         Create a new procurement
       </Button>
 
-      <Typography variant="h5" sx={{ pt: 3 }}>
-        Procurement list
-      </Typography>
+      <Typography variant="h5">Procurement list</Typography>
 
       {loading && <LinearProgress />}
 

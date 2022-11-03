@@ -17,6 +17,34 @@ namespace API.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
 
+            modelBuilder.Entity("API.Entities.Distribution", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("DistributedToId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DistributionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DistributionRoom")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistributedToId");
+
+                    b.ToTable("Distributions");
+                });
+
             modelBuilder.Entity("API.Entities.InventoryProduct", b =>
                 {
                     b.Property<int>("Id")
@@ -25,6 +53,9 @@ namespace API.Database.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("DistributionId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
@@ -41,10 +72,12 @@ namespace API.Database.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("WarrantyExpiryDate")
+                    b.Property<DateTime?>("WarrantyExpiryDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DistributionId");
 
                     b.HasIndex("ProductId");
 
@@ -396,8 +429,21 @@ namespace API.Database.Migrations
                     b.ToTable("UserRoles");
                 });
 
+            modelBuilder.Entity("API.Entities.Distribution", b =>
+                {
+                    b.HasOne("API.Entities.User", "DistributedTo")
+                        .WithMany()
+                        .HasForeignKey("DistributedToId");
+
+                    b.Navigation("DistributedTo");
+                });
+
             modelBuilder.Entity("API.Entities.InventoryProduct", b =>
                 {
+                    b.HasOne("API.Entities.Distribution", "Distribution")
+                        .WithMany("Products")
+                        .HasForeignKey("DistributionId");
+
                     b.HasOne("API.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId");
@@ -405,6 +451,8 @@ namespace API.Database.Migrations
                     b.HasOne("API.Entities.PurchaseOrder", "PurchaseOrder")
                         .WithMany()
                         .HasForeignKey("PurchaseOrderId");
+
+                    b.Navigation("Distribution");
 
                     b.Navigation("Product");
 
@@ -529,6 +577,11 @@ namespace API.Database.Migrations
                         .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("API.Entities.Distribution", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("API.Entities.Procurement", b =>

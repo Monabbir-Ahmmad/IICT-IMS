@@ -61,7 +61,7 @@ app.UseCors(
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<AuthMiddleware>();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

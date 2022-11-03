@@ -38,7 +38,6 @@ function ProcurementCreatePage() {
   const [openAddNew, setOpenAddNew] = useState(false);
 
   const [products, setProducts] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [productCategories, setProductCategories] = useState([]);
 
   useEffect(() => {
@@ -56,7 +55,6 @@ function ProcurementCreatePage() {
     if (success) {
       reset();
       setProducts([]);
-      setSelectedRows([]);
     }
   }, [success, reset]);
 
@@ -71,13 +69,8 @@ function ProcurementCreatePage() {
     setOpenAddNew(false);
   };
 
-  const onRowSelectionChange = (newSelectedRows) => {
-    setSelectedRows(newSelectedRows);
-  };
-
-  const onDeleteSelected = () => {
+  const onDeleteSelected = (selectedRows) => {
     setProducts(products.filter((item) => !selectedRows.includes(item.id)));
-    setSelectedRows([]);
   };
 
   const onSubmit = (data) => {
@@ -118,7 +111,7 @@ function ProcurementCreatePage() {
             justifyContent={"space-between"}
           >
             <Typography variant="subtitle1">
-              Total Estimated Price:{" "}
+              Estimated Subtotal Price:{" "}
               <strong>
                 {currencyFormatter().format(
                   products.reduce(
@@ -217,9 +210,7 @@ function ProcurementCreatePage() {
 
       <ProcurementProductTable
         data={products}
-        selectedRows={selectedRows}
         onAddNewRowClick={() => setOpenAddNew(true)}
-        onRowSelectionChange={onRowSelectionChange}
         onSelectedRowDeleteClick={onDeleteSelected}
       />
     </Stack>

@@ -116,7 +116,7 @@ function EmployeeRegisterForm() {
           >
             {userRoles.map((role) => (
               <MenuItem key={role.id} value={role.id}>
-                {role.roleName}
+                {role.name}
               </MenuItem>
             ))}
           </TextField>

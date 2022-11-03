@@ -22,6 +22,7 @@ export const statusColors = {
   "Offer Sent": "info",
   "Delivery Sent": "info",
   "In Inventory": "info",
+  Distributed: "success",
   "Offer Accepted": "success",
   "Delivery Completed": "success",
   "Offer Rejected": "danger",
