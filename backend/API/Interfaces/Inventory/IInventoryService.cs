@@ -14,5 +14,7 @@ namespace API.Interfaces.Inventory
         Task<List<InventoryProductResDto>> GetReceivableProducts();
 
         Task DistributeProducts(DistributionReqDto distributionReqDto);
+
+        Task<InventoryProductResDto> GetInventoryProduct(int id);
     }
 }

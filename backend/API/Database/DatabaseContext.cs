@@ -59,6 +59,18 @@ namespace API.Database
                 .HasOne(quotation => quotation.Supplier)
                 .WithMany(supplier => supplier.Quotations)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .Entity<InventoryProduct>()
+                .HasOne(product => product.Distribution)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .Entity<InventoryProduct>()
+                .HasMany(product => product.DistributionHistory)
+                .WithMany(distribution => distribution.Products)
+                .UsingEntity(j => j.ToTable("DistributionHistory"));
         }
 
         public override int SaveChanges()

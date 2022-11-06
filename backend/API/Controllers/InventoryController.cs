@@ -47,5 +47,11 @@ namespace API.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("product/{id}")]
+        public async Task<ActionResult<InventoryProductResDto>> GetInventoryProduct(int id)
+        {
+            return await _inventoryService.GetInventoryProduct(id);
+        }
     }
 }

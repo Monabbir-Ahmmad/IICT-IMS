@@ -167,7 +167,8 @@ namespace API.Interfaces.PurchaseOrders
                     throw new NotFoundException("Purchase order product not found.");
 
                 purchaseOrderProduct.UnitPrice = product.UnitPrice;
-                purchaseOrderProduct.WarrantyExpiryDate = product.WarrantyExpiryDate;
+                if (product.WarrantyExpiryDate != null)
+                    purchaseOrderProduct.WarrantyExpiryDate = product.WarrantyExpiryDate;
 
                 _context.PurchaseOrderProducts.Update(purchaseOrderProduct);
             }
@@ -211,7 +212,7 @@ namespace API.Interfaces.PurchaseOrders
                         Product = product.Product,
                         PurchaseOrder = purchaseOrder,
                         Price = product.UnitPrice ?? 0,
-                        WarrantyExpiryDate = product.WarrantyExpiryDate ?? DateTime.Now,
+                        WarrantyExpiryDate = product.WarrantyExpiryDate ?? null,
                         Status = StatusEnum.InInventory,
                     };
 

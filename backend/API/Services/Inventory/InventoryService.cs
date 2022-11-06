@@ -47,6 +47,7 @@ namespace API.Services.Inventory
                     throw new BadRequestException("Product is not in inventory");
 
                 inventoryProduct.Status = StatusEnum.Distributed;
+                inventoryProduct.Distribution = distribution;
 
                 _context.InventoryProducts.Update(inventoryProduct);
 
@@ -68,6 +69,19 @@ namespace API.Services.Inventory
                 .ToListAsync();
 
             return _mapper.Map<List<InventoryProductResDto>>(products);
+        }
+
+        public async Task<InventoryProductResDto> GetInventoryProduct(int id)
+        {
+            var product = await _context.InventoryProducts
+                .Include(p => p.Product)
+                .ThenInclude(p => p.Category)
+                .SingleOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+                throw new NotFoundException("Product not found.");
+
+            return _mapper.Map<InventoryProductResDto>(product);
         }
 
         public async Task<InventoryProductResDto> GetProduct(int id)

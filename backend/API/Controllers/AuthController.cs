@@ -61,13 +61,18 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("logout")]
+        public Task<ActionResult> Logout()
+        {
+            HttpContext.Response.Cookies.Delete("authorization");
+            return Task.FromResult<ActionResult>(Ok());
+        }
+
         [HttpPost("refreshToken")]
         public async Task<ActionResult<AuthResDto>> RefreshToken(string refreshToken)
         {
             var result = await _authService.RefreshToken(refreshToken);
-
             SetHeaderCookie(result.AccessToken);
-
             return Ok(result);
         }
 

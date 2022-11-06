@@ -3,6 +3,7 @@ using System;
 using API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221106014519_Mig2")]
+    partial class Mig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
@@ -54,9 +56,6 @@ namespace API.Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("DistributionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
@@ -76,8 +75,6 @@ namespace API.Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DistributionId");
 
                     b.HasIndex("ProductId");
 
@@ -455,11 +452,6 @@ namespace API.Database.Migrations
 
             modelBuilder.Entity("API.Entities.InventoryProduct", b =>
                 {
-                    b.HasOne("API.Entities.Distribution", "Distribution")
-                        .WithMany()
-                        .HasForeignKey("DistributionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("API.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId");
@@ -467,8 +459,6 @@ namespace API.Database.Migrations
                     b.HasOne("API.Entities.PurchaseOrder", "PurchaseOrder")
                         .WithMany()
                         .HasForeignKey("PurchaseOrderId");
-
-                    b.Navigation("Distribution");
 
                     b.Navigation("Product");
 

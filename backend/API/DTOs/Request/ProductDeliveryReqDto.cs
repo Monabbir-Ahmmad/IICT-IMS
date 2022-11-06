@@ -10,7 +10,6 @@ namespace API.DTOs.Request
         [Required]
         public decimal UnitPrice { get; set; }
 
-        [Required]
-        public DateTime WarrantyExpiryDate { get; set; }
+        public DateTime? WarrantyExpiryDate { get; set; }
     }
 }
