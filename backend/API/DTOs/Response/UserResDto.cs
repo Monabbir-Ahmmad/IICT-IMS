@@ -1,6 +1,6 @@
 namespace API.DTOs.Response
 {
-    public class UserDetailsResDto
+    public class UserResDto
     {
         public int Id { get; set; }
 

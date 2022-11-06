@@ -22,9 +22,7 @@ namespace API.Services.AutoComplete
         {
             var categoryList = await _context.ProductCategories.ToListAsync();
 
-            var categoryListResDto = _mapper.Map<List<ProductCategoryResDto>>(categoryList);
-
-            return categoryListResDto;
+            return _mapper.Map<List<ProductCategoryResDto>>(categoryList);
         }
 
         public async Task<List<UserRoleResDto>> GetUserRoles()
@@ -33,9 +31,14 @@ namespace API.Services.AutoComplete
                 .Where(x => x.Name != UserRoleEnum.Supplier)
                 .ToListAsync();
 
-            var userRoleListResDto = _mapper.Map<List<UserRoleResDto>>(userRoles);
+            return _mapper.Map<List<UserRoleResDto>>(userRoles);
+        }
 
-            return userRoleListResDto;
+        public async Task<List<UserResDto>> GetUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+
+            return _mapper.Map<List<UserResDto>>(users);
         }
     }
 }

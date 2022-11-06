@@ -23,6 +23,10 @@ namespace API.Services.Inventory
 
         public async Task DistributeProducts(DistributionReqDto distributionReqDto)
         {
+            var distributor = await _context.Users.FindAsync(distributionReqDto.DistributorId);
+            if (distributor == null)
+                throw new BadRequestException("Distributor not found");
+
             var distributionTo = await _context.Users.FindAsync(distributionReqDto.DistributedToId);
 
             if (distributionTo == null)
@@ -30,6 +34,7 @@ namespace API.Services.Inventory
 
             var distribution = new Distribution
             {
+                Distributor = distributor,
                 DistributedTo = distributionTo,
                 DistributionDate = distributionReqDto.DistributionDate,
                 DistributionRoom = distributionReqDto.DistributionRoom,
@@ -71,7 +76,7 @@ namespace API.Services.Inventory
             return _mapper.Map<List<InventoryProductResDto>>(products);
         }
 
-        public async Task<InventoryProductResDto> GetInventoryProduct(int id)
+        public async Task<InventoryProductResDto> GetProduct(int id)
         {
             var product = await _context.InventoryProducts
                 .Include(p => p.Product)
@@ -80,15 +85,6 @@ namespace API.Services.Inventory
 
             if (product == null)
                 throw new NotFoundException("Product not found.");
-
-            return _mapper.Map<InventoryProductResDto>(product);
-        }
-
-        public async Task<InventoryProductResDto> GetProduct(int id)
-        {
-            var product = await _context.InventoryProducts
-                .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
 
             return _mapper.Map<InventoryProductResDto>(product);
         }

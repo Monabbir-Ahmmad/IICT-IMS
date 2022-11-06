@@ -19,13 +19,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDetailsResDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserResDto>>> GetUsers()
         {
             return await _userService.GetUsers();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDetailsResDto>> GetUser(int id)
+        public async Task<ActionResult<UserResDto>> GetUser(int id)
         {
             return await _userService.GetUserById(id);
         }

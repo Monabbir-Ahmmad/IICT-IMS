@@ -2,8 +2,8 @@ namespace API.DTOs.Request
 {
     public class DistributionReqDto
     {
+        public int DistributorId { get; set; }
         public int DistributedToId { get; set; }
-
         public DateTime DistributionDate { get; set; }
         public string DistributionRoom { get; set; }
         public List<DistributionProductReqDto> Products { get; set; }

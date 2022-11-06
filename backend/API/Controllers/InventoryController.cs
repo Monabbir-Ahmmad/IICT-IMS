@@ -43,6 +43,7 @@ namespace API.Controllers
         [HttpPost("distribute")]
         public async Task<IActionResult> DistributeProducts(DistributionReqDto distributionReqDto)
         {
+            distributionReqDto.DistributorId = HttpContext.Items["userId"] as int? ?? 0;
             await _inventoryService.DistributeProducts(distributionReqDto);
 
             return NoContent();
@@ -51,7 +52,7 @@ namespace API.Controllers
         [HttpGet("product/{id}")]
         public async Task<ActionResult<InventoryProductResDto>> GetInventoryProduct(int id)
         {
-            return await _inventoryService.GetInventoryProduct(id);
+            return await _inventoryService.GetProduct(id);
         }
     }
 }

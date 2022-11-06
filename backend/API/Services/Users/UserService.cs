@@ -17,20 +17,20 @@ namespace API.Services.Users
             _mapper = mapper;
         }
 
-        public async Task<UserDetailsResDto> GetUserById(int id)
+        public async Task<UserResDto> GetUserById(int id)
         {
             var user = await _context.Users
                 .Include(x => x.Role)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return _mapper.Map<UserDetailsResDto>(user);
+            return _mapper.Map<UserResDto>(user);
         }
 
-        public async Task<List<UserDetailsResDto>> GetUsers()
+        public async Task<List<UserResDto>> GetUsers()
         {
             var users = await _context.Users.Include(x => x.Role).ToListAsync();
 
-            return _mapper.Map<List<UserDetailsResDto>>(users);
+            return _mapper.Map<List<UserResDto>>(users);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace API.MapperProfiles
 
         private void MapUser()
         {
-            CreateMap<User, UserDetailsResDto>()
+            CreateMap<User, UserResDto>()
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name));
         }
 

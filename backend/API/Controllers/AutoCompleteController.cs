@@ -26,5 +26,11 @@ namespace API.Controllers
         {
             return await _autoCompleteService.GetUserRoles();
         }
+
+        [HttpGet("users")]
+        public async Task<ActionResult<List<UserResDto>>> GetUsers()
+        {
+            return await _autoCompleteService.GetUsers();
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace API.Interfaces.AutoComplete
     {
         Task<List<ProductCategoryResDto>> GetProductCategories();
         Task<List<UserRoleResDto>> GetUserRoles();
+        Task<List<UserResDto>> GetUsers();
     }
 }
