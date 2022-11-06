@@ -7,10 +7,11 @@ export const POST_USER_REGISTER = `/auth/register`;
 export const POST_SUPPLIER_REGISTER = `/auth/supplier/register`;
 export const POST_USER_LOGIN = `/auth/login`;
 export const POST_SUPPLIER_LOGIN = `/auth/supplier/login`;
+export const POST_LOGOUT = `/auth/logout`;
 
 //Auto complete
-export const GET_AUTO_COMPLETE_USER_ROLES = `/public/autoComplete/userRoles`;
-export const GET_AUTO_COMPLETE_PRODUCT_CATEGORIES = `/public/autoComplete/productCategories`;
+export const GET_AUTO_COMPLETE_USER_ROLES = `/autoComplete/public/userRoles`;
+export const GET_AUTO_COMPLETE_PRODUCT_CATEGORIES = `/autoComplete/public/productCategories`;
 
 //User
 export const GET_USER_PROFILE = "/user/profile";
@@ -46,3 +47,4 @@ export const GET_INVENTORY_LIST = "/inventory";
 export const GET_DISTRIBUTABLE_INVENTORY = "/inventory/distributable";
 export const DISTRIBUTE_INVENTORY = "/inventory/distribute";
 export const GET_RECEIVABLE_INVENTORY = "/inventory/receivable";
+export const GET_INVENTORY_PRODUCT = "/inventory/product";

@@ -5,11 +5,12 @@ import {
 } from "react-icons/ri";
 import InventroyProductListTable from "../ui/InventoryProductListTable";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getInventoryList } from "../../../redux/actions/inventory.action";
 
 function InventoryPage() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { inventoryList, loading } = useSelector(
@@ -22,7 +23,9 @@ function InventoryPage() {
 
   const onRowDelete = (id) => {};
 
-  const onRowClick = (id) => {};
+  const onRowClick = (id) => {
+    navigate(`/inventory/product/${id}`);
+  };
 
   return (
     <Stack spacing={3}>

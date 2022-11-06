@@ -21,6 +21,7 @@ import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage
 import PurchaseOrderDetailsPage from "./components/purchaseOrder/page/PurchaseOrderDetailsPage";
 import ProductDistributionPage from "./components/inventory/page/ProductDistributionPage";
 import ProductReturnReceivePage from "./components/inventory/page/ProductReturnReceivePage";
+import InventoryProductDetailsPage from "./components/inventory/page/InventoryProductDetailsPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -63,6 +64,11 @@ function App() {
             <Route
               path="inventory/receive"
               element={<ProductReturnReceivePage />}
+            />
+
+            <Route
+              path="inventory/product/:id"
+              element={<InventoryProductDetailsPage />}
             />
 
             <Route

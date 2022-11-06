@@ -34,6 +34,7 @@ import {
   distributableInventoryListReducer,
   distributeInventoryReducer,
   inventoryListReducer,
+  inventoryProductDetailsReducer,
   receivableInventoryListReducer,
 } from "./reducers/inventory.reducer";
 
@@ -61,6 +62,7 @@ const reducer = combineReducers({
   distributeInventory: distributeInventoryReducer,
   distributableInventoryList: distributableInventoryListReducer,
   receivableInventoryList: receivableInventoryListReducer,
+  inventoryProductDetails: inventoryProductDetailsReducer,
 });
 
 const initialState = {

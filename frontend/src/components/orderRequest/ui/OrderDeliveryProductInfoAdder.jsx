@@ -17,7 +17,7 @@ function OrderDeliveryProductInfoAdder({ open, product, onSubmit, onCancel }) {
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       unitPrice: "",
-      warrantyExpiryDate: "",
+      warrantyExpiryDate: null,
     },
   });
 

@@ -1,4 +1,5 @@
 import {
+  POST_LOGOUT,
   POST_SUPPLIER_LOGIN,
   POST_SUPPLIER_REGISTER,
   POST_USER_LOGIN,
@@ -76,7 +77,8 @@ class AuthService {
     return res;
   }
 
-  logout() {
+  async logout() {
+    await api().post(POST_LOGOUT);
     tokenService.removeUser();
   }
 }
