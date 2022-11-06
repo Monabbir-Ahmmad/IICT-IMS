@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import moment from "moment";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { MdPublish as SendQuotationIcon } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,7 @@ function QuotationDetailsPage() {
   const { userAuth } = useSelector((state) => state.userLogin);
   const procurementDetails = useSelector((state) => state.procurementDetails);
   const quotationCreate = useSelector((state) => state.quotationCreate);
+  const [quoteOffered, setQuoteOffered] = useState(null);
 
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
@@ -43,11 +44,27 @@ function QuotationDetailsPage() {
     if (quotationCreate.success) reset();
   }, [quotationCreate.success, reset]);
 
+  useEffect(() => {
+    if (procurementDetails?.procurement?.quotations) {
+      setQuoteOffered(
+        procurementDetails.procurement.quotations.find(
+          (quotation) => quotation.supplier.id === Number(userAuth.id)
+        )
+      );
+    }
+  }, [procurementDetails.procurement, userAuth]);
+
   const onSubmit = (values) => {
     dispatch(
       createQuotation({ ...values, procurementId, supplierId: userAuth.id })
     );
   };
+
+  const getStatus = useCallback(() => {
+    if (quoteOffered?.accepted) return "Offer Accepted";
+    else if (quoteOffered) return "Offer Sent";
+    else return "Not Offered";
+  }, [quoteOffered]);
 
   return (
     <Stack spacing={3}>
@@ -59,9 +76,7 @@ function QuotationDetailsPage() {
         <Alert severity="error">{procurementDetails.error}</Alert>
       )}
 
-      {!procurementDetails.procurement?.quotations.find(
-        (quotation) => quotation.supplier.id === Number(userAuth.id)
-      ) && (
+      {!quoteOffered && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={3} alignItems={"start"}>
             <Button
@@ -111,8 +126,8 @@ function QuotationDetailsPage() {
         Quote Details{" "}
         <Chip
           variant="outlined"
-          label={procurementDetails.procurement?.status}
-          color={statusColors[procurementDetails.procurement?.status]}
+          label={getStatus()}
+          color={statusColors[getStatus()]}
         />
       </Typography>
 

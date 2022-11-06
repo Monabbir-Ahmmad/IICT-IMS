@@ -9,6 +9,9 @@ import {
   GET_INVENTORY_LIST_FAIL,
   GET_INVENTORY_LIST_REQUEST,
   GET_INVENTORY_LIST_SUCCESS,
+  GET_INVENTORY_PRODUCT_FAIL,
+  GET_INVENTORY_PRODUCT_REQUEST,
+  GET_INVENTORY_PRODUCT_SUCCESS,
   GET_RECEIVABLE_INVENTORY_LIST_FAIL,
   GET_RECEIVABLE_INVENTORY_LIST_REQUEST,
   GET_RECEIVABLE_INVENTORY_LIST_SUCCESS,
@@ -68,6 +71,19 @@ export const receivableInventoryListReducer = (
     case GET_RECEIVABLE_INVENTORY_LIST_SUCCESS:
       return { loading: false, inventoryList: action.payload };
     case GET_RECEIVABLE_INVENTORY_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const inventoryProductDetailsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_INVENTORY_PRODUCT_REQUEST:
+      return { loading: true };
+    case GET_INVENTORY_PRODUCT_SUCCESS:
+      return { loading: false, inventoryProduct: action.payload };
+    case GET_INVENTORY_PRODUCT_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

@@ -10,6 +10,9 @@ import {
   GET_INVENTORY_LIST_FAIL,
   GET_INVENTORY_LIST_REQUEST,
   GET_INVENTORY_LIST_SUCCESS,
+  GET_INVENTORY_PRODUCT_FAIL,
+  GET_INVENTORY_PRODUCT_REQUEST,
+  GET_INVENTORY_PRODUCT_SUCCESS,
   GET_RECEIVABLE_INVENTORY_LIST_FAIL,
   GET_RECEIVABLE_INVENTORY_LIST_REQUEST,
   GET_RECEIVABLE_INVENTORY_LIST_SUCCESS,
@@ -118,6 +121,32 @@ export const getReceivableInventoryList = () => async (dispatch) => {
         : error.message;
     dispatch({
       type: GET_RECEIVABLE_INVENTORY_LIST_FAIL,
+      payload: errorMessage,
+    });
+
+    dispatch(showErrorAlert(errorMessage));
+  }
+};
+
+export const getInventoryProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GET_INVENTORY_PRODUCT_REQUEST,
+    });
+
+    const res = await inventoryService.getInventoryProduct(id);
+
+    dispatch({
+      type: GET_INVENTORY_PRODUCT_SUCCESS,
+      payload: res.data,
+    });
+  } catch (error) {
+    const errorMessage =
+      error.response && error.response.data?.message
+        ? error.response.data?.message
+        : error.message;
+    dispatch({
+      type: GET_INVENTORY_PRODUCT_FAIL,
       payload: errorMessage,
     });
 

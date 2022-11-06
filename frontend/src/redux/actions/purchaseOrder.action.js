@@ -99,7 +99,7 @@ export const confirmDelivery = (id) => async (dispatch) => {
 
     dispatch({ type: CONFIRM_DELIVERY_SUCCESS });
 
-    dispatch({ type: GET_PURCHASE_ORDER_LIST_SUCCESS, payload: res.data });
+    dispatch({ type: GET_PURCHASE_ORDER_SUCCESS, payload: res.data });
 
     dispatch(showSuccessAlert("Delivery received successfully"));
   } catch (error) {
