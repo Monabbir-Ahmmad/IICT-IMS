@@ -18,18 +18,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   distributeInventory,
   getDistributableInventoryList,
-} from "../../../redux/actions/inventory.action";
+} from "../../../redux/actions/inventory.actions";
+import autoCompleteService from "../../../services/autoComplete.service";
 import DistribuableProductsTable from "../ui/DistributableProductsTable";
 import DistributingProductsTable from "../ui/DistributingProductsTable";
-
-const users = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "",
-    role: "Admin",
-  },
-];
 
 function ProductDistributionPage() {
   const dispatch = useDispatch();
@@ -51,6 +43,19 @@ function ProductDistributionPage() {
 
   const [distributableProducts, setDistributableProducts] = useState([]);
   const [distributingProducts, setDistributingProducts] = useState([]);
+  const [distributees, setDistributees] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await autoCompleteService.getUsers();
+        setDistributees(data);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     dispatch(getDistributableInventoryList());
@@ -154,9 +159,9 @@ function ProductDistributionPage() {
                   helperText={fieldState.error?.message}
                   sx={{ flex: 2 }}
                 >
-                  {users.map((user) => (
+                  {distributees.map((user) => (
                     <MenuItem key={user.id} value={user.id}>
-                      {user.name}
+                      {user.username}
                     </MenuItem>
                   ))}
                 </TextField>

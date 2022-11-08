@@ -7,7 +7,7 @@ import InventroyProductListTable from "../ui/InventoryProductListTable";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getInventoryList } from "../../../redux/actions/inventory.action";
+import { getInventoryList } from "../../../redux/actions/inventory.actions";
 
 function InventoryPage() {
   const navigate = useNavigate();

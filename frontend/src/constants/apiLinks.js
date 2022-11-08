@@ -11,6 +11,7 @@ export const POST_LOGOUT = `/auth/logout`;
 
 //Auto complete
 export const GET_AUTO_COMPLETE_USER_ROLES = `/autoComplete/public/userRoles`;
+export const GET_AUTO_COMPLETE_USERS = `/autoComplete/users`;
 export const GET_AUTO_COMPLETE_PRODUCT_CATEGORIES = `/autoComplete/public/productCategories`;
 
 //User

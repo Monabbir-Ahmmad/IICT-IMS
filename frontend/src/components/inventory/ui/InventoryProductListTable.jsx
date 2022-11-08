@@ -1,5 +1,6 @@
 import { Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import moment from "moment";
 import { useMemo } from "react";
 import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
@@ -51,6 +52,17 @@ function InventroyProductListTable({ data = [], onRowOpenClick }) {
         flex: 1,
         minWidth: 100,
         valueFormatter: ({ value }) => currencyFormatter().format(value),
+      },
+      {
+        field: "warrantyExpiryDate",
+        headerName: "Warranty Till",
+        type: "date",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 100,
+        valueFormatter: ({ value }) =>
+          value ? moment(value).format("MMM Do, YYYY") : "N/A",
       },
       {
         field: "status",
