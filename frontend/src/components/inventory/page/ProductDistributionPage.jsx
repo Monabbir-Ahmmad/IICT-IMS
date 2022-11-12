@@ -1,8 +1,8 @@
 import {
+  Autocomplete,
   Box,
   Button,
   LinearProgress,
-  MenuItem,
   Paper,
   Stack,
   TextField,
@@ -150,21 +150,21 @@ function ProductDistributionPage() {
               control={control}
               rules={{ required: "Distributee is required" }}
               render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  select
-                  label="Distributed To"
-                  variant="outlined"
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
+                <Autocomplete
+                  onChange={(event, newValue) => field.onChange(newValue?.id)}
+                  options={distributees}
+                  getOptionLabel={(option) => option.username || ""}
                   sx={{ flex: 2 }}
-                >
-                  {distributees.map((user) => (
-                    <MenuItem key={user.id} value={user.id}>
-                      {user.username}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Distribute To"
+                      variant="outlined"
+                      error={!!fieldState.error}
+                      helperText={fieldState.error?.message}
+                    />
+                  )}
+                />
               )}
             />
 
