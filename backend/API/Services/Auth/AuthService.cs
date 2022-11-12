@@ -33,6 +33,9 @@ namespace API.Services.Auth
             if (userRole == null)
                 throw new ApiException(HttpStatusCode.NotFound, "User role does not exist.");
 
+            if (!UserRoleEnum.IICTSignupRoles.Contains(userRole.Name))
+                throw new ApiException(HttpStatusCode.Forbidden, "User role is not allowed to sign up is iict employee.");
+
             var user = new User
             {
                 Username = registerDto.Username,

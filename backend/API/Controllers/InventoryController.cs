@@ -49,6 +49,15 @@ namespace API.Controllers
             return NoContent();
         }
 
+        [HttpPost("receive-return")]
+        public async Task<IActionResult> ReceiveReturnProducts(ReceiveReturnReqDto receiveReturnReqDto)
+        {
+            receiveReturnReqDto.ReceiverId = HttpContext.Items["userId"] as int? ?? 0;
+            await _inventoryService.ReceiveProducts(receiveReturnReqDto);
+
+            return NoContent();
+        }
+
         [HttpGet("product/{id}")]
         public async Task<ActionResult<InventoryProductResDto>> GetInventoryProduct(int id)
         {

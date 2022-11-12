@@ -28,7 +28,7 @@ namespace API.Services.AutoComplete
         public async Task<List<UserRoleResDto>> GetUserRoles()
         {
             var userRoles = await _context.UserRoles
-                .Where(x => x.Name != UserRoleEnum.Supplier)
+                .Where(x => UserRoleEnum.IICTSignupRoles.Contains(x.Name))
                 .ToListAsync();
 
             return _mapper.Map<List<UserRoleResDto>>(userRoles);

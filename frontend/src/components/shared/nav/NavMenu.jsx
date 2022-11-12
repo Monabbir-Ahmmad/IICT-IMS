@@ -43,34 +43,34 @@ function NavMenu() {
           title={"Inventory"}
           link={"/inventory"}
           icon={InventoryIcon}
-          allowedRoles={[UserRoles.EMPLOYEE]}
+          allowedRoles={[UserRoles.ADMIN]}
         />
 
         <NavLinkItem
           title={"Procurements"}
           link={"/procurements"}
           icon={ProcurementIcon}
-          allowedRoles={[UserRoles.EMPLOYEE]}
+          allowedRoles={[UserRoles.ADMIN]}
         />
 
         <NavLinkItem
           title={"Quotations"}
           link={"/quotations"}
           icon={QuotationIcon}
-          // allowedRoles={[UserRoles.SUPPLIER]}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]}
         />
 
         <NavLinkItem
           title={"Purchase Orders"}
           link={"/purchase-orders"}
           icon={PurchaseOrderIcon}
-          allowedRoles={[UserRoles.EMPLOYEE, UserRoles.ADMIN]}
+          allowedRoles={[UserRoles.ADMIN]}
         />
         <NavLinkItem
           title={"Order Requests"}
           link={"/order-requests"}
           icon={OrderRequestIcon}
-          // allowedRoles={[UserRoles.SUPPLIER]}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]}
         />
       </List>
 

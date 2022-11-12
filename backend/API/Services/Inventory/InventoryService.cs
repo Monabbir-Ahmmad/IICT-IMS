@@ -1,3 +1,4 @@
+using System.Net;
 using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
@@ -23,14 +24,26 @@ namespace API.Services.Inventory
 
         public async Task DistributeProducts(DistributionReqDto distributionReqDto)
         {
-            var distributor = await _context.Users.FindAsync(distributionReqDto.DistributorId);
-            if (distributor == null)
-                throw new BadRequestException("Distributor not found");
+            var distributor = await _context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == distributionReqDto.DistributorId);
 
-            var distributionTo = await _context.Users.FindAsync(distributionReqDto.DistributedToId);
+            if (distributor == null)
+                throw new NotFoundException("Distributor not found.");
+            if (!UserRoleEnum.InventoryManagementRoles.Contains(distributor.Role.Name))
+                throw new ApiException(HttpStatusCode.Forbidden, "You can't distribute products.");
+
+            var distributionTo = await _context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == distributionReqDto.DistributedToId);
 
             if (distributionTo == null)
-                throw new BadRequestException("User for distribution not found");
+                throw new NotFoundException("User for distribution not found.");
+            if (!UserRoleEnum.IICTRoles.Contains(distributionTo.Role.Name))
+                throw new ApiException(
+                    HttpStatusCode.Forbidden,
+                    "This user can't receive products."
+                );
 
             var distribution = new Distribution
             {
@@ -46,10 +59,9 @@ namespace API.Services.Inventory
                 var inventoryProduct = await _context.InventoryProducts.FindAsync(product.Id);
 
                 if (inventoryProduct == null)
-                    throw new BadRequestException("Product not found");
-
+                    throw new NotFoundException("Product not found.");
                 if (inventoryProduct.Status != StatusEnum.InInventory)
-                    throw new BadRequestException("Product is not in inventory");
+                    throw new BadRequestException("Product is not currently distributable.");
 
                 inventoryProduct.Status = StatusEnum.Distributed;
                 inventoryProduct.Distribution = distribution;
@@ -100,15 +112,75 @@ namespace API.Services.Inventory
             return _mapper.Map<List<InventoryProductResDto>>(products);
         }
 
-        public Task<List<InventoryProductResDto>> GetReceivableProducts()
+        public async Task<List<InventoryProductResDto>> GetReceivableProducts()
         {
-            var products = _context.InventoryProducts
+            var products = await _context.InventoryProducts
                 .Where(p => p.Status == StatusEnum.Distributed)
                 .Include(p => p.Product)
                 .ThenInclude(p => p.Category)
                 .ToListAsync();
 
-            return _mapper.Map<Task<List<InventoryProductResDto>>>(products);
+            return _mapper.Map<List<InventoryProductResDto>>(products);
+        }
+
+        public async Task ReceiveProducts(ReceiveReturnReqDto receiveReturnReqDto)
+        {
+            var receiver = await _context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == receiveReturnReqDto.ReceiverId);
+
+            if (receiver == null)
+                throw new NotFoundException("Receiver not found.");
+            if (!UserRoleEnum.InventoryManagementRoles.Contains(receiver.Role.Name))
+                throw new ApiException(
+                    HttpStatusCode.Forbidden,
+                    "You can't receive returned products."
+                );
+
+            var receiveFrom = await _context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == receiveReturnReqDto.ReceivedFromId);
+
+            if (receiveFrom == null)
+                throw new NotFoundException("Product returner not found.");
+            if (!UserRoleEnum.IICTRoles.Contains(receiveFrom.Role.Name))
+                throw new ApiException(
+                    HttpStatusCode.Forbidden,
+                    "This user can't return products."
+                );
+
+            var receiveReturn = new ReceiveReturn()
+            {
+                Receiver = receiver,
+                ReceivedFrom = receiveFrom,
+                ReceivingDate = receiveReturnReqDto.ReceivingDate,
+                Products = new List<InventoryProduct>()
+            };
+
+            foreach (var product in receiveReturnReqDto.Products)
+            {
+                var inventoryProduct = await _context.InventoryProducts
+                    .Include(x => x.Distribution)
+                    .FirstOrDefaultAsync(x => x.Id == product.Id);
+
+                if (inventoryProduct == null)
+                    throw new NotFoundException("Product not found.");
+
+                if (inventoryProduct.Distribution == null)
+                    throw new BadRequestException("Product is not distributed.");
+
+                inventoryProduct.Status = StatusEnum.InInventory;
+                inventoryProduct.Distribution = null;
+
+                _context.InventoryProducts.Update(inventoryProduct);
+
+                receiveReturn.Products.Add(inventoryProduct);
+            }
+
+            await _context.ReceiveReturns.AddAsync(receiveReturn);
+            await _context.SaveChangesAsync();
+
+            return;
         }
     }
 }

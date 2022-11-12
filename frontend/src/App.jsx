@@ -53,7 +53,7 @@ function App() {
 
       <Route element={<AuthGuard />}>
         <Route path="/" element={<NavDrawer />}>
-          <Route element={<AuthGuard allowedRoles={[UserRoles.EMPLOYEE]} />}>
+          <Route element={<AuthGuard allowedRoles={[UserRoles.ADMIN]} />}>
             <Route path="inventory" element={<InventoryPage />} />
 
             <Route

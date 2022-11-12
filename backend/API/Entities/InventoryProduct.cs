@@ -12,8 +12,10 @@ namespace API.Entities
 
         public PurchaseOrder PurchaseOrder { get; set; }
 
-        public Distribution Distribution { get; set; }
+        public Distribution? Distribution { get; set; }
 
         public ICollection<Distribution> DistributionHistory { get; set; }
+
+        public ICollection<ReceiveReturn> ReceiveReturnHistory { get; set; }
     }
 }

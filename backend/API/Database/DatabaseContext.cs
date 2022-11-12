@@ -17,6 +17,7 @@ namespace API.Database
         public DbSet<PurchaseOrderProduct> PurchaseOrderProducts { get; set; }
         public DbSet<InventoryProduct> InventoryProducts { get; set; }
         public DbSet<Distribution> Distributions { get; set; }
+        public DbSet<ReceiveReturn> ReceiveReturns { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options) { }
 
@@ -71,6 +72,12 @@ namespace API.Database
                 .HasMany(product => product.DistributionHistory)
                 .WithMany(distribution => distribution.Products)
                 .UsingEntity(j => j.ToTable("DistributionHistory"));
+
+            builder
+            .Entity<InventoryProduct>()
+            .HasMany(product => product.ReceiveReturnHistory)
+            .WithMany(receiveReturn => receiveReturn.Products)
+            .UsingEntity(j => j.ToTable("ReceiveReturnHistory"));
         }
 
         public override int SaveChanges()
