@@ -19,9 +19,12 @@ import OrderRequestPage from "./components/orderRequest/page/OrderRequestPage";
 import OrderRequestDetailsPage from "./components/orderRequest/page/OrderRequestDetailsPage";
 import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage";
 import PurchaseOrderDetailsPage from "./components/purchaseOrder/page/PurchaseOrderDetailsPage";
-import ProductDistributionPage from "./components/inventory/page/ProductDistributionPage";
-import ProductReturnReceivePage from "./components/inventory/page/ProductReturnReceivePage";
-import InventoryProductDetailsPage from "./components/inventory/page/InventoryProductDetailsPage";
+import ProductDistributionPage from "./components/distribution/page/ProductDistributionPage";
+import ProductReturnReceivePage from "./components/receive_return/page/ProductReturnReceivePage";
+import DistributionPage from "./components/distribution/page/DistributionPage";
+import ReceiveReturnPage from "./components/receive_return/page/ReceiveReturnPage";
+import AdminDashboardPage from "./components/admin/page/AdminDashboardPage";
+import ProfilePage from "./components/profile/page/ProfilePage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -53,22 +56,25 @@ function App() {
 
       <Route element={<AuthGuard />}>
         <Route path="/" element={<NavDrawer />}>
-          <Route element={<AuthGuard allowedRoles={[UserRoles.EMPLOYEE]} />}>
+          <Route path="profile/:id" element={<ProfilePage />} />
+
+          <Route element={<AuthGuard allowedRoles={[UserRoles.ADMIN]} />}>
+            <Route path="admin-dashboard" element={<AdminDashboardPage />} />
+
             <Route path="inventory" element={<InventoryPage />} />
 
+            <Route path="distribution" element={<DistributionPage />} />
+
             <Route
-              path="inventory/distribute"
+              path="distribution/distribute"
               element={<ProductDistributionPage />}
             />
 
-            <Route
-              path="inventory/receive"
-              element={<ProductReturnReceivePage />}
-            />
+            <Route path="receive-returns" element={<ReceiveReturnPage />} />
 
             <Route
-              path="inventory/product/:id"
-              element={<InventoryProductDetailsPage />}
+              path="receive-returns/receive"
+              element={<ProductReturnReceivePage />}
             />
 
             <Route

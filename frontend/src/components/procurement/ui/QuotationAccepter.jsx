@@ -77,7 +77,7 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
             </Typography>
 
             <Typography variant="body1">
-              Order Value:{" "}
+              Order Subtotal Cost:{" "}
               <strong>
                 {currencyFormatter().format(quotation?.quotedTotalPrice)}
               </strong>

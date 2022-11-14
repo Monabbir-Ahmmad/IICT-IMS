@@ -53,6 +53,7 @@ function QuotationResTable({ data = [], onQuotationAccept }) {
         getActions: ({ row }) => [
           <Button
             variant="contained"
+            size="small"
             disabled={row.accepted}
             onClick={() => onQuotationAccept(row)}
           >
@@ -68,6 +69,8 @@ function QuotationResTable({ data = [], onQuotationAccept }) {
     <Paper variant="outlined">
       <DataGrid
         autoHeight
+        disableColumnMenu
+        disableColumnFilter
         rows={data}
         columns={columns}
         disableSelectionOnClick

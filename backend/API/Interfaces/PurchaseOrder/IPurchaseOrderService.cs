@@ -14,6 +14,7 @@ namespace API.Interfaces.PurchaseOrder
         Task<PurchaseOrderResDto> GetPurchaseOrder(int id);
 
         Task<List<PurchaseOrderResDto>> GetPurchaseOrders();
+        Task<List<PurchaseOrderResDto>> GetOrderRequests(int supplierId);
 
         Task<PurchaseOrderResDto> DeliverPurchaseOrderProducts(
             PurchaseOrderDeliveryReqDto purchaseOrderDeliveryReqDto

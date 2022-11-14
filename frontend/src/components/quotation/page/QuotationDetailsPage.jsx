@@ -131,58 +131,106 @@ function QuotationDetailsPage() {
         />
       </Typography>
 
-      <Paper variant="outlined">
-        <Stack p={2} spacing={2}>
-          <Typography variant={"body1"}>
-            Title: <strong>{procurementDetails.procurement?.title}</strong>
-          </Typography>
-          <Divider />
-          <Typography variant={"body1"}>
-            Issuing Date:{" "}
-            <strong>
-              {moment(procurementDetails.procurement?.createdAt).format(
-                "MMM Do, YYYY"
-              )}
-            </strong>
-          </Typography>
-          <Divider />
-          <Typography variant={"body1"}>
-            Tender Deadling:{" "}
-            <strong>
-              {moment(procurementDetails.procurement?.deadline).format(
-                "MMM Do, YYYY"
-              )}
-            </strong>
-          </Typography>
-          <Divider />
-          <Typography variant={"body1"}>
-            Estimated Subtotal Price:{" "}
-            <strong>
-              {currencyFormatter().format(
-                procurementDetails.procurement?.estimatedTotalPrice
-              )}
-            </strong>
-          </Typography>
+      <Stack width={1} spacing={3} direction={{ xs: "column", lg: "row" }}>
+        <Paper variant="outlined" sx={{ flex: 1 }}>
+          <Stack p={3} spacing={3}>
+            <Typography variant="h6">Procurement Details</Typography>
 
-          <Divider />
+            <Divider />
 
-          <Typography variant={"body1"}>
-            Your Quoted Subtotal Price:{" "}
-            <strong>
-              {procurementDetails.procurement?.quotations.find(
-                (quotation) => quotation.supplier.id === Number(userAuth.id)
-              )
-                ? currencyFormatter().format(
-                    procurementDetails.procurement?.quotations.find(
-                      (quotation) =>
-                        quotation.supplier.id === Number(userAuth.id)
-                    )?.quotedTotalPrice
-                  )
-                : "N/A"}
-            </strong>
-          </Typography>
-        </Stack>
-      </Paper>
+            <Typography variant={"body1"}>
+              Procurement ID:{" "}
+              <strong>{procurementDetails.procurement?.id}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Procurement Title:{" "}
+              <strong>{procurementDetails.procurement?.title}</strong>
+            </Typography>
+            <Typography variant={"body1"}>
+              Issuing Date:{" "}
+              <strong>
+                {moment(procurementDetails.procurement?.createdAt).format(
+                  "MMM Do, YYYY"
+                )}
+              </strong>
+            </Typography>
+            <Typography variant={"body1"}>
+              Tender Deadling:{" "}
+              <strong>
+                {moment(procurementDetails.procurement?.deadline).format(
+                  "MMM Do, YYYY"
+                )}
+              </strong>
+            </Typography>
+            <Typography variant={"body1"}>
+              Estimated Subtotal Price:{" "}
+              <strong>
+                {currencyFormatter().format(
+                  procurementDetails.procurement?.estimatedTotalPrice
+                )}
+              </strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Your Quoted Subtotal Price:{" "}
+              <strong>
+                {procurementDetails.procurement?.quotations.find(
+                  (quotation) => quotation.supplier.id === Number(userAuth.id)
+                )
+                  ? currencyFormatter().format(
+                      procurementDetails.procurement?.quotations.find(
+                        (quotation) =>
+                          quotation.supplier.id === Number(userAuth.id)
+                      )?.quotedTotalPrice
+                    )
+                  : "N/A"}
+              </strong>
+            </Typography>
+          </Stack>
+        </Paper>
+
+        <Paper variant="outlined" sx={{ flex: 1 }}>
+          <Stack p={3} spacing={3}>
+            <Typography variant="h6">Procurement Created By</Typography>
+
+            <Divider />
+
+            <Typography variant={"body1"}>
+              Name:{" "}
+              <strong>
+                {procurementDetails.procurement?.createdBy?.username}
+              </strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Email:{" "}
+              <strong>
+                {procurementDetails.procurement?.createdBy?.email}
+              </strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Contact Number:{" "}
+              <strong>
+                {procurementDetails.procurement?.createdBy?.contactNumber}
+              </strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Role:{" "}
+              <strong>{procurementDetails.procurement?.createdBy?.role}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Designation:{" "}
+              <strong>
+                {procurementDetails.procurement?.createdBy?.designation}
+              </strong>
+            </Typography>
+          </Stack>
+        </Paper>
+      </Stack>
       <Typography variant="h6" sx={{ pt: 3 }}>
         Product List
       </Typography>

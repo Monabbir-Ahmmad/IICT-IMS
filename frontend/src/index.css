@@ -18,6 +18,13 @@ body {
   height: 100%;
 }
 
+input[value=""]::-webkit-datetime-edit {
+  color: transparent;
+}
+input:focus::-webkit-datetime-edit {
+  color: #000;
+}
+
 /* total width */
 *::-webkit-scrollbar {
   background-color: transparent;

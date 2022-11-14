@@ -10,10 +10,14 @@ namespace API.Entities
 
         public string Status { get; set; }
 
+        public Voucher Voucher { get; set; }
+
         public PurchaseOrder PurchaseOrder { get; set; }
 
-        public Distribution Distribution { get; set; }
+        public Distribution? CurrentDistribution { get; set; }
 
         public ICollection<Distribution> DistributionHistory { get; set; }
+
+        public ICollection<ReceiveReturn> ReceiveReturnHistory { get; set; }
     }
 }

@@ -1,21 +1,37 @@
 import { Alert, LinearProgress, Stack, Typography } from "@mui/material";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProcurementList } from "../../../redux/actions/procurement.actions";
+import quotationService from "../../../services/quotation.service";
+import SearchFilter from "../../shared/searchFilter/SearchFilter";
 import QuotationListTable from "../ui/QuotationListTable";
 
 function QuotationPage() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { procurements, loading, error } = useSelector(
-    (state) => state.procurementList
-  );
+  const [procurementRequests, setProcurementRequests] = useState({
+    data: [],
+    loading: true,
+    error: null,
+  });
 
   useEffect(() => {
-    dispatch(getProcurementList());
-  }, [dispatch]);
+    (async () => {
+      try {
+        const res = await quotationService.getProcurmentRequestList();
+        setProcurementRequests({
+          data: res.data,
+          loading: false,
+          error: null,
+        });
+      } catch (error) {
+        setProcurementRequests({
+          data: [],
+          loading: false,
+          error: error.message,
+        });
+      }
+    })();
+  }, []);
 
   const onRowOpenClick = (id) => {
     navigate("./" + id);
@@ -25,11 +41,19 @@ function QuotationPage() {
     <Stack spacing={2}>
       <Typography variant="h5">Quotations</Typography>
 
-      {loading && <LinearProgress />}
+      {procurementRequests.loading && <LinearProgress />}
 
-      {error && <Alert severity="error">{error}</Alert>}
+      {procurementRequests.error && (
+        <Alert severity="error">{procurementRequests.error}</Alert>
+      )}
 
-      <QuotationListTable data={procurements} onRowOpenClick={onRowOpenClick} />
+      <div>
+        <SearchFilter />
+        <QuotationListTable
+          data={procurementRequests.data}
+          onRowOpenClick={onRowOpenClick}
+        />
+      </div>
     </Stack>
   );
 }

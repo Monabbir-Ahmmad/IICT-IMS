@@ -24,7 +24,16 @@ function PurchaseOrderTable({ data = [], onRowOpenClick }) {
         minWidth: 100,
         headerAlign: "center",
         align: "center",
-        valueGetter: ({ row }) => row?.procurement?.title,
+        renderCell: RenderCellExpand,
+      },
+      {
+        field: "supplier",
+        headerName: "Supplier",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+        valueGetter: ({ row }) => row?.supplier?.companyName,
         renderCell: RenderCellExpand,
       },
       {
@@ -77,6 +86,21 @@ function PurchaseOrderTable({ data = [], onRowOpenClick }) {
         align: "center",
         renderCell: ({ value }) => (
           <Chip variant="outlined" label={value} color={statusColors[value]} />
+        ),
+      },
+      {
+        field: "isApproved",
+        headerName: "Approval",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 100,
+        renderCell: ({ value }) => (
+          <Chip
+            variant="outlined"
+            label={value ? "Approved" : "Pending"}
+            color={statusColors[value ? "Approved" : "Pending"]}
+          />
         ),
       },
     ],

@@ -1,1 +1,10 @@
-[{ "Name": "Employee" }, { "Name": "Supplier" }]
+[
+  { "Name": "Admin" },
+  { "Name": "Director" },
+  { "Name": "Office Manager" },
+  { "Name": "Store Manager" },
+  { "Name": "Office Officer" },
+  { "Name": "Store Officer" },
+  { "Name": "Normal Employee" },
+  { "Name": "Supplier" }
+]

@@ -1,3 +1,4 @@
+using API.DTOs.Request;
 using API.DTOs.Response;
 
 namespace API.Interfaces.User
@@ -6,6 +7,16 @@ namespace API.Interfaces.User
     {
         Task<UserResDto> GetUserById(int id);
 
-        Task<List<UserResDto>> GetUsers();
+        Task<SupplierResDto> GetSupplierById(int id);
+
+        Task<UserResDto> UpdateUserProfile(UserProfileUpdateReqDto userProfileUpdateReqDto);
+
+        Task<SupplierResDto> UpdateSupplierProfile(
+            SupplierProfileUpdateReqDto supplierProfileUpdateReqDto
+        );
+
+        Task UpdateSupplierPassword(PasswordUpdateReqDto passwordUpdateReqDto);
+
+        Task UpdateUserPassword(PasswordUpdateReqDto passwordUpdateReqDto);
     }
 }

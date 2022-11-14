@@ -1,44 +1,28 @@
+using System.Text.Json.Serialization;
+using API.Config;
 using API.Database;
 using API.Database.Seed;
-using API.Interfaces.Auth;
-using API.Interfaces.AutoComplete;
-using API.Interfaces.Inventory;
-using API.Interfaces.Procurement;
-using API.Interfaces.ProductCategory;
-using API.Interfaces.PurchaseOrder;
-using API.Interfaces.PurchaseOrders;
-using API.Interfaces.Quotation;
-using API.Interfaces.User;
 using API.Middlewares;
-using API.Services.Auth;
-using API.Services.AutoComplete;
-using API.Services.Inventory;
-using API.Services.Procurements;
-using API.Services.ProductCategories;
-using API.Services.Quotations;
-using API.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     options.EnableSensitiveDataLogging();
 });
 
+builder.Services.AddHttpContextAccessor();
+
 // Dependency injections
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
-builder.Services.AddScoped<IProcurementService, ProcurementService>();
-builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
-builder.Services.AddScoped<IQuotationService, QuotationService>();
-builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
-builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScopedServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -1,16 +1,12 @@
 ﻿namespace API.Entities
 {
-    public class Supplier : BaseEntity
+    public class Supplier : AccountBaseEntity
     {
         public string CompanyName { get; set; }
 
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-
         public string BIN { get; set; }
 
-        public ProductCategory Category { get; set; }
+        public Category Category { get; set; }
 
         public string Address { get; set; }
 

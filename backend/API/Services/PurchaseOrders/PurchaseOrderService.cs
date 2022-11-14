@@ -33,6 +33,16 @@ namespace API.Interfaces.PurchaseOrders
             PurchaseOrderCreateReqDto purchaseOrderCreateReqDto
         )
         {
+            var createdBy = await _context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == purchaseOrderCreateReqDto.CreatedById);
+
+            if (createdBy == null)
+                throw new NotFoundException("User not found.");
+
+            if (!UserRoleEnum.PurchaseOrderMakerRoles.Contains(createdBy.Role.Name))
+                throw new BadRequestException("User is not allowed to create purchase order.");
+
             if (
                 await _context.PurchaseOrders.AnyAsync(
                     x => x.Procurement.Id == purchaseOrderCreateReqDto.ProcurementId
@@ -52,24 +62,29 @@ namespace API.Interfaces.PurchaseOrders
             if (procurement == null)
                 throw new NotFoundException("Procurement not found.");
 
-            var quotation = await _context.Quotations.SingleOrDefaultAsync(
-                x =>
-                    x.Id == purchaseOrderCreateReqDto.QuotationId
-                    && x.Procurement.Id == purchaseOrderCreateReqDto.ProcurementId
-            );
+            var quotation = await _context.Quotations
+                .Include(x => x.Supplier)
+                .SingleOrDefaultAsync(
+                    x =>
+                        x.Id == purchaseOrderCreateReqDto.QuotationId
+                        && x.Procurement.Id == purchaseOrderCreateReqDto.ProcurementId
+                );
 
             if (quotation == null)
                 throw new NotFoundException("Quotation not found.");
 
             var purchaseOrder = new API.Entities.PurchaseOrder
             {
+                CreatedBy = createdBy,
+                Title = procurement.Title,
                 Procurement = procurement,
                 Quotation = quotation,
+                Supplier = quotation.Supplier,
                 Category = procurement.Category,
                 Products = new List<PurchaseOrderProduct>(),
                 DeliveryDeadline = purchaseOrderCreateReqDto.DeliveryDeadline,
                 TotalPrice = quotation.QuotedTotalPrice,
-                Status = StatusEnum.Pending,
+                Status = StatusEnum.PendingApproval,
             };
 
             foreach (var product in procurement.Products)
@@ -108,9 +123,12 @@ namespace API.Interfaces.PurchaseOrders
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
+                .Include(x => x.Supplier)
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
                 .ThenInclude(x => x.Supplier)
+                .Include(x => x.CreatedBy)
+                .ThenInclude(x => x.Role)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
             if (purchaseOrder == null)
@@ -122,6 +140,22 @@ namespace API.Interfaces.PurchaseOrders
         public async Task<List<PurchaseOrderResDto>> GetPurchaseOrders()
         {
             var purchaseOrders = await _context.PurchaseOrders
+                .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.Category)
+                .Include(x => x.Procurement)
+                .Include(x => x.Quotation)
+                .ThenInclude(x => x.Supplier)
+                .ToListAsync();
+
+            return _mapper.Map<List<PurchaseOrderResDto>>(purchaseOrders);
+        }
+
+        public async Task<List<PurchaseOrderResDto>> GetOrderRequests(int supplierId)
+        {
+            var purchaseOrders = await _context.PurchaseOrders
+                .Where(x => x.IsApproved && x.Supplier.Id == supplierId)
                 .Include(x => x.Category)
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Product)
@@ -221,6 +255,7 @@ namespace API.Interfaces.PurchaseOrders
             }
 
             purchaseOrder.Status = StatusEnum.DeliveryCompleted;
+            purchaseOrder.ReceiveDate = DateTime.Now;
 
             _context.PurchaseOrders.Update(purchaseOrder);
             await _context.SaveChangesAsync();

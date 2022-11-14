@@ -1,4 +1,4 @@
-import { Chip, Paper } from "@mui/material";
+import { Button, Chip, Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import moment from "moment";
 import { useMemo } from "react";
@@ -74,6 +74,21 @@ function InventroyProductListTable({ data = [], onRowOpenClick }) {
         renderCell: ({ value }) => (
           <Chip variant="outlined" label={value} color={statusColors[value]} />
         ),
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        type: "actions",
+        flex: 1,
+        minWidth: 100,
+        getActions: (params) => [
+          <Button variant="contained" size="small">
+            Edit Status
+          </Button>,
+          <Button variant="contained" size="small">
+            Print
+          </Button>,
+        ],
       },
     ],
     []

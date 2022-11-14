@@ -2,10 +2,12 @@ using System.Net.Http.Headers;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Interfaces.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
@@ -20,13 +22,11 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResDto>> Register(RegisterReqDto registerDto)
+        public async Task<ActionResult> Register(RegisterReqDto registerDto)
         {
-            var result = await _authService.RegisterUser(registerDto);
+            await _authService.RegisterUser(registerDto);
 
-            SetHeaderCookie(result.AccessToken);
-
-            return Created("User created", result);
+            return NoContent();
         }
 
         [HttpPost("login")]
@@ -40,15 +40,11 @@ namespace API.Controllers
         }
 
         [HttpPost("supplier/register")]
-        public async Task<ActionResult<AuthResDto>> SupplierRegister(
-            SupplierRegisterReqDto supplierRegisterDto
-        )
+        public async Task<ActionResult> SupplierRegister(SupplierRegisterReqDto supplierRegisterDto)
         {
-            var result = await _authService.RegisterSupplier(supplierRegisterDto);
+            await _authService.RegisterSupplier(supplierRegisterDto);
 
-            SetHeaderCookie(result.AccessToken);
-
-            return Created("Supplier created", result);
+            return NoContent();
         }
 
         [HttpPost("supplier/login")]
@@ -66,6 +62,22 @@ namespace API.Controllers
         {
             HttpContext.Response.Cookies.Delete("authorization");
             return Task.FromResult<ActionResult>(Ok());
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordReqDto forgotPasswordDto)
+        {
+            await _authService.ForgotPassword(forgotPasswordDto);
+
+            return NoContent();
+        }
+
+        [HttpGet("reset-password/{token}")]
+        public async Task<ActionResult> ResetPassword(string token)
+        {
+            var newPassword = await _authService.ResetPassword(token);
+
+            return Ok("New password: " + newPassword);
         }
 
         [HttpPost("refreshToken")]

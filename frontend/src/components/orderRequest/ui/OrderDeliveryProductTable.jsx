@@ -90,6 +90,7 @@ function OrderDeliveryProductTable({
         getActions: (params) => [
           <Button
             variant="contained"
+            size="small"
             disabled={!deliveryNotSent}
             onClick={() => onEditProductClick(params.row)}
           >
@@ -105,6 +106,8 @@ function OrderDeliveryProductTable({
     <Paper variant="outlined">
       <DataGrid
         autoHeight
+        disableColumnMenu
+        disableColumnFilter
         rows={data}
         columns={columns}
         disableSelectionOnClick

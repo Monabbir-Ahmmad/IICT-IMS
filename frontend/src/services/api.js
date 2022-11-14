@@ -55,6 +55,12 @@ const flatenErrors = (error) => {
 
     error.response.data.message = errors.join(" ");
   }
+
+  error.message =
+    error.response && error.response.data?.message
+      ? error.response.data?.message
+      : error.message;
+
   return Promise.reject(error);
 };
 

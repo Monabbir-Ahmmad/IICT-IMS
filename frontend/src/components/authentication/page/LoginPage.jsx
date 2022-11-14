@@ -3,10 +3,11 @@ import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import AuthIntro from "../ui/AuthIntro";
 import LoginForm from "../ui/LoginForm";
 import styled from "@emotion/styled";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AppIcon from "../../shared/icon/AppIcon";
 import ThemeSwitcher from "../../shared/themeSwitch/ThemeSwitcher";
+import ForgotPasswordDialog from "../ui/ForgotPasswordDialog";
 
 const Wrapper = styled(Box)`
   display: flex;
@@ -17,12 +18,13 @@ const Wrapper = styled(Box)`
 
 function LoginPage() {
   const theme = useTheme();
-
   const navigate = useNavigate();
   const location = useLocation();
   const redirect = location?.state?.from?.pathname || "/";
 
   const { userAuth } = useSelector((state) => state.userLogin);
+
+  const [openForgotPassword, setOpenForgotPassword] = useState(false);
 
   useEffect(() => {
     if (userAuth?.id) {
@@ -100,9 +102,20 @@ function LoginPage() {
                 Sign up
               </Link>
             </Typography>
+            <Typography
+              color={"primary"}
+              sx={{ cursor: "pointer" }}
+              onClick={() => setOpenForgotPassword(true)}
+            >
+              Forgot password?
+            </Typography>
           </Paper>
         </Wrapper>
       </Stack>
+      <ForgotPasswordDialog
+        open={openForgotPassword}
+        onClose={() => setOpenForgotPassword(false)}
+      />
     </Stack>
   );
 }

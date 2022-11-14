@@ -1,24 +1,37 @@
-import { Stack, Typography } from "@mui/material";
+import { Alert, LinearProgress, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import purchaseOrderService from "../../../services/purchaseOrder.service";
+import SearchFilter from "../../shared/searchFilter/SearchFilter";
 import OrderRequestTable from "../ui/OrderRequestTable";
 
 function OrderRequestPage() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [orderRequests, setOrderRequests] = useState([]);
+  const [orderRequests, setOrderRequests] = useState({
+    data: [],
+    loading: true,
+    error: null,
+  });
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await purchaseOrderService.getAll();
-        setOrderRequests(res.data);
-      } catch (error) {}
+        const res = await purchaseOrderService.getOrderRequestList();
+        setOrderRequests({
+          data: res.data,
+          loading: false,
+          error: null,
+        });
+      } catch (error) {
+        setOrderRequests({
+          data: [],
+          loading: false,
+          error: error.message,
+        });
+      }
     })();
-  }, [dispatch]);
+  }, []);
 
   const onRowOpenClick = (id) => {
     navigate("./" + id);
@@ -28,7 +41,19 @@ function OrderRequestPage() {
     <Stack spacing={2}>
       <Typography variant="h5">Order Requests</Typography>
 
-      <OrderRequestTable data={orderRequests} onRowOpenClick={onRowOpenClick} />
+      {orderRequests.loading && <LinearProgress />}
+
+      {orderRequests.error && (
+        <Alert severity="error">{orderRequests.error}</Alert>
+      )}
+
+      <div>
+        <SearchFilter />
+        <OrderRequestTable
+          data={orderRequests.data}
+          onRowOpenClick={onRowOpenClick}
+        />
+      </div>
     </Stack>
   );
 }

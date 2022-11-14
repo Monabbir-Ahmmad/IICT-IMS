@@ -7,6 +7,7 @@ namespace API.Enums
 {
     public class StatusEnum
     {
+        public static readonly string PendingApproval = "Pending Approval";
         public static readonly string Pending = "Pending";
         public static readonly string Approved = "Approved";
         public static readonly string Rejected = "Rejected";

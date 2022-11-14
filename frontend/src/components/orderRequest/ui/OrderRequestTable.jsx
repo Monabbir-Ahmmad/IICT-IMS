@@ -16,7 +16,6 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
         minWidth: 100,
         headerAlign: "center",
         align: "center",
-        valueGetter: ({ row }) => row?.procurement?.title,
         renderCell: RenderCellExpand,
       },
       {

@@ -4,6 +4,8 @@ namespace API.DTOs.Request
 {
     public class PurchaseOrderCreateReqDto
     {
+        public int CreatedById { get; set; }
+
         [Required]
         public int ProcurementId { get; set; }
 

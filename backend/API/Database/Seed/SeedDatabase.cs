@@ -7,19 +7,19 @@ namespace API.Database.Seed
     {
         public static async Task SeedDataAsync(DatabaseContext context)
         {
-            if (!context.ProductCategories.Any())
+            if (!context.Categories.Any())
             {
                 var productCategoriesData = System.IO.File.ReadAllText(
                     "Database/Seed/Data/ProductCategories.json"
                 );
 
-                var productCategories = JsonSerializer.Deserialize<List<ProductCategory>>(
+                var productCategories = JsonSerializer.Deserialize<List<Category>>(
                     productCategoriesData
                 );
 
                 foreach (var productCategory in productCategories)
                 {
-                    context.ProductCategories.Add(productCategory);
+                    context.Categories.Add(productCategory);
                 }
                 await context.SaveChangesAsync();
             }

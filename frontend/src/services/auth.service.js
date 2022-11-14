@@ -27,20 +27,7 @@ class AuthService {
   }
 
   async register(data) {
-    const res = await api().post(POST_USER_REGISTER, data);
-
-    const decodedToken = tokenService.decodeToken(res.data.accessToken);
-
-    res.data = {
-      id: decodedToken.id,
-      role: decodedToken.role,
-      refreshToken: res.data.refreshToken,
-      accessToken: res.data.accessToken,
-    };
-
-    tokenService.setUser(res.data);
-
-    return res;
+    return await api().post(POST_USER_REGISTER, data);
   }
 
   async loginSupplier(email, password) {
@@ -61,20 +48,7 @@ class AuthService {
   }
 
   async registerSupplier(data) {
-    const res = await api().post(POST_SUPPLIER_REGISTER, data);
-
-    const decodedToken = tokenService.decodeToken(res.data.accessToken);
-
-    res.data = {
-      id: decodedToken.id,
-      role: decodedToken.role,
-      refreshToken: res.data.refreshToken,
-      accessToken: res.data.accessToken,
-    };
-
-    tokenService.setUser(res.data);
-
-    return res;
+    return await api().post(POST_SUPPLIER_REGISTER, data);
   }
 
   async logout() {

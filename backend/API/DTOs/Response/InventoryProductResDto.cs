@@ -17,5 +17,7 @@ namespace API.DTOs.Response
         public DateTime? WarrantyExpiryDate { get; set; }
 
         public string Status { get; set; }
+
+        public DistributionResDto CurrentDistribution { get; set; }
     }
 }

@@ -129,6 +129,8 @@ function ProcurementProductTable({
       <DataGrid
         rows={data}
         columns={columns}
+        disableColumnMenu
+        disableColumnFilter
         checkboxSelection
         disableSelectionOnClick
         hideFooterSelectedRowCount

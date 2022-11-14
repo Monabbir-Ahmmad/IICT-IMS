@@ -77,6 +77,21 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         ),
       },
       {
+        field: "isApproved",
+        headerName: "Approval",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 100,
+        renderCell: ({ value }) => (
+          <Chip
+            variant="outlined"
+            label={value ? "Approved" : "Pending"}
+            color={statusColors[value ? "Approved" : "Pending"]}
+          />
+        ),
+      },
+      {
         field: "actions",
         headerName: "Actions",
         type: "actions",

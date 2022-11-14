@@ -9,27 +9,26 @@ import {
 } from "../action_types/auth";
 import authService from "../../services/auth.service";
 import { UserRoles } from "../../constants/enums";
+import { showSuccessAlert } from "./alertSnackbar.actions";
 
 export const signup = (registrationData, userType) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
-
-    let res;
-    if (userType === UserRoles.EMPLOYEE) {
-      res = await authService.register(registrationData);
-    } else if (userType === UserRoles.SUPPLIER) {
-      res = await authService.registerSupplier(registrationData);
+    if (userType === UserRoles.SUPPLIER) {
+      await authService.registerSupplier(registrationData);
+    } else {
+      await authService.register(registrationData);
     }
 
     dispatch({
       type: USER_REGISTER_SUCCESS,
-      payload: res?.data,
     });
 
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: res?.data,
-    });
+    dispatch(
+      showSuccessAlert(
+        "Account creation request received. Please wait for approval email to login."
+      )
+    );
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,

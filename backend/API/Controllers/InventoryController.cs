@@ -1,10 +1,21 @@
 using API.DTOs.Request;
 using API.DTOs.Response;
+using API.Enums;
 using API.Interfaces.Inventory;
+using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize(
+        UserRoleEnum.Admin,
+        UserRoleEnum.Director,
+        UserRoleEnum.OfficeManager,
+        UserRoleEnum.OfficeOfficer,
+        UserRoleEnum.StoreManager,
+        UserRoleEnum.StoreOfficer,
+        UserRoleEnum.NormalEmployee
+    )]
     [ApiController]
     [Route("api/[controller]")]
     public class InventoryController : ControllerBase
@@ -47,6 +58,29 @@ namespace API.Controllers
             await _inventoryService.DistributeProducts(distributionReqDto);
 
             return NoContent();
+        }
+
+        [HttpGet("distribution-history")]
+        public async Task<ActionResult<List<DistributionResDto>>> GetDistributionHistory()
+        {
+            return await _inventoryService.GetDistributionHistory();
+        }
+
+        [HttpPost("receive-return")]
+        public async Task<IActionResult> ReceiveReturnProducts(
+            ReceiveReturnReqDto receiveReturnReqDto
+        )
+        {
+            receiveReturnReqDto.ReceiverId = HttpContext.Items["userId"] as int? ?? 0;
+            await _inventoryService.ReceiveProducts(receiveReturnReqDto);
+
+            return NoContent();
+        }
+
+        [HttpGet("receive-return-history")]
+        public async Task<ActionResult<List<ReceiveReturnResDto>>> GetReceiveReturnHistory()
+        {
+            return await _inventoryService.GetReceiveHistory();
         }
 
         [HttpGet("product/{id}")]

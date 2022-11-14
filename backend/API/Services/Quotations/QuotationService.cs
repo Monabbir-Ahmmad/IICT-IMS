@@ -26,6 +26,14 @@ namespace API.Services.Quotations
             QuotationCreateReqDto quotationCreateReqDto
         )
         {
+            var supplier = await _context.Suppliers
+                .Where(x => x.Id == quotationCreateReqDto.SupplierId)
+                .Include(x => x.Category)
+                .FirstOrDefaultAsync();
+
+            if (supplier == null)
+                throw new NotFoundException("Supplier not found.");
+
             if (
                 await _context.Quotations.AnyAsync(
                     x =>
@@ -34,14 +42,6 @@ namespace API.Services.Quotations
                 )
             )
                 throw new ApiException(HttpStatusCode.Conflict, "Quotation already offered.");
-
-            var supplier = await _context.Suppliers
-                .Where(x => x.Id == quotationCreateReqDto.SupplierId)
-                .Include(x => x.Category)
-                .FirstOrDefaultAsync();
-
-            if (supplier == null)
-                throw new NotFoundException("Supplier not found.");
 
             var procurement = await _context.Procurements
                 .Where(x => x.Id == quotationCreateReqDto.ProcurementId)
@@ -56,6 +56,9 @@ namespace API.Services.Quotations
 
             if (procurement == null)
                 throw new NotFoundException("Procurement not found.");
+
+            if (!procurement.IsApproved)
+                throw new ApiException(HttpStatusCode.Forbidden, "Procurement not approved.");
 
             var quotation = new Quotation
             {
@@ -73,6 +76,32 @@ namespace API.Services.Quotations
             await _context.SaveChangesAsync();
 
             return _mapper.Map<ProcurementResDto>(procurement);
+        }
+
+        public async Task<List<ProcurementResDto>> GetProcurementRequests(int supplierId)
+        {
+            var supplier = await _context.Suppliers
+                .Where(x => x.Id == supplierId)
+                .Include(x => x.Category)
+                .FirstOrDefaultAsync();
+
+            if (supplier == null)
+                throw new NotFoundException("Supplier not found.");
+
+            var procurements = await _context.Procurements
+                .Where(x => x.Category.Id == supplier.Category.Id && x.IsApproved)
+                .Include(x => x.CreatedBy)
+                .ThenInclude(x => x.Role)
+                .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.Category)
+                .Include(x => x.Quotations.Where(q => q.Supplier.Id == supplierId))
+                .ThenInclude(x => x.Supplier)
+                .ThenInclude(s => s.Category)
+                .ToListAsync();
+
+            return _mapper.Map<List<ProcurementResDto>>(procurements);
         }
 
         public async Task<QuotationResDto> GetQuotation(int quotationId)

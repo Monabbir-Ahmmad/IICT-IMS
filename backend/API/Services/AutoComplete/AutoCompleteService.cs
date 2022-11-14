@@ -20,7 +20,7 @@ namespace API.Services.AutoComplete
 
         public async Task<List<ProductCategoryResDto>> GetProductCategories()
         {
-            var categoryList = await _context.ProductCategories.ToListAsync();
+            var categoryList = await _context.Categories.ToListAsync();
 
             return _mapper.Map<List<ProductCategoryResDto>>(categoryList);
         }
@@ -28,7 +28,7 @@ namespace API.Services.AutoComplete
         public async Task<List<UserRoleResDto>> GetUserRoles()
         {
             var userRoles = await _context.UserRoles
-                .Where(x => x.Name != UserRoleEnum.Supplier)
+                .Where(x => UserRoleEnum.IICTSignupRoles.Contains(x.Name))
                 .ToListAsync();
 
             return _mapper.Map<List<UserRoleResDto>>(userRoles);
@@ -36,7 +36,7 @@ namespace API.Services.AutoComplete
 
         public async Task<List<UserResDto>> GetUsers()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.Users.Include(x => x.Role).ToListAsync();
 
             return _mapper.Map<List<UserResDto>>(users);
         }

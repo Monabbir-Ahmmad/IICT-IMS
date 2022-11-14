@@ -1,13 +1,15 @@
 import { Button, List, Stack, Toolbar } from "@mui/material";
 import {
-  RiHome5Line as HomeIcon,
+  RiDashboardLine as DashboardIcon,
   RiShutDownLine as LogoutIcon,
   RiArchiveLine as InventoryIcon,
-  RiShoppingCartLine as ProcurementIcon,
+  RiFileList3Line as ProcurementIcon,
   RiFileList3Line as QuotationIcon,
   RiUser6Line as UserIcon,
-  RiDraftLine as OrderRequestIcon,
-  RiShoppingBag2Line as PurchaseOrderIcon,
+  RiShoppingCartLine as OrderRequestIcon,
+  RiShoppingCartLine as PurchaseOrderIcon,
+  RiDownload2Line as ReceiveReturnIcon,
+  RiUpload2Line as DistributionIcon,
 } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import NavLinkItem from "./NavLinkItem";
@@ -19,7 +21,7 @@ function NavMenu() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { userAuthInfo } = useSelector((state) => state.userLogin);
+  const { userAuth } = useSelector((state) => state.userLogin);
 
   const handleLogoutClick = () => {
     dispatch(logout());
@@ -31,46 +33,65 @@ function NavMenu() {
       <Toolbar />
 
       <List component={"nav"} sx={{ flex: 1 }}>
-        <NavLinkItem title={"Home"} link={"/home"} icon={HomeIcon} />
-
         <NavLinkItem
-          title={"Profile"}
-          link={`/profile/${userAuthInfo?.id}`}
-          icon={UserIcon}
+          title={"Admin Dashboard"}
+          link={"/admin-dashboard"}
+          icon={DashboardIcon}
+          allowedRoles={[UserRoles.ADMIN]}
         />
 
         <NavLinkItem
-          title={"Inventory"}
-          link={"/inventory"}
-          icon={InventoryIcon}
-          allowedRoles={[UserRoles.EMPLOYEE]}
+          title={"Profile"}
+          link={`/profile/${userAuth?.id}`}
+          icon={UserIcon}
         />
 
         <NavLinkItem
           title={"Procurements"}
           link={"/procurements"}
           icon={ProcurementIcon}
-          allowedRoles={[UserRoles.EMPLOYEE]}
+          allowedRoles={[UserRoles.ADMIN]}
         />
 
         <NavLinkItem
           title={"Quotations"}
           link={"/quotations"}
           icon={QuotationIcon}
-          // allowedRoles={[UserRoles.SUPPLIER]}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]}
         />
 
         <NavLinkItem
           title={"Purchase Orders"}
           link={"/purchase-orders"}
           icon={PurchaseOrderIcon}
-          allowedRoles={[UserRoles.EMPLOYEE, UserRoles.ADMIN]}
+          allowedRoles={[UserRoles.ADMIN]}
         />
         <NavLinkItem
           title={"Order Requests"}
           link={"/order-requests"}
           icon={OrderRequestIcon}
-          // allowedRoles={[UserRoles.SUPPLIER]}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]}
+        />
+
+        <NavLinkItem
+          title={"Inventory"}
+          link={"/inventory"}
+          icon={InventoryIcon}
+          allowedRoles={[UserRoles.ADMIN]}
+        />
+
+        <NavLinkItem
+          title={"Distribution"}
+          link={"/distribution"}
+          icon={DistributionIcon}
+          allowedRoles={[UserRoles.ADMIN]}
+        />
+
+        <NavLinkItem
+          title={"Receive Returns"}
+          link={"/receive-returns"}
+          icon={ReceiveReturnIcon}
+          allowedRoles={[UserRoles.ADMIN]}
         />
       </List>
 

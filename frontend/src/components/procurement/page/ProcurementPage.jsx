@@ -14,6 +14,7 @@ import {
   deleteProcurement,
   getProcurementList,
 } from "../../../redux/actions/procurement.actions";
+import SearchFilter from "../../shared/searchFilter/SearchFilter";
 
 function ProcurementPage() {
   const dispatch = useDispatch();
@@ -53,11 +54,14 @@ function ProcurementPage() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <ProcurementListItem
-        data={procurements}
-        onRowOpenClick={onRowClick}
-        onRowDeleteClick={onRowDelete}
-      />
+      <div>
+        <SearchFilter />
+        <ProcurementListItem
+          data={procurements}
+          onRowOpenClick={onRowClick}
+          onRowDeleteClick={onRowDelete}
+        />
+      </div>
     </Stack>
   );
 }

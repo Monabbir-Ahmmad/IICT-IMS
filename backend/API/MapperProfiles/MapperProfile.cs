@@ -19,6 +19,8 @@ namespace API.MapperProfiles
             MapPurchaseOrder();
             MapPurchaseOrderProduct();
             MapInventoryProduct();
+            MapDistributionHistory();
+            MapReceiveHistory();
         }
 
         private void MapUserRole()
@@ -34,13 +36,13 @@ namespace API.MapperProfiles
 
         private void MapSupplier()
         {
-            CreateMap<Supplier, SupplierDetailsResDto>()
+            CreateMap<Supplier, SupplierResDto>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
         }
 
         private void MapProductCategory()
         {
-            CreateMap<ProductCategory, ProductCategoryResDto>();
+            CreateMap<Category, ProductCategoryResDto>();
         }
 
         private void MapProcurement()
@@ -111,6 +113,32 @@ namespace API.MapperProfiles
                     opt => opt.MapFrom(src => src.Product.Manufacturer)
                 )
                 .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.Product.Details));
+        }
+
+        private void MapDistributionHistory()
+        {
+            CreateMap<Distribution, DistributionResDto>()
+                .ForMember(
+                    dest => dest.DistributorName,
+                    opt => opt.MapFrom(src => src.Distributor.Username)
+                )
+                .ForMember(
+                    dest => dest.DistributedToName,
+                    opt => opt.MapFrom(src => src.DistributedTo.Username)
+                );
+        }
+
+        private void MapReceiveHistory()
+        {
+            CreateMap<ReceiveReturn, ReceiveReturnResDto>()
+                .ForMember(
+                    dest => dest.ReceiverName,
+                    opt => opt.MapFrom(src => src.Receiver.Username)
+                )
+                .ForMember(
+                    dest => dest.ReceivedFromName,
+                    opt => opt.MapFrom(src => src.ReceivedFrom.Username)
+                );
         }
     }
 }

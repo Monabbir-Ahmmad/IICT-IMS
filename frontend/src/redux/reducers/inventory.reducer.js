@@ -15,6 +15,10 @@ import {
   GET_RECEIVABLE_INVENTORY_LIST_FAIL,
   GET_RECEIVABLE_INVENTORY_LIST_REQUEST,
   GET_RECEIVABLE_INVENTORY_LIST_SUCCESS,
+  RECEIVE_RETURN_INVENTORY_FAIL,
+  RECEIVE_RETURN_INVENTORY_REQUEST,
+  RECEIVE_RETURN_INVENTORY_RESET,
+  RECEIVE_RETURN_INVENTORY_SUCCESS,
 } from "../action_types/inventory";
 
 export const distributeInventoryReducer = (state = {}, action) => {
@@ -26,6 +30,21 @@ export const distributeInventoryReducer = (state = {}, action) => {
     case DISTRIBUTE_INVENTORY_FAIL:
       return { loading: false, success: false, error: action.payload };
     case DISTRIBUTE_INVENTORY_RESET:
+      return { loading: false, success: false };
+    default:
+      return state;
+  }
+};
+
+export const receiveReturnInventoryReducer = (state = {}, action) => {
+  switch (action.type) {
+    case RECEIVE_RETURN_INVENTORY_REQUEST:
+      return { loading: true };
+    case RECEIVE_RETURN_INVENTORY_SUCCESS:
+      return { loading: false, success: true };
+    case RECEIVE_RETURN_INVENTORY_FAIL:
+      return { loading: false, success: false, error: action.payload };
+    case RECEIVE_RETURN_INVENTORY_RESET:
       return { loading: false, success: false };
     default:
       return state;

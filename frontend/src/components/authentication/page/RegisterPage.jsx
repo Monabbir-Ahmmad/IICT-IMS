@@ -12,8 +12,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import AppIcon from "../../shared/icon/AppIcon";
+import TabPanel from "../../shared/tab/TabPanel";
 import ThemeSwitcher from "../../shared/themeSwitch/ThemeSwitcher";
-import EmployeeRegisterForm from "../ui/EmployeeRegisterForm";
+import RegisterForm from "../ui/RegisterForm";
 import SupplierRegisterForm from "../ui/SupplierRegisterForm";
 
 function RegisterPage() {
@@ -21,15 +22,15 @@ function RegisterPage() {
 
   const navigate = useNavigate();
 
-  const { userAuthInfo } = useSelector((state) => state.userLogin);
+  const { userAuth } = useSelector((state) => state.userLogin);
 
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
-    if (userAuthInfo?.id) {
+    if (userAuth?.id) {
       navigate("/home", { replace: true });
     }
-  }, [navigate, userAuthInfo]);
+  }, [navigate, userAuth]);
 
   return (
     <Stack
@@ -91,11 +92,17 @@ function RegisterPage() {
             value={activeTab}
             onChange={(e, value) => setActiveTab(value)}
           >
-            <Tab label="IICT Employee" value={1} />
-            <Tab label="Supplier" value={2} />
+            <Tab label="IICT Employee" value={0} />
+            <Tab label="Supplier" value={1} />
           </Tabs>
-          {activeTab === 1 && <EmployeeRegisterForm />}
-          {activeTab === 2 && <SupplierRegisterForm />}
+
+          <TabPanel value={activeTab} index={0}>
+            <RegisterForm />
+          </TabPanel>
+          <TabPanel value={activeTab} index={1}>
+            <SupplierRegisterForm />
+          </TabPanel>
+
           <Typography sx={{ mt: 3 }}>
             Already have an account?{" "}
             <Link component={RouterLink} to="/login" underline="hover">

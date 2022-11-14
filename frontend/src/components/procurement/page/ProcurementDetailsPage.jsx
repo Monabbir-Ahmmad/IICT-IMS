@@ -67,46 +67,73 @@ function ProcurementDetailsPage() {
         />
       </Typography>
 
-      <Paper variant="outlined">
-        <Stack p={3} spacing={3}>
-          <Typography variant={"body1"}>
-            Procurement Title: <strong>{procurement?.title}</strong>
-          </Typography>
+      <Stack width={1} spacing={3} direction={{ xs: "column", lg: "row" }}>
+        <Paper variant="outlined" sx={{ flex: 1 }}>
+          <Stack p={3} spacing={3}>
+            <Typography variant={"h6"}>Details</Typography>
 
-          <Divider />
+            <Divider />
 
-          <Typography variant={"body1"}>
-            Procurement Category: <strong>{procurement?.category}</strong>
-          </Typography>
+            <Typography variant={"body1"}>
+              Procurement Title: <strong>{procurement?.title}</strong>
+            </Typography>
 
-          <Divider />
+            <Typography variant={"body1"}>
+              Procurement Category: <strong>{procurement?.category}</strong>
+            </Typography>
 
-          <Typography variant={"body1"}>
-            Issuing Date:{" "}
-            <strong>
-              {moment(procurement?.createdAt).format("MMM Do, YYYY")}
-            </strong>
-          </Typography>
+            <Typography variant={"body1"}>
+              Issuing Date:{" "}
+              <strong>
+                {moment(procurement?.createdAt).format("MMM Do, YYYY")}
+              </strong>
+            </Typography>
 
-          <Divider />
+            <Typography variant={"body1"}>
+              Tender Deadling:{" "}
+              <strong>
+                {moment(procurement?.deadline).format("MMM Do, YYYY")}
+              </strong>
+            </Typography>
 
-          <Typography variant={"body1"}>
-            Tender Deadling:{" "}
-            <strong>
-              {moment(procurement?.deadline).format("MMM Do, YYYY")}
-            </strong>
-          </Typography>
+            <Typography variant={"body1"}>
+              Estimated Subtotal Price:{" "}
+              <strong>
+                {currencyFormatter().format(procurement?.estimatedTotalPrice)}
+              </strong>
+            </Typography>
+          </Stack>
+        </Paper>
 
-          <Divider />
+        <Paper variant="outlined" sx={{ flex: 1 }}>
+          <Stack p={3} spacing={3}>
+            <Typography variant={"h6"}>Created By</Typography>
+            <Divider />
 
-          <Typography variant={"body1"}>
-            Estimated Subtotal Price:{" "}
-            <strong>
-              {currencyFormatter().format(procurement?.estimatedTotalPrice)}
-            </strong>
-          </Typography>
-        </Stack>
-      </Paper>
+            <Typography variant={"body1"}>
+              Name: <strong>{procurement?.createdBy?.username}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Email: <strong>{procurement?.createdBy?.email}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Contact Number:{" "}
+              <strong>{procurement?.createdBy?.contactNumber}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Role: <strong>{procurement?.createdBy?.role}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Designation:{" "}
+              <strong>{procurement?.createdBy?.designation}</strong>
+            </Typography>
+          </Stack>
+        </Paper>
+      </Stack>
       <Typography variant="h6" sx={{ pt: 3 }}>
         Product List
       </Typography>

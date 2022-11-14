@@ -1,7 +1,7 @@
 using API.Database;
 using API.Enums;
 using API.Errors;
-using API.Interfaces.Auth;
+using API.Interfaces.Token;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Middlewares
@@ -40,7 +40,10 @@ namespace API.Middlewares
                 throw new UnauthorizedException("No Token Found.");
             }
 
-            var userId = tokenService.GetUserIdFromToken(token);
+            var userId = tokenService.ValidateToken(token);
+            if (userId == null)
+                throw new UnauthorizedException("Invalid Token.");
+
             var userRole = tokenService.GetRoleFromToken(token);
 
             if (userRole == UserRoleEnum.Supplier)
@@ -49,6 +52,8 @@ namespace API.Middlewares
 
                 if (supplier == null)
                     throw new UnauthorizedException("Invalid Token.");
+                if (!supplier.IsVerified)
+                    throw new UnauthorizedException("Account is not verified.");
             }
             else
             {
@@ -58,6 +63,10 @@ namespace API.Middlewares
 
                 if (user == null)
                     throw new UnauthorizedException("Invalid Token.");
+                if (!user.IsVerified)
+                    throw new UnauthorizedException("Account is not verified.");
+
+                userRole = user.Role.Name;
             }
 
             httpContext.Items["userId"] = userId;

@@ -1,14 +1,13 @@
-
 namespace API.Entities
 {
-    public class User : BaseEntity
+    public class User : AccountBaseEntity
     {
         public string Username { get; set; }
 
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-
         public UserRole Role { get; set; }
+
+        public string ContactNumber { get; set; }
+
+        public string Designation { get; set; }
     }
 }

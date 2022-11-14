@@ -1,11 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using API.DTOs.Request;
 using API.DTOs.Response;
+using API.Enums;
 using API.Errors;
 using API.Interfaces.ProductCategory;
+using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize(UserRoleEnum.Admin, UserRoleEnum.Director)]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductCategoryController : ControllerBase
@@ -26,19 +30,20 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> DeleteCategory(int id)
+        public async Task<ActionResult> DeleteCategory(int id)
         {
-            var result = await _productCategoryService.DeleteCategory(id);
-            return result ? Ok("Category Deleted.") : throw new BadRequestException();
+            await _productCategoryService.DeleteCategory(id);
+            return Ok("Category Deleted.");
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProductCategoryResDto>> GetCategory(int id)
+        [HttpPut]
+        public async Task<ActionResult> GetCategory(ProductCategoryUpdateReqDto categoryDto)
         {
-            return await _productCategoryService.GetCategory(id);
+            await _productCategoryService.UpdateCategory(categoryDto);
+            return Ok("Category updated.");
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult<List<ProductCategoryResDto>>> GetCategories()
         {
             return await _productCategoryService.GetCategories();

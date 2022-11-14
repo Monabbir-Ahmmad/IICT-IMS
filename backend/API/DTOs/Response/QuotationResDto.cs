@@ -12,7 +12,7 @@ namespace API.DTOs.Response
 
         public decimal QuotedTotalPrice { get; set; }
 
-        public SupplierDetailsResDto Supplier { get; set; }
+        public SupplierResDto Supplier { get; set; }
 
         public bool Accepted { get; set; }
     }

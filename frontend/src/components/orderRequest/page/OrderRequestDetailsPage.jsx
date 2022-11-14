@@ -156,57 +156,83 @@ function OrderRequestDetailsPage() {
         />
       </Typography>
 
-      <Paper variant="outlined">
-        <Stack p={3} spacing={3}>
-          <Typography variant={"body1"}>
-            Order Title: <strong>{purchaseOrder?.procurement?.title}</strong>
-          </Typography>
+      <Stack width={1} spacing={3} direction={{ xs: "column", lg: "row" }}>
+        <Paper variant="outlined" sx={{ flex: 1 }}>
+          <Stack p={3} spacing={3}>
+            <Typography variant="h6">Order Details</Typography>
 
-          <Divider />
+            <Divider />
 
-          <Typography variant={"body1"}>
-            Order Category: <strong>{purchaseOrder?.category}</strong>
-          </Typography>
+            <Typography variant={"body1"}>
+              Order Title: <strong>{purchaseOrder?.title}</strong>
+            </Typography>
 
-          <Divider />
+            <Typography variant={"body1"}>
+              Order Category: <strong>{purchaseOrder?.category}</strong>
+            </Typography>
 
-          <Typography variant={"body1"}>
-            Order Date:{" "}
-            <strong>
-              {moment(purchaseOrder?.createdAt).format("MMM Do, YYYY")}
-            </strong>
-          </Typography>
+            <Typography variant={"body1"}>
+              Order Date:{" "}
+              <strong>
+                {moment(purchaseOrder?.createdAt).format("MMM Do, YYYY")}
+              </strong>
+            </Typography>
 
-          <Divider />
+            <Typography variant={"body1"}>
+              Delivery Deadling:{" "}
+              <strong>
+                {moment(purchaseOrder?.deliveryDeadline).format("MMM Do, YYYY")}
+              </strong>
+            </Typography>
 
-          <Typography variant={"body1"}>
-            Delivery Deadling:{" "}
-            <strong>
-              {moment(purchaseOrder?.deliveryDeadline).format("MMM Do, YYYY")}
-            </strong>
-          </Typography>
+            <Typography variant={"body1"}>
+              Delivery Date:{" "}
+              <strong>
+                {purchaseOrder?.deliveryDate
+                  ? moment(purchaseOrder?.deliveryDate).format("MMM Do, YYYY")
+                  : "N/A"}
+              </strong>
+            </Typography>
 
-          <Divider />
+            <Typography variant={"body1"}>
+              Subtotal Price:{" "}
+              <strong>
+                {currencyFormatter().format(purchaseOrder?.totalPrice)}
+              </strong>
+            </Typography>
+          </Stack>
+        </Paper>
 
-          <Typography variant={"body1"}>
-            Delivery Date:{" "}
-            <strong>
-              {purchaseOrder?.deliveryDate
-                ? moment(purchaseOrder?.deliveryDate).format("MMM Do, YYYY")
-                : "N/A"}
-            </strong>
-          </Typography>
+        <Paper variant="outlined" sx={{ flex: 1 }}>
+          <Stack p={3} spacing={3}>
+            <Typography variant={"h6"}>Created By</Typography>
+            <Divider />
 
-          <Divider />
+            <Typography variant={"body1"}>
+              Name: <strong>{purchaseOrder?.createdBy?.username}</strong>
+            </Typography>
 
-          <Typography variant={"body1"}>
-            Subtotal Price:{" "}
-            <strong>
-              {currencyFormatter().format(purchaseOrder?.totalPrice)}
-            </strong>
-          </Typography>
-        </Stack>
-      </Paper>
+            <Typography variant={"body1"}>
+              Email: <strong>{purchaseOrder?.createdBy?.email}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Contact Number:{" "}
+              <strong>{purchaseOrder?.createdBy?.contactNumber}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Role: <strong>{purchaseOrder?.createdBy?.role}</strong>
+            </Typography>
+
+            <Typography variant={"body1"}>
+              Designation:{" "}
+              <strong>{purchaseOrder?.createdBy?.designation}</strong>
+            </Typography>
+          </Stack>
+        </Paper>
+      </Stack>
+
       <Typography variant="h6" sx={{ pt: 3 }}>
         Product List
       </Typography>

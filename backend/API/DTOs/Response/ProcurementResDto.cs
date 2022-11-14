@@ -16,6 +16,10 @@
 
         public string Status { get; set; }
 
+        public bool IsApproved { get; set; }
+
+        public UserResDto CreatedBy { get; set; }
+
         public List<ProcurementProductResDto> Products { get; set; }
 
         public List<QuotationResDto> Quotations { get; set; }

@@ -16,6 +16,10 @@ import {
   GET_RECEIVABLE_INVENTORY_LIST_FAIL,
   GET_RECEIVABLE_INVENTORY_LIST_REQUEST,
   GET_RECEIVABLE_INVENTORY_LIST_SUCCESS,
+  RECEIVE_RETURN_INVENTORY_FAIL,
+  RECEIVE_RETURN_INVENTORY_REQUEST,
+  RECEIVE_RETURN_INVENTORY_RESET,
+  RECEIVE_RETURN_INVENTORY_SUCCESS,
 } from "../action_types/inventory";
 import { showErrorAlert, showSuccessAlert } from "./alertSnackbar.actions";
 
@@ -47,6 +51,37 @@ export const distributeInventory = (data) => async (dispatch) => {
 
   setTimeout(() => {
     dispatch({ type: DISTRIBUTE_INVENTORY_RESET });
+  }, 5000);
+};
+
+export const receiveReturnInventory = (data) => async (dispatch) => {
+  try {
+    dispatch({
+      type: RECEIVE_RETURN_INVENTORY_REQUEST,
+    });
+
+    await inventoryService.receive(data);
+
+    dispatch({
+      type: RECEIVE_RETURN_INVENTORY_SUCCESS,
+    });
+
+    dispatch(showSuccessAlert("Products received successfully"));
+  } catch (error) {
+    const errorMessage =
+      error.response && error.response.data?.message
+        ? error.response.data?.message
+        : error.message;
+    dispatch({
+      type: RECEIVE_RETURN_INVENTORY_FAIL,
+      payload: errorMessage,
+    });
+
+    dispatch(showErrorAlert(errorMessage));
+  }
+
+  setTimeout(() => {
+    dispatch({ type: RECEIVE_RETURN_INVENTORY_RESET });
   }, 5000);
 };
 

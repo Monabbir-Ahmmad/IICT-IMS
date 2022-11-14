@@ -67,6 +67,8 @@ function QuotationOfferProductTable({ data = [] }) {
     <Paper variant="outlined">
       <DataGrid
         autoHeight
+        disableColumnMenu
+        disableColumnFilter
         rows={data}
         columns={columns}
         disableSelectionOnClick

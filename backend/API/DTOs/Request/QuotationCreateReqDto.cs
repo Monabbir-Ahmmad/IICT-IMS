@@ -10,7 +10,10 @@ namespace API.DTOs.Request
         [Required]
         public int SupplierId { get; set; }
 
-        [Required]
+        [
+            Required,
+            Range(1, 300000, ErrorMessage = "Quoted total price must be between 1 and 300000.")
+        ]
         public decimal QuotedTotalPrice { get; set; }
     }
 }

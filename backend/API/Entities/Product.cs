@@ -4,7 +4,7 @@ namespace API.Entities
     {
         public string Name { get; set; }
 
-        public ProductCategory Category { get; set; }
+        public Category Category { get; set; }
 
         public string Manufacturer { get; set; }
 
