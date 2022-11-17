@@ -1,25 +1,5 @@
-using API.Interfaces.Admin;
-using API.Interfaces.Auth;
-using API.Interfaces.AutoComplete;
-using API.Interfaces.Inventory;
-using API.Interfaces.Mail;
-using API.Interfaces.Procurement;
-using API.Interfaces.ProductCategory;
-using API.Interfaces.PurchaseOrder;
-using API.Interfaces.PurchaseOrders;
-using API.Interfaces.Quotation;
-using API.Interfaces.Token;
-using API.Interfaces.User;
-using API.Services.Admin;
-using API.Services.Auth;
-using API.Services.AutoComplete;
-using API.Services.Inventory;
-using API.Services.Mail;
-using API.Services.Procurements;
-using API.Services.ProductCategories;
-using API.Services.Quotations;
-using API.Services.Token;
-using API.Services.Users;
+using API.Interfaces;
+using API.Services;
 
 namespace API.Config
 {

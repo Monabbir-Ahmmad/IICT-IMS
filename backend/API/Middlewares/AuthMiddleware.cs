@@ -1,7 +1,7 @@
 using API.Database;
 using API.Enums;
 using API.Errors;
-using API.Interfaces.Token;
+using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Middlewares

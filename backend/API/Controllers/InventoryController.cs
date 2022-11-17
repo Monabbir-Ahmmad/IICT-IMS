@@ -1,7 +1,7 @@
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Enums;
-using API.Interfaces.Inventory;
+using API.Interfaces;
 using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 

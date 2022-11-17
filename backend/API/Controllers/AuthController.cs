@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using API.DTOs.Request;
 using API.DTOs.Response;
-using API.Interfaces.Auth;
+using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

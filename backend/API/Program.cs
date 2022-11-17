@@ -3,7 +3,9 @@ using API.Config;
 using API.Database;
 using API.Database.Seed;
 using API.Middlewares;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,12 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.EnableSensitiveDataLogging();
 });
 
-builder.Services.AddHttpContextAccessor();
+builder.Services.Configure<FormOptions>(x =>
+{
+    x.ValueLengthLimit = int.MaxValue;
+    x.MultipartBodyLengthLimit = int.MaxValue;
+    x.MemoryBufferThreshold = int.MaxValue;
+});
 
 // Dependency injections
 builder.Services.AddScopedServices();
@@ -46,6 +53,16 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<AuthMiddleware>();
 
 // app.UseHttpsRedirection();
+
+app.UseStaticFiles(
+    new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "Resources")
+        ),
+        RequestPath = "/Resources"
+    }
+);
 
 app.UseAuthorization();
 

@@ -9,7 +9,6 @@ namespace API.Enums
     {
         public static readonly string PendingApproval = "Pending Approval";
         public static readonly string Pending = "Pending";
-        public static readonly string PendingApproval = "Pending Approval";
         public static readonly string Approved = "Approved";
         public static readonly string Rejected = "Rejected";
         public static readonly string Cancelled = "Cancelled";

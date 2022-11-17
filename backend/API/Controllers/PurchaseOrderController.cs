@@ -2,7 +2,7 @@ using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Enums;
 using API.Errors;
-using API.Interfaces.PurchaseOrder;
+using API.Interfaces;
 using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 

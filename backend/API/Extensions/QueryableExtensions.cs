@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Reflection;
 using API.Utilities;
 
 namespace API.Extensions
@@ -20,31 +21,30 @@ namespace API.Extensions
         public static IQueryable<T> OrderBy<T>(
             this IQueryable<T> source,
             string propertyName,
-            bool descending
+            bool ascending = true
         )
         {
-            if (String.IsNullOrEmpty(propertyName))
-            {
-                return source;
-            }
+            var parameter = Expression.Parameter(typeof(T), "");
 
-            ParameterExpression parameter = Expression.Parameter(source.ElementType, "");
+            var member = propertyName
+                .Split('.')
+                .Aggregate((Expression)parameter, Expression.Property);
 
-            MemberExpression property = Expression.Property(parameter, propertyName);
+            var propertyType = member.Type;
 
-            LambdaExpression lambda = Expression.Lambda(property, parameter);
+            var keySelector = Expression.Lambda(member, parameter);
 
-            string methodName = descending ? "OrderByDescending" : "OrderBy";
+            var methodName = ascending ? "OrderBy" : "OrderByDescending";
 
-            Expression methodCallExpression = Expression.Call(
+            var resultExpression = Expression.Call(
                 typeof(Queryable),
                 methodName,
-                new Type[] { source.ElementType, property.Type },
+                new[] { typeof(T), propertyType },
                 source.Expression,
-                Expression.Quote(lambda)
+                Expression.Quote(keySelector)
             );
 
-            return source.Provider.CreateQuery<T>(methodCallExpression);
+            return source.Provider.CreateQuery<T>(resultExpression);
         }
     }
 }

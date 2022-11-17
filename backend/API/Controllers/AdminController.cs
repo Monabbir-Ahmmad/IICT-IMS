@@ -1,6 +1,6 @@
 using API.DTOs.Response;
 using API.Enums;
-using API.Interfaces.Admin;
+using API.Interfaces;
 using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
