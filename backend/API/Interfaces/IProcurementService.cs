@@ -1,4 +1,5 @@
-﻿using API.DTOs.Request;
+﻿using API.DTOs.Params;
+using API.DTOs.Request;
 using API.DTOs.Response;
 
 namespace API.Interfaces
@@ -8,7 +9,7 @@ namespace API.Interfaces
         Task<ProcurementResDto> CreateProcurement(ProcurementReqDto procuremnetDto);
         Task<bool> DeleteProcurement(int id);
 
-        Task<List<ProcurementResDto>> GetProcurements();
+        Task<PaginatedResDto<ProcurementResDto>> GetProcurements(PaginatedFilterSortParam param);
 
         Task<ProcurementResDto> GetProcurement(int id);
     }

@@ -46,5 +46,52 @@ namespace API.Extensions
 
             return source.Provider.CreateQuery<T>(resultExpression);
         }
+
+        public static IQueryable<T> ApplyFiltering<T>(
+            this IQueryable<T> source,
+            string SearchColumn,
+            string SearchValue,
+            string SearchOperator
+        )
+        {
+            if (
+                !string.IsNullOrEmpty(SearchColumn)
+                && !string.IsNullOrEmpty(SearchValue)
+                && !string.IsNullOrEmpty(SearchOperator)
+            )
+            {
+                source = source.Where(SearchColumn, SearchOperator, SearchValue);
+            }
+
+            return source;
+        }
+
+        public static IQueryable<T> ApplySorting<T>(
+            this IQueryable<T> source,
+            string SortColumn,
+            string SortDirection
+        )
+        {
+            if (!string.IsNullOrEmpty(SortColumn) && !string.IsNullOrEmpty(SortDirection))
+            {
+                source = source.OrderBy(SortColumn, SortDirection == "asc");
+            }
+
+            return source;
+        }
+
+        public static IQueryable<T> ApplyPagination<T>(
+            this IQueryable<T> source,
+            int PageNumber,
+            int PageSize
+        )
+        {
+            if (PageNumber >= 0 && PageSize > 0)
+            {
+                source = source.Skip(PageNumber * PageSize).Take(PageSize);
+            }
+
+            return source;
+        }
     }
 }

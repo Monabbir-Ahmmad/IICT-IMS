@@ -1,10 +1,12 @@
 using System.Net;
 using API.Database;
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
 using API.Enums;
 using API.Errors;
+using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -136,9 +138,11 @@ namespace API.Interfaces
             return _mapper.Map<PurchaseOrderResDto>(purchaseOrder);
         }
 
-        public async Task<List<PurchaseOrderResDto>> GetPurchaseOrders()
+        public async Task<PaginatedResDto<PurchaseOrderResDto>> GetPurchaseOrders(
+            PaginatedFilterSortParam param
+        )
         {
-            var purchaseOrders = await _context.PurchaseOrders
+            var purchaseOrders = _context.PurchaseOrders
                 .Include(x => x.Category)
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Product)
@@ -146,14 +150,30 @@ namespace API.Interfaces
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
                 .ThenInclude(x => x.Supplier)
-                .ToListAsync();
+                .AsQueryable();
 
-            return _mapper.Map<List<PurchaseOrderResDto>>(purchaseOrders);
+            var totalCount = await purchaseOrders.CountAsync();
+
+            purchaseOrders = purchaseOrders
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<PurchaseOrderResDto>
+            {
+                Data = _mapper.Map<List<PurchaseOrderResDto>>(await purchaseOrders.ToListAsync()),
+                TotalCount = totalCount,
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+            };
         }
 
-        public async Task<List<PurchaseOrderResDto>> GetOrderRequests(int supplierId)
+        public async Task<PaginatedResDto<PurchaseOrderResDto>> GetOrderRequests(
+            int supplierId,
+            PaginatedFilterSortParam param
+        )
         {
-            var purchaseOrders = await _context.PurchaseOrders
+            var purchaseOrders = _context.PurchaseOrders
                 .Where(x => x.IsApproved && x.Supplier.Id == supplierId)
                 .Include(x => x.Category)
                 .Include(x => x.Products)
@@ -162,9 +182,22 @@ namespace API.Interfaces
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
                 .ThenInclude(x => x.Supplier)
-                .ToListAsync();
+                .AsQueryable();
 
-            return _mapper.Map<List<PurchaseOrderResDto>>(purchaseOrders);
+            var totalCount = await purchaseOrders.CountAsync();
+
+            purchaseOrders = purchaseOrders
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<PurchaseOrderResDto>
+            {
+                Data = _mapper.Map<List<PurchaseOrderResDto>>(await purchaseOrders.ToListAsync()),
+                TotalCount = totalCount,
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+            };
         }
 
         public async Task<PurchaseOrderResDto> DeliverPurchaseOrderProducts(

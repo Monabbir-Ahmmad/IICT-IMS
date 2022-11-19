@@ -1,3 +1,4 @@
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 
@@ -7,8 +8,14 @@ namespace API.Interfaces
     {
         Task<ProcurementResDto> CreateQuotation(QuotationCreateReqDto createQuotationDto);
         Task<QuotationResDto> GetQuotation(int quotationId);
-        Task<List<QuotationResDto>> GetQuotations(int procurementId);
+        Task<PaginatedResDto<QuotationResDto>> GetQuotations(
+            int procurementId,
+            PaginatedFilterSortParam param
+        );
 
-        Task<List<ProcurementResDto>> GetProcurementRequests(int supplierId);
+        Task<PaginatedResDto<ProcurementResDto>> GetProcurementRequests(
+            int supplierId,
+            PaginatedFilterSortParam param
+        );
     }
 }

@@ -81,9 +81,9 @@ namespace API.Controllers
         }
 
         [HttpPost("refreshToken")]
-        public async Task<ActionResult<AuthResDto>> RefreshToken(string refreshToken)
+        public async Task<ActionResult<AuthResDto>> RefreshToken(RefreshTokenReqDto refreshTokenReq)
         {
-            var result = await _authService.RefreshToken(refreshToken);
+            var result = await _authService.RefreshToken(refreshTokenReq.RefreshToken);
             SetHeaderCookie(result.AccessToken);
             return Ok(result);
         }

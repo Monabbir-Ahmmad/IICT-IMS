@@ -1,10 +1,12 @@
 ﻿using System.Net;
 using API.Database;
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
 using API.Enums;
 using API.Errors;
+using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -122,9 +124,11 @@ namespace API.Services
             return _mapper.Map<ProcurementResDto>(procurement);
         }
 
-        public async Task<List<ProcurementResDto>> GetProcurements()
+        public async Task<PaginatedResDto<ProcurementResDto>> GetProcurements(
+            PaginatedFilterSortParam param
+        )
         {
-            var procurements = await _context.Procurements
+            var procurements = _context.Procurements
                 .Include(x => x.Category)
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Product)
@@ -132,9 +136,22 @@ namespace API.Services
                 .Include(x => x.Quotations)
                 .ThenInclude(x => x.Supplier)
                 .ThenInclude(s => s.Category)
-                .ToListAsync();
+                .AsQueryable();
 
-            return _mapper.Map<List<ProcurementResDto>>(procurements);
+            var totalCount = await procurements.CountAsync();
+
+            procurements = procurements
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<ProcurementResDto>
+            {
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+                TotalCount = totalCount,
+                Data = _mapper.Map<List<ProcurementResDto>>(await procurements.ToListAsync())
+            };
         }
     }
 }

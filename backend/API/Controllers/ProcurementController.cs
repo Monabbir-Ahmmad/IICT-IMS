@@ -1,4 +1,5 @@
-﻿using API.DTOs.Request;
+﻿using API.DTOs.Params;
+using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Enums;
 using API.Errors;
@@ -55,9 +56,11 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet()]
-        public async Task<ActionResult<List<ProcurementResDto>>> GetProcurements()
+        public async Task<ActionResult<PaginatedResDto<ProcurementResDto>>> GetProcurements(
+            [FromQuery] PaginatedFilterSortParam param
+        )
         {
-            return await _procurementService.GetProcurements();
+            return await _procurementService.GetProcurements(param);
         }
     }
 }

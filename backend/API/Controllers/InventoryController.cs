@@ -1,3 +1,4 @@
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Enums;
@@ -28,9 +29,11 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<InventoryProductResDto>>> GetProducts()
+        public async Task<ActionResult<PaginatedResDto<InventoryProductResDto>>> GetProducts(
+            [FromQuery] PaginatedFilterSortParam param
+        )
         {
-            return await _inventoryService.GetProducts();
+            return await _inventoryService.GetProducts(param);
         }
 
         [HttpGet("{id}")]
@@ -40,15 +43,19 @@ namespace API.Controllers
         }
 
         [HttpGet("distributable")]
-        public async Task<ActionResult<List<InventoryProductResDto>>> GetDistributableProducts()
+        public async Task<
+            ActionResult<PaginatedResDto<InventoryProductResDto>>
+        > GetDistributableProducts([FromQuery] PaginatedFilterSortParam param)
         {
-            return await _inventoryService.GetDistributableProducts();
+            return await _inventoryService.GetDistributableProducts(param);
         }
 
         [HttpGet("receivable")]
-        public async Task<ActionResult<List<InventoryProductResDto>>> GetReceivableProducts()
+        public async Task<
+            ActionResult<PaginatedResDto<InventoryProductResDto>>
+        > GetReceivableProducts([FromQuery] PaginatedFilterSortParam param)
         {
-            return await _inventoryService.GetReceivableProducts();
+            return await _inventoryService.GetReceivableProducts(param);
         }
 
         [HttpPost("distribute")]
@@ -61,9 +68,11 @@ namespace API.Controllers
         }
 
         [HttpGet("distribution-history")]
-        public async Task<ActionResult<List<DistributionResDto>>> GetDistributionHistory()
+        public async Task<ActionResult<PaginatedResDto<DistributionResDto>>> GetDistributionHistory(
+            [FromQuery] PaginatedFilterSortParam param
+        )
         {
-            return await _inventoryService.GetDistributionHistory();
+            return await _inventoryService.GetDistributionHistory(param);
         }
 
         [HttpPost("receive-return")]
@@ -78,9 +87,11 @@ namespace API.Controllers
         }
 
         [HttpGet("receive-return-history")]
-        public async Task<ActionResult<List<ReceiveReturnResDto>>> GetReceiveReturnHistory()
+        public async Task<
+            ActionResult<PaginatedResDto<ReceiveReturnResDto>>
+        > GetReceiveReturnHistory([FromQuery] PaginatedFilterSortParam param)
         {
-            return await _inventoryService.GetReceiveHistory();
+            return await _inventoryService.GetReceiveHistory(param);
         }
 
         [HttpGet("product/{id}")]

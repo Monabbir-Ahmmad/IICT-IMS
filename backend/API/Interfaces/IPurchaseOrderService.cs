@@ -1,3 +1,4 @@
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 
@@ -13,8 +14,13 @@ namespace API.Interfaces
 
         Task<PurchaseOrderResDto> GetPurchaseOrder(int id);
 
-        Task<List<PurchaseOrderResDto>> GetPurchaseOrders();
-        Task<List<PurchaseOrderResDto>> GetOrderRequests(int supplierId);
+        Task<PaginatedResDto<PurchaseOrderResDto>> GetPurchaseOrders(
+            PaginatedFilterSortParam param
+        );
+        Task<PaginatedResDto<PurchaseOrderResDto>> GetOrderRequests(
+            int supplierId,
+            PaginatedFilterSortParam param
+        );
 
         Task<PurchaseOrderResDto> DeliverPurchaseOrderProducts(
             PurchaseOrderDeliveryReqDto purchaseOrderDeliveryReqDto

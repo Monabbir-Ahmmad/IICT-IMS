@@ -1,3 +1,4 @@
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 
@@ -5,20 +6,28 @@ namespace API.Interfaces
 {
     public interface IInventoryService
     {
-        Task<List<InventoryProductResDto>> GetProducts();
+        Task<PaginatedResDto<InventoryProductResDto>> GetProducts(PaginatedFilterSortParam param);
 
         Task<InventoryProductResDto> GetProduct(int id);
 
-        Task<List<InventoryProductResDto>> GetDistributableProducts();
+        Task<PaginatedResDto<InventoryProductResDto>> GetDistributableProducts(
+            PaginatedFilterSortParam param
+        );
 
-        Task<List<InventoryProductResDto>> GetReceivableProducts();
+        Task<PaginatedResDto<InventoryProductResDto>> GetReceivableProducts(
+            PaginatedFilterSortParam param
+        );
 
         Task DistributeProducts(DistributionReqDto distributionReqDto);
 
         Task ReceiveProducts(ReceiveReturnReqDto receiveReturnReqDto);
 
-        Task<List<DistributionResDto>> GetDistributionHistory();
+        Task<PaginatedResDto<DistributionResDto>> GetDistributionHistory(
+            PaginatedFilterSortParam param
+        );
 
-        Task<List<ReceiveReturnResDto>> GetReceiveHistory();
+        Task<PaginatedResDto<ReceiveReturnResDto>> GetReceiveHistory(
+            PaginatedFilterSortParam param
+        );
     }
 }

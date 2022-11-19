@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using API.Database;
+using API.DTOs.Params;
 using API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,27 +19,36 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get(
-            string propertyName,
-            string comparison,
-            string value,
-            string sortBy,
-            bool sortAscending = true
-        )
+        public async Task<ActionResult> Get([FromQuery] PaginatedFilterSortParam param)
         {
             var products = _context.InventoryProducts
                 .Include(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .AsQueryable();
 
-            if (propertyName != null && comparison != null && value != null)
+            if (
+                param.SearchColumn != null
+                && param.SearchValue != null
+                && param.SearchOperator != null
+            )
             {
-                products = products.Where(propertyName, comparison, value);
+                products = products.Where(
+                    param.SearchColumn,
+                    param.SearchOperator,
+                    param.SearchValue
+                );
             }
 
-            if (sortBy != null)
+            if (param.SortColumn != null && param.SortDirection != null)
             {
-                products = products.OrderBy(sortBy, sortAscending);
+                products = products.OrderBy(param.SortColumn, param.SortDirection == "asc");
+            }
+
+            if (param.PageNumber > 0 && param.PageSize > 0)
+            {
+                products = products
+                    .Skip((param.PageNumber - 1) * param.PageSize)
+                    .Take(param.PageSize);
             }
 
             return Ok(await products.ToListAsync());

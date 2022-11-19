@@ -1,10 +1,12 @@
 using System.Net;
 using API.Database;
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
 using API.Enums;
 using API.Errors;
+using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -77,17 +79,6 @@ namespace API.Services
             return;
         }
 
-        public async Task<List<InventoryProductResDto>> GetDistributableProducts()
-        {
-            var products = await _context.InventoryProducts
-                .Where(p => p.Status == StatusEnum.InInventory)
-                .Include(p => p.Product)
-                .ThenInclude(p => p.Category)
-                .ToListAsync();
-
-            return _mapper.Map<List<InventoryProductResDto>>(products);
-        }
-
         public async Task<InventoryProductResDto> GetProduct(int id)
         {
             var product = await _context.InventoryProducts
@@ -105,52 +96,137 @@ namespace API.Services
             return _mapper.Map<InventoryProductResDto>(product);
         }
 
-        public async Task<List<InventoryProductResDto>> GetProducts()
+        public async Task<PaginatedResDto<InventoryProductResDto>> GetProducts(
+            PaginatedFilterSortParam param
+        )
         {
-            var products = await _context.InventoryProducts
+            var products = _context.InventoryProducts
                 .Include(x => x.Product)
                 .ThenInclude(x => x.Category)
-                .Where(x => x.Status != null)
-                .ToListAsync();
+                .AsQueryable();
 
-            return _mapper.Map<List<InventoryProductResDto>>(products);
+            var totalCount = await products.CountAsync();
+
+            products = products
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<InventoryProductResDto>
+            {
+                Data = _mapper.Map<List<InventoryProductResDto>>(await products.ToListAsync()),
+                TotalCount = totalCount,
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+            };
         }
 
-        public async Task<List<InventoryProductResDto>> GetReceivableProducts()
+        public async Task<PaginatedResDto<InventoryProductResDto>> GetDistributableProducts(
+            PaginatedFilterSortParam param
+        )
         {
-            var products = await _context.InventoryProducts
-                .Where(p => p.Status == StatusEnum.Distributed)
-                .Include(p => p.Product)
-                .ThenInclude(p => p.Category)
-                .ToListAsync();
-
-            return _mapper.Map<List<InventoryProductResDto>>(products);
-        }
-
-        public async Task<List<DistributionResDto>> GetDistributionHistory()
-        {
-            var distributions = await _context.Distributions
-                .Include(x => x.Distributor)
-                .Include(x => x.DistributedTo)
-                .Include(x => x.Products)
-                .ThenInclude(x => x.Product)
+            var products = _context.InventoryProducts
+                .Include(x => x.Product)
                 .ThenInclude(x => x.Category)
-                .ToListAsync();
+                .Where(x => x.Status == StatusEnum.InInventory)
+                .AsQueryable();
 
-            return _mapper.Map<List<DistributionResDto>>(distributions);
+            var totalCount = await products.CountAsync();
+
+            products = products
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<InventoryProductResDto>
+            {
+                Data = _mapper.Map<List<InventoryProductResDto>>(await products.ToListAsync()),
+                TotalCount = totalCount,
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+            };
         }
 
-        public async Task<List<ReceiveReturnResDto>> GetReceiveHistory()
+        public async Task<PaginatedResDto<InventoryProductResDto>> GetReceivableProducts(
+            PaginatedFilterSortParam param
+        )
         {
-            var receiveReturns = await _context.ReceiveReturns
+            var products = _context.InventoryProducts
+                .Include(x => x.Product)
+                .ThenInclude(x => x.Category)
+                .Where(x => x.Status == StatusEnum.Distributed)
+                .AsQueryable();
+
+            var totalCount = await products.CountAsync();
+
+            products = products
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<InventoryProductResDto>
+            {
+                Data = _mapper.Map<List<InventoryProductResDto>>(await products.ToListAsync()),
+                TotalCount = totalCount,
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+            };
+        }
+
+        public async Task<PaginatedResDto<DistributionResDto>> GetDistributionHistory(
+            PaginatedFilterSortParam param
+        )
+        {
+            var distributions = _context.Distributions
+                .Include(d => d.Distributor)
+                .Include(d => d.DistributedTo)
+                .Include(d => d.Products)
+                .ThenInclude(p => p.Product)
+                .ThenInclude(p => p.Category)
+                .AsQueryable();
+
+            var totalCount = await distributions.CountAsync();
+
+            distributions = distributions
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<DistributionResDto>
+            {
+                Data = _mapper.Map<List<DistributionResDto>>(await distributions.ToListAsync()),
+                TotalCount = totalCount,
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+            };
+        }
+
+        public async Task<PaginatedResDto<ReceiveReturnResDto>> GetReceiveHistory(
+            PaginatedFilterSortParam param
+        )
+        {
+            var receiveReturns = _context.ReceiveReturns
                 .Include(x => x.Receiver)
                 .Include(x => x.ReceivedFrom)
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
-                .ToListAsync();
+                .AsQueryable();
 
-            return _mapper.Map<List<ReceiveReturnResDto>>(receiveReturns);
+            var totalCount = await receiveReturns.CountAsync();
+
+            receiveReturns = receiveReturns
+                .ApplyFiltering(param.SearchColumn, param.SearchValue, param.SearchOperator)
+                .ApplySorting(param.SortColumn, param.SortDirection)
+                .ApplyPagination(param.PageNumber, param.PageSize);
+
+            return new PaginatedResDto<ReceiveReturnResDto>
+            {
+                Data = _mapper.Map<List<ReceiveReturnResDto>>(await receiveReturns.ToListAsync()),
+                TotalCount = totalCount,
+                PageNumber = param.PageNumber,
+                PageSize = param.PageSize,
+            };
         }
 
         public async Task ReceiveProducts(ReceiveReturnReqDto receiveReturnReqDto)

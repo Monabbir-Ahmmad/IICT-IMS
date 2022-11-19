@@ -11,11 +11,8 @@ namespace API.Interfaces
         Task<AuthResDto> LoginSupplier(LoginReqDto loginDto);
         Task<bool> UserExists(string email);
         Task<bool> SupplierExists(string BIN, string email, string companyName);
-
         Task ForgotPassword(ForgotPasswordReqDto forgotPasswordReqDto);
-
         Task<string> ResetPassword(string token);
-
         Task<AuthResDto> RefreshToken(string refreshToken);
     }
 }

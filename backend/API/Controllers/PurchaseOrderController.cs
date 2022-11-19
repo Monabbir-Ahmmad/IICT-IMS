@@ -1,3 +1,4 @@
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Enums;
@@ -62,17 +63,21 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpGet()]
-        public async Task<ActionResult<List<PurchaseOrderResDto>>> GetPurchaseOrders()
+        public async Task<ActionResult<PaginatedResDto<PurchaseOrderResDto>>> GetPurchaseOrders(
+            [FromQuery] PaginatedFilterSortParam param
+        )
         {
-            return await _purchaseOrderService.GetPurchaseOrders();
+            return await _purchaseOrderService.GetPurchaseOrders(param);
         }
 
         [Authorize(UserRoleEnum.Admin, UserRoleEnum.Supplier)]
         [HttpGet("order-requests")]
-        public async Task<ActionResult<List<PurchaseOrderResDto>>> GetOrderRequests()
+        public async Task<ActionResult<PaginatedResDto<PurchaseOrderResDto>>> GetOrderRequests(
+            [FromQuery] PaginatedFilterSortParam param
+        )
         {
             var supplierId = HttpContext.Items["userId"] as int? ?? 0;
-            return await _purchaseOrderService.GetOrderRequests(supplierId);
+            return await _purchaseOrderService.GetOrderRequests(supplierId, param);
         }
 
         [Authorize(UserRoleEnum.Admin, UserRoleEnum.Supplier)]
