@@ -6,7 +6,16 @@ import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 
-function InventroyProductListTable({ data = [], onRowOpenClick }) {
+function InventroyProductListTable({
+  data = [],
+  loading,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -100,10 +109,19 @@ function InventroyProductListTable({ data = [], onRowOpenClick }) {
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}
+        onSortModelChange={onSortChange}
         onRowClick={(params) => onRowOpenClick(params.id)}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

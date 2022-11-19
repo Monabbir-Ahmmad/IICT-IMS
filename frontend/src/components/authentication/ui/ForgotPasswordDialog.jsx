@@ -10,35 +10,29 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { UserRoles } from "../../../constants/enums";
 
-function ForgotPasswordDialog({ open, onClose, inventoryProductId }) {
-  const [activeStep, setActiveStep] = useState(0);
-  const [email, setEmail] = useState(null);
+function ForgotPasswordDialog({ open, onClose }) {
+  const { handleSubmit, control, reset } = useForm({
+    defaultValues: {
+      email: "",
+    },
+  });
+
   const [emailFor, setEmailFor] = useState(UserRoles.EMPLOYEE);
 
-  const [varificationCode, setVarificationCode] = useState(null);
-
   useEffect(() => {
-    setActiveStep(0);
-    setEmail(null);
-    setVarificationCode(null);
-  }, [open]);
+    reset();
+  }, [open, reset]);
 
-  const onSendCode = () => {
-    setActiveStep(1);
-  };
-
-  const onVerifyCode = () => {
-    setActiveStep(2);
+  const onSubmit = (value) => {
+    console.log(value);
   };
 
   return (
@@ -54,79 +48,63 @@ function ForgotPasswordDialog({ open, onClose, inventoryProductId }) {
     >
       <DialogTitle>Forgot Your Password?</DialogTitle>
       <DialogContent dividers>
-        <Stepper activeStep={activeStep} orientation="vertical">
-          <Step>
-            <StepLabel>
-              Enter your email address to receive password reset email
-            </StepLabel>
-            <StepContent>
-              <Stack spacing={2}>
+        <form id="forgot-password-form" onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={2} p={2}>
+            <Typography variant={"body2"}>
+              Enter your email address and we'll send you a verification mail to
+              reset your password.
+            </Typography>
+
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field, fieldState }) => (
                 <TextField
+                  {...field}
                   label="Email"
                   variant="outlined"
-                  fullWidth
                   type={"email"}
-                  onChange={(e) => setEmail(e.target.value)}
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
+              )}
+            />
 
-                <FormControl>
-                  <FormLabel>Email For</FormLabel>
-                  <RadioGroup
-                    row
-                    value={emailFor}
-                    onChange={(e) => setEmailFor(e.target.value)}
-                  >
-                    <FormControlLabel
-                      value={UserRoles.EMPLOYEE}
-                      control={<Radio />}
-                      label="IICT Employee"
-                    />
-                    <FormControlLabel
-                      value={UserRoles.SUPPLIER}
-                      control={<Radio />}
-                      label="Supplier"
-                    />
-                  </RadioGroup>
-                </FormControl>
-
-                <Button
-                  variant="contained"
-                  disabled={!email?.trim()}
-                  onClick={onSendCode}
-                >
-                  Send Password Reset Code
-                </Button>
-              </Stack>
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>
-              Enter the varification code you received in your email to reset
-              your password
-            </StepLabel>
-            <StepContent>
-              <TextField
-                label="Varification Code"
-                variant="outlined"
-                fullWidth
-                type={"email"}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <Button
-                variant="contained"
-                disabled={!varificationCode?.trim()}
-                onClick={onVerifyCode}
-                sx={{ my: 2 }}
+            <FormControl>
+              <FormLabel>Email For</FormLabel>
+              <RadioGroup
+                row
+                value={emailFor}
+                onChange={(e) => setEmailFor(e.target.value)}
               >
-                Reset Password
-              </Button>
-            </StepContent>
-          </Step>
-        </Stepper>
+                <FormControlLabel
+                  value={UserRoles.EMPLOYEE}
+                  control={<Radio />}
+                  label="IICT Employee"
+                />
+                <FormControlLabel
+                  value={UserRoles.SUPPLIER}
+                  control={<Radio />}
+                  label="Supplier"
+                />
+              </RadioGroup>
+            </FormControl>
+          </Stack>
+        </form>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
+
+        <Button type="submit" form="forgot-password-form">
+          Send Verification Email
+        </Button>
       </DialogActions>
     </Dialog>
   );

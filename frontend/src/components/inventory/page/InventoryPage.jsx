@@ -1,30 +1,91 @@
-import { Button, LinearProgress, Stack, Typography } from "@mui/material";
+import { Alert, Button, Stack, Typography } from "@mui/material";
 import InventroyProductListTable from "../ui/InventoryProductListTable";
 import { useEffect } from "react";
 import { RiAddFill as AddIcon } from "react-icons/ri";
-import { useDispatch, useSelector } from "react-redux";
-import { getInventoryList } from "../../../redux/actions/inventory.actions";
 import { useState } from "react";
 import InventoryProductDetailsDialog from "../ui/InventoryProductDetailsDialog";
 import SearchFilter from "../../shared/searchFilter/SearchFilter";
+import { inventoryFilterDef } from "../../shared/searchFilter/filterData";
+import inventoryService from "../../../services/inventory.service";
 
 function InventoryPage() {
-  const dispatch = useDispatch();
+  const [inventoryList, setInventoryList] = useState({
+    data: [],
+    rowCount: 0,
+    loading: false,
+    error: null,
+  });
 
-  const { inventoryList, loading } = useSelector(
-    (state) => state.inventoryList
-  );
+  const [filter, setFilter] = useState();
+  const [sort, setSort] = useState();
+  const [pagination, setPagination] = useState({
+    pageNumber: 0,
+  });
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [inventoryProductId, setInventoryProductId] = useState(null);
 
   useEffect(() => {
-    dispatch(getInventoryList());
-  }, [dispatch]);
+    getInventory(filter, sort, pagination.pageNumber);
+  }, [filter, sort, pagination]);
+
+  useEffect(() => {
+    setPagination({ pageNumber: 0 });
+  }, [filter, sort]);
 
   const onRowClick = (id) => {
     setInventoryProductId(id);
     setOpenDetailsDialog(true);
+  };
+
+  const onSortChange = (sortModel) => {
+    setSort({
+      sortColumn: inventoryFilterDef.find(
+        (f) => f.field === sortModel[0]?.field
+      )?.key,
+      sortDirection: sortModel[0]?.sort,
+    });
+  };
+
+  const onFilterApply = (filter) => {
+    setFilter(filter);
+  };
+
+  const onFilterClear = () => {
+    setFilter(null);
+  };
+
+  const onPageChange = (page) => {
+    setPagination({
+      pageNumber: page,
+    });
+  };
+
+  const getInventory = async () => {
+    setInventoryList({ ...inventoryList, loading: true });
+    try {
+      const { data } = await inventoryService.getList(
+        filter,
+        sort,
+        pagination.pageNumber
+      );
+      setInventoryList({
+        data:
+          pagination.pageNumber === 0
+            ? data.data
+            : [...inventoryList.data, ...data.data],
+        rowCount: data.totalCount,
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      setInventoryList({
+        data: [],
+        rowCount: 0,
+        loading: false,
+        error: error.message,
+      });
+    }
   };
 
   return (
@@ -35,8 +96,6 @@ function InventoryPage() {
         inventoryProductId={inventoryProductId}
       />
 
-      {loading && <LinearProgress />}
-
       <Button
         variant="contained"
         startIcon={<AddIcon />}
@@ -45,14 +104,28 @@ function InventoryPage() {
         Add Directly Purchased Products
       </Button>
 
+      {inventoryList.error && (
+        <Alert severity="error">{inventoryList.error}</Alert>
+      )}
+
       <Typography variant="h5">Product list</Typography>
 
       <div>
-        <SearchFilter />
+        <SearchFilter
+          filterDef={inventoryFilterDef}
+          onApply={onFilterApply}
+          onClear={onFilterClear}
+        />
 
         <InventroyProductListTable
-          data={inventoryList}
+          loading={inventoryList.loading}
+          data={inventoryList.data}
           onRowOpenClick={onRowClick}
+          onSortChange={onSortChange}
+          onPageChange={onPageChange}
+          pageNumber={pagination.pageNumber}
+          rowCount={inventoryList.rowCount}
+          pageSize={20}
         />
       </div>
     </Stack>

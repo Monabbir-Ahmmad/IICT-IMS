@@ -5,7 +5,16 @@ import { useMemo } from "react";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 
-function DistributionHistoryTable({ data = [], onRowOpenClick }) {
+function DistributionHistoryTable({
+  data = [],
+  loading,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -47,7 +56,6 @@ function DistributionHistoryTable({ data = [], onRowOpenClick }) {
       {
         field: "distributionRoom",
         headerName: "Distribution Room",
-        type: "date",
         headerAlign: "center",
         align: "center",
         flex: 1,
@@ -61,6 +69,7 @@ function DistributionHistoryTable({ data = [], onRowOpenClick }) {
         align: "center",
         flex: 1,
         minWidth: 100,
+        sortable: false,
         valueGetter: ({ row }) => row.products.length,
       },
     ],
@@ -73,10 +82,19 @@ function DistributionHistoryTable({ data = [], onRowOpenClick }) {
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}
+        onSortModelChange={onSortChange}
         onRowClick={(params) => onRowOpenClick(params.id)}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

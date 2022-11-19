@@ -13,19 +13,44 @@ import api from "./api";
 
 class InventoryService {
   async getAll() {
-    return await api().get(GET_INVENTORY);
+    return await api().get(GET_INVENTORY_LIST);
+  }
+
+  async getList(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_INVENTORY_LIST, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
   }
 
   async get(id) {
-    return await api().get(`${GET_INVENTORY_LIST}/${id}`);
+    return await api().get(`${GET_INVENTORY}/${id}`);
   }
 
-  async getDistributable() {
-    return await api().get(GET_DISTRIBUTABLE_INVENTORY);
+  async getDistributable(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_DISTRIBUTABLE_INVENTORY, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
   }
 
-  async getReceivable() {
-    return await api().get(GET_RECEIVABLE_INVENTORY);
+  async getReceivable(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_RECEIVABLE_INVENTORY, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
   }
 
   async distribute(data) {
@@ -40,12 +65,26 @@ class InventoryService {
     return await api().get(`${GET_INVENTORY_PRODUCT}/${id}`);
   }
 
-  async getDistributionHistory() {
-    return await api().get(GET_DISTRIBUTION_HISTORY);
+  async getDistributionHistory(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_DISTRIBUTION_HISTORY, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
   }
 
-  async getReceiveReturnHistory() {
-    return await api().get(GET_RECEIVE_RETURN_HISTORY);
+  async getReceiveReturnHistory(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_RECEIVE_RETURN_HISTORY, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
   }
 }
 

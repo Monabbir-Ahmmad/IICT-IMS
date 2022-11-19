@@ -17,6 +17,17 @@ class PurchaseOrderService {
     return await api().get(GET_PURCHASE_ORDER_LIST);
   }
 
+  async getList(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_PURCHASE_ORDER_LIST, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
+  }
+
   async get(id) {
     return await api().get(`${GET_PURCHASE_ORDER}/${id}`);
   }
@@ -31,8 +42,15 @@ class PurchaseOrderService {
     });
   }
 
-  async getOrderRequestList() {
-    return await api().get(GET_ORDER_REQUEST_LIST);
+  async getOrderRequestList(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_ORDER_REQUEST_LIST, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
   }
 }
 

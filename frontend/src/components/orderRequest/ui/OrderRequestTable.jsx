@@ -6,7 +6,16 @@ import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function OrderRequestTable({ data = [], onRowOpenClick }) {
+function OrderRequestTable({
+  data = [],
+  loading,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -59,7 +68,6 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
         align: "center",
         valueFormatter: ({ value }) => currencyFormatter().format(value),
       },
-
       {
         field: "status",
         headerName: "Status",
@@ -81,10 +89,19 @@ function OrderRequestTable({ data = [], onRowOpenClick }) {
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}
+        onSortModelChange={onSortChange}
         onRowClick={(params) => onRowOpenClick(params.id)}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

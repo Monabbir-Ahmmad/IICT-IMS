@@ -14,7 +14,7 @@ import { RiFilter2Fill as FilterIcon } from "react-icons/ri";
 import { useEffect } from "react";
 import { useState } from "react";
 
-function SearchFilter({ filterDef = [] }) {
+function SearchFilter({ filterDef = [], onApply, onClear }) {
   const [selectedColumn, setSelectedColumn] = useState(filterDef[0] || null);
 
   const [column, setColumn] = useState(filterDef[0]?.field || "");
@@ -35,13 +35,21 @@ function SearchFilter({ filterDef = [] }) {
     setColumn(e.target.value);
   };
 
-  const onFilterApply = () => {};
+  const onFilterApply = () => {
+    onApply({
+      searchColumn: selectedColumn.key,
+      searchOperator: operator,
+      searchValue: value,
+    });
+  };
 
   const onFilterClear = () => {
     setSelectedColumn(filterDef[0] || null);
     setColumn(filterDef[0]?.field || "");
     setOperator("");
     setValue("");
+
+    onClear();
   };
 
   return (

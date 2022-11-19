@@ -5,6 +5,7 @@ import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import { useMemo, useState } from "react";
+import moment from "moment";
 
 function CustomeToolbar({ onAddProductsClick, selectedRows }) {
   return (
@@ -33,7 +34,17 @@ function CustomeToolbar({ onAddProductsClick, selectedRows }) {
   );
 }
 
-function DistribuableProductsTable({ data = [], onAddProductsClick }) {
+function DistribuableProductsTable({
+  data = [],
+  loading,
+  onAddProductsClick,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -90,6 +101,17 @@ function DistribuableProductsTable({ data = [], onAddProductsClick }) {
         valueFormatter: ({ value }) => currencyFormatter().format(value),
       },
       {
+        field: "warrantyExpiryDate",
+        headerName: "Warranty Till",
+        type: "date",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 100,
+        valueFormatter: ({ value }) =>
+          value ? moment(value).format("MMM Do, YYYY") : "N/A",
+      },
+      {
         field: "status",
         headerName: "Status",
         headerAlign: "center",
@@ -129,6 +151,16 @@ function DistribuableProductsTable({ data = [], onAddProductsClick }) {
           },
         }}
         onSelectionModelChange={onRowSelectionChange}
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
+        onSortModelChange={onSortChange}
+        onRowClick={(params) => onRowOpenClick(params.id)}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

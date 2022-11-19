@@ -5,6 +5,7 @@ import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import { useMemo, useState } from "react";
+import moment from "moment";
 
 function CustomeToolbar({ onRemoveProductsClick, selectedRows }) {
   return (
@@ -89,6 +90,17 @@ function DistributingProductsTable({ data = [], onRemoveProductsClick }) {
         flex: 1,
         minWidth: 100,
         valueFormatter: ({ value }) => currencyFormatter().format(value),
+      },
+      {
+        field: "warrantyExpiryDate",
+        headerName: "Warranty Till",
+        type: "date",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 100,
+        valueFormatter: ({ value }) =>
+          value ? moment(value).format("MMM Do, YYYY") : "N/A",
       },
       {
         field: "status",

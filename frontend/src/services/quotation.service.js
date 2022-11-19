@@ -9,8 +9,15 @@ class QuotationService {
     return await api().post(CREATE_QUOTATION, data);
   }
 
-  async getProcurmentRequestList() {
-    return await api().get(GET_PROCUREMENT_REQUEST_LIST);
+  async getProcurementRequestList(filter, sort, pageNumber = 0, pageSize = 20) {
+    return await api().get(GET_PROCUREMENT_REQUEST_LIST, {
+      params: {
+        ...filter,
+        ...sort,
+        pageNumber,
+        pageSize,
+      },
+    });
   }
 }
 
