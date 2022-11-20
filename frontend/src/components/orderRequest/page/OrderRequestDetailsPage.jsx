@@ -20,7 +20,7 @@ import { Controller, useForm } from "react-hook-form";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import {
-  getPurchaseOrder,
+  getOrderRequest,
   sendDelivery,
 } from "../../../redux/actions/purchaseOrder.action";
 import { showErrorAlert } from "../../../redux/actions/alertSnackbar.actions";
@@ -49,7 +49,7 @@ function OrderRequestDetailsPage() {
   const [openProductEditDialog, setOpenProductEditDialog] = useState(false);
 
   useEffect(() => {
-    dispatch(getPurchaseOrder(purchaseOrderId));
+    dispatch(getOrderRequest(purchaseOrderId));
   }, [dispatch, purchaseOrderId]);
 
   useEffect(() => {

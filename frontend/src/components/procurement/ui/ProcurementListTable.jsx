@@ -7,7 +7,17 @@ import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
+function ProcurementListTable({
+  data = [],
+  loading,
+  onRowDeleteClick,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -34,6 +44,16 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         align: "center",
         flex: 1,
         minWidth: 100,
+      },
+      {
+        field: "createdBy",
+        headerName: "Created By",
+        headerAlign: "center",
+        align: "center",
+        flex: 1,
+        minWidth: 100,
+        valueGetter: ({ row }) => row.createdBy?.username,
+        renderCell: RenderCellExpand,
       },
       {
         field: "createdAt",
@@ -77,21 +97,6 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
         ),
       },
       {
-        field: "isApproved",
-        headerName: "Approval",
-        headerAlign: "center",
-        align: "center",
-        flex: 1,
-        minWidth: 100,
-        renderCell: ({ value }) => (
-          <Chip
-            variant="outlined"
-            label={value ? "Approved" : "Pending"}
-            color={statusColors[value ? "Approved" : "Pending"]}
-          />
-        ),
-      },
-      {
         field: "actions",
         headerName: "Actions",
         type: "actions",
@@ -117,6 +122,15 @@ function ProcurementListTable({ data = [], onRowDeleteClick, onRowOpenClick }) {
           NoRowsOverlay: EmptyTableOverlay,
         }}
         onRowClick={(params) => onRowOpenClick(params.id)}
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
+        onSortModelChange={onSortChange}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

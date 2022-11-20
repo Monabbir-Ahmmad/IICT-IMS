@@ -33,7 +33,17 @@ function CustomeToolbar({ onAddProductsClick, selectedRows }) {
   );
 }
 
-function ReceivableProductsTable({ data = [], onAddProductsClick }) {
+function ReceivableProductsTable({
+  data = [],
+  loading,
+  onAddProductsClick,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -129,6 +139,16 @@ function ReceivableProductsTable({ data = [], onAddProductsClick }) {
           },
         }}
         onSelectionModelChange={onRowSelectionChange}
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
+        onSortModelChange={onSortChange}
+        onRowClick={(params) => onRowOpenClick(params.id)}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

@@ -143,13 +143,13 @@ namespace API.Interfaces
         )
         {
             var purchaseOrders = _context.PurchaseOrders
+                .Include(x => x.Supplier)
+                .Include(x => x.CreatedBy)
+                .ThenInclude(x => x.Role)
                 .Include(x => x.Category)
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
-                .Include(x => x.Procurement)
-                .Include(x => x.Quotation)
-                .ThenInclude(x => x.Supplier)
                 .AsQueryable();
 
             var totalCount = await purchaseOrders.CountAsync();
@@ -174,14 +174,13 @@ namespace API.Interfaces
         )
         {
             var purchaseOrders = _context.PurchaseOrders
-                .Where(x => x.IsApproved && x.Supplier.Id == supplierId)
                 .Include(x => x.Category)
+                .Include(x => x.CreatedBy)
+                .ThenInclude(x => x.Role)
                 .Include(x => x.Products)
                 .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
-                .Include(x => x.Procurement)
-                .Include(x => x.Quotation)
-                .ThenInclude(x => x.Supplier)
+                .Where(x => x.IsApproved && x.Supplier.Id == supplierId)
                 .AsQueryable();
 
             var totalCount = await purchaseOrders.CountAsync();
@@ -198,6 +197,24 @@ namespace API.Interfaces
                 PageNumber = param.PageNumber,
                 PageSize = param.PageSize,
             };
+        }
+
+        public async Task<PurchaseOrderResDto> GetOrderRequest(int id, int supplierId)
+        {
+            var orderRequest = await _context.PurchaseOrders
+                .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.Category)
+                .Include(x => x.Supplier)
+                .Include(x => x.CreatedBy)
+                .ThenInclude(x => x.Role)
+                .SingleOrDefaultAsync(x => x.Id == id && x.Supplier.Id == supplierId);
+
+            if (orderRequest == null)
+                throw new NotFoundException("Order request not found.");
+
+            return _mapper.Map<PurchaseOrderResDto>(orderRequest);
         }
 
         public async Task<PurchaseOrderResDto> DeliverPurchaseOrderProducts(

@@ -8,7 +8,16 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
 
-function QuotationListTable({ data = [], onRowOpenClick }) {
+function QuotationListTable({
+  data = [],
+  loading,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const { userAuth } = useSelector((state) => state.userLogin);
 
   const getStatus = useCallback(
@@ -33,6 +42,16 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         minWidth: 100,
         headerAlign: "center",
         align: "center",
+        renderCell: RenderCellExpand,
+      },
+      {
+        field: "createdBy",
+        headerName: "Created By",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+        valueGetter: ({ row }) => row.createdBy.username,
         renderCell: RenderCellExpand,
       },
       {
@@ -73,6 +92,7 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         minWidth: 100,
         headerAlign: "center",
         align: "center",
+        sortable: false,
         valueGetter: (params) =>
           params.row.quotations?.find(
             (quotation) => quotation.supplier.id === Number(userAuth.id)
@@ -87,6 +107,7 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         minWidth: 100,
         headerAlign: "center",
         align: "center",
+        sortable: false,
         valueGetter: (params) => getStatus(params.row.quotations),
         renderCell: ({ value }) => (
           <Chip variant="outlined" label={value} color={statusColors[value]} />
@@ -102,10 +123,19 @@ function QuotationListTable({ data = [], onRowOpenClick }) {
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}
+        onSortModelChange={onSortChange}
         onRowClick={(params) => onRowOpenClick(params.id)}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

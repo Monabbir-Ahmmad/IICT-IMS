@@ -28,11 +28,11 @@ function DistributionHistoryTable({
       {
         field: "distributorName",
         headerName: "Distributor Name",
-        renderCell: RenderCellExpand,
         headerAlign: "center",
         align: "center",
         flex: 1,
         minWidth: 100,
+        renderCell: RenderCellExpand,
       },
       {
         field: "distributedToName",
@@ -41,6 +41,7 @@ function DistributionHistoryTable({
         align: "center",
         flex: 1,
         minWidth: 100,
+        renderCell: RenderCellExpand,
       },
       {
         field: "distributionDate",

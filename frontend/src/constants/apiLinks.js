@@ -40,7 +40,8 @@ export const GET_PROCUREMENT_REQUEST_LIST =
 //Purchase order
 export const CREATE_PURCHASE_ORDER = "/purchaseOrder/create";
 export const GET_PURCHASE_ORDER_LIST = "/purchaseOrder";
-export const GET_ORDER_REQUEST_LIST = "/purchaseOrder/order-requests";
+export const GET_ORDER_REQUEST_LIST = "/purchaseOrder/order-request";
+export const GET_ORDER_REQUEST = "/purchaseOrder/order-request";
 export const GET_PURCHASE_ORDER = "/purchaseOrder";
 export const SEND_PURCHASE_ORDER_DELIVERY = "/purchaseOrder/delivery";
 export const CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE =

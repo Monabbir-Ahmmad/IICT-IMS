@@ -6,7 +6,16 @@ import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import moment from "moment/moment";
 import { useMemo } from "react";
 
-function PurchaseOrderTable({ data = [], onRowOpenClick }) {
+function PurchaseOrderTable({
+  data = [],
+  loading,
+  onRowOpenClick,
+  onSortChange,
+  onPageChange,
+  rowCount,
+  pageNumber,
+  pageSize,
+}) {
   const columns = useMemo(
     () => [
       {
@@ -24,6 +33,24 @@ function PurchaseOrderTable({ data = [], onRowOpenClick }) {
         minWidth: 100,
         headerAlign: "center",
         align: "center",
+        renderCell: RenderCellExpand,
+      },
+      {
+        field: "category",
+        headerName: "Category",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+      },
+      {
+        field: "createdBy",
+        headerName: "Created By",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+        valueGetter: ({ row }) => row.createdBy?.username,
         renderCell: RenderCellExpand,
       },
       {
@@ -88,21 +115,6 @@ function PurchaseOrderTable({ data = [], onRowOpenClick }) {
           <Chip variant="outlined" label={value} color={statusColors[value]} />
         ),
       },
-      {
-        field: "isApproved",
-        headerName: "Approval",
-        headerAlign: "center",
-        align: "center",
-        flex: 1,
-        minWidth: 100,
-        renderCell: ({ value }) => (
-          <Chip
-            variant="outlined"
-            label={value ? "Approved" : "Pending"}
-            color={statusColors[value ? "Approved" : "Pending"]}
-          />
-        ),
-      },
     ],
     []
   );
@@ -113,10 +125,19 @@ function PurchaseOrderTable({ data = [], onRowOpenClick }) {
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        disableColumnMenu
+        loading={loading}
+        sortingMode="server"
+        rowsPerPageOptions={[5]}
+        page={pageNumber}
+        rowCount={rowCount}
+        pageSize={pageSize}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}
+        onSortModelChange={onSortChange}
         onRowClick={(params) => onRowOpenClick(params.id)}
+        onPageChange={onPageChange}
         sx={{ border: 0 }}
       />
     </Paper>

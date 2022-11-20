@@ -1,6 +1,7 @@
 import {
   CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE,
   CREATE_PURCHASE_ORDER,
+  GET_ORDER_REQUEST,
   GET_ORDER_REQUEST_LIST,
   GET_PURCHASE_ORDER,
   GET_PURCHASE_ORDER_LIST,
@@ -51,6 +52,10 @@ class PurchaseOrderService {
         pageSize,
       },
     });
+  }
+
+  async getOrderRequest(id) {
+    return await api().get(`${GET_ORDER_REQUEST}/${id}`);
   }
 }
 

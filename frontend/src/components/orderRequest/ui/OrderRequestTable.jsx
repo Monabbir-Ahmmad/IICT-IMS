@@ -28,6 +28,15 @@ function OrderRequestTable({
         renderCell: RenderCellExpand,
       },
       {
+        field: "createdBy",
+        headerName: "Created By",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
+        valueGetter: ({ row }) => row.createdBy?.username,
+      },
+      {
         field: "createdAt",
         headerName: "Order Date",
         type: "date",

@@ -71,13 +71,21 @@ namespace API.Controllers
         }
 
         [Authorize(UserRoleEnum.Admin, UserRoleEnum.Supplier)]
-        [HttpGet("order-requests")]
+        [HttpGet("order-request")]
         public async Task<ActionResult<PaginatedResDto<PurchaseOrderResDto>>> GetOrderRequests(
             [FromQuery] PaginatedFilterSortParam param
         )
         {
             var supplierId = HttpContext.Items["userId"] as int? ?? 0;
             return await _purchaseOrderService.GetOrderRequests(supplierId, param);
+        }
+
+        [Authorize(UserRoleEnum.Admin, UserRoleEnum.Supplier)]
+        [HttpGet("order-request/{id}")]
+        public async Task<ActionResult<PurchaseOrderResDto>> GetOrderRequest(int id)
+        {
+            var supplierId = HttpContext.Items["userId"] as int? ?? 0;
+            return await _purchaseOrderService.GetOrderRequest(id, supplierId);
         }
 
         [Authorize(UserRoleEnum.Admin, UserRoleEnum.Supplier)]

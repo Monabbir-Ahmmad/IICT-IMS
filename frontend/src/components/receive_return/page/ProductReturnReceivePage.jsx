@@ -13,23 +13,18 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { RiUploadFill as DistributeIcon } from "react-icons/ri";
+import { RiDownloadFill as ReceiveIcon } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getReceivableInventoryList,
-  receiveReturnInventory,
-} from "../../../redux/actions/inventory.actions";
+import { receiveReturnInventory } from "../../../redux/actions/inventory.actions";
 import autoCompleteService from "../../../services/autoComplete.service";
+import inventoryService from "../../../services/inventory.service";
+import { distributableInventoryFilterDef } from "../../shared/searchFilter/filterData";
 import SearchFilter from "../../shared/searchFilter/SearchFilter";
 import ReceivableProductsTable from "../ui/ReceivableProductsTable";
 import ReceivingProductsTable from "../ui/ReceivingProductsTable";
 
 function ProductReturnReceivePage() {
   const dispatch = useDispatch();
-
-  const { inventoryList, loading } = useSelector(
-    (state) => state.receivableInventoryList
-  );
 
   const { loading: receiveReturnLoading, success } = useSelector(
     (state) => state.receiveReturnInventory
@@ -46,6 +41,20 @@ function ProductReturnReceivePage() {
   const [receivingingProducts, setReceivingProducts] = useState([]);
   const [receiveFrom, setReceiveFrom] = useState([]);
 
+  const [filter, setFilter] = useState();
+  const [sort, setSort] = useState();
+  const [pagination, setPagination] = useState({
+    pageNumber: 0,
+  });
+
+  useEffect(() => {
+    getReceivableInventory();
+  }, [filter, sort, pagination]);
+
+  useEffect(() => {
+    setPagination({ pageNumber: 0 });
+  }, [filter, sort]);
+
   useEffect(() => {
     (async () => {
       try {
@@ -58,39 +67,90 @@ function ProductReturnReceivePage() {
   }, []);
 
   useEffect(() => {
-    dispatch(getReceivableInventoryList());
-  }, [dispatch]);
-
-  useEffect(() => {
-    setReceivableProducts(inventoryList);
-  }, [inventoryList]);
-
-  useEffect(() => {
     if (success) {
       reset();
       setReceivingProducts([]);
     }
   }, [success, reset]);
 
+  const onSortChange = (sortModel) => {
+    setSort({
+      sortColumn: distributableInventoryFilterDef.find(
+        (f) => f.field === sortModel[0]?.field
+      )?.key,
+      sortDirection: sortModel[0]?.sort,
+    });
+  };
+
+  const onFilterApply = (filter) => {
+    setFilter(filter);
+  };
+
+  const onFilterClear = () => {
+    setFilter(null);
+  };
+
+  const onPageChange = (page) => {
+    setPagination({
+      pageNumber: page,
+    });
+  };
+
+  const getReceivableInventory = async () => {
+    setReceivableProducts({
+      ...receivableProducts,
+      loading: true,
+      error: null,
+    });
+
+    try {
+      const { data } = await inventoryService.getReceivable(
+        filter,
+        sort,
+        pagination.pageNumber
+      );
+      setReceivableProducts({
+        data: data.data?.filter(
+          (x) => !receivingingProducts.find((y) => y.id === x.id)
+        ),
+        rowCount: data.rowCount,
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      setReceivableProducts({
+        data: [],
+        rowCount: 0,
+        loading: false,
+        error: error.message,
+      });
+    }
+  };
+
   const onAddProductsClick = (selectedItems) => {
     setReceivingProducts(
       receivingingProducts.concat(
-        receivableProducts
-          .filter((item) => selectedItems.includes(item.id))
-          .concat(receivingingProducts)
+        receivableProducts.data.filter((item) =>
+          selectedItems.includes(item.id)
+        )
       )
     );
-    setReceivableProducts(
-      receivableProducts.filter((item) => !selectedItems.includes(item.id))
-    );
+
+    setReceivableProducts({
+      ...receivableProducts,
+      data: receivableProducts.data.filter(
+        (item) => !selectedItems.includes(item.id)
+      ),
+    });
   };
 
   const onRemoveProductsClick = (selectedItems) => {
-    setReceivableProducts(
-      receivingingProducts
+    setReceivableProducts({
+      ...receivableProducts,
+      data: receivingingProducts
         .filter((item) => selectedItems.includes(item.id))
-        .concat(receivableProducts)
-    );
+        .concat(receivableProducts.data),
+    });
     setReceivingProducts(
       receivingingProducts.filter((item) => !selectedItems.includes(item.id))
     );
@@ -104,14 +164,14 @@ function ProductReturnReceivePage() {
 
   return (
     <Stack spacing={3}>
-      {(loading || receiveReturnLoading) && <LinearProgress />}
+      {receiveReturnLoading && <LinearProgress />}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Button
           type="submit"
           disabled={receivingingProducts.length === 0 || !formState.errors}
           variant="contained"
-          startIcon={<DistributeIcon />}
+          startIcon={<ReceiveIcon />}
           sx={{ justifySelf: "end", mb: 3 }}
         >
           Receive Products
@@ -187,10 +247,20 @@ function ProductReturnReceivePage() {
           Receivable Products
         </Typography>
 
-        <SearchFilter />
+        <SearchFilter
+          filterDef={distributableInventoryFilterDef}
+          onApply={onFilterApply}
+          onClear={onFilterClear}
+        />
         <ReceivableProductsTable
-          data={receivableProducts}
+          loading={receivableProducts.loading}
+          data={receivableProducts.data}
           onAddProductsClick={onAddProductsClick}
+          onSortChange={onSortChange}
+          onPageChange={onPageChange}
+          pageNumber={pagination.pageNumber}
+          rowCount={receivableProducts.rowCount}
+          pageSize={20}
         />
       </div>
     </Stack>

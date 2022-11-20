@@ -22,6 +22,8 @@ namespace API.Interfaces
             PaginatedFilterSortParam param
         );
 
+        Task<PurchaseOrderResDto> GetOrderRequest(int id, int supplierId);
+
         Task<PurchaseOrderResDto> DeliverPurchaseOrderProducts(
             PurchaseOrderDeliveryReqDto purchaseOrderDeliveryReqDto
         );

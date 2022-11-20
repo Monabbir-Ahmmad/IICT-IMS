@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { distributeInventory } from "../../../redux/actions/inventory.actions";
 import autoCompleteService from "../../../services/autoComplete.service";
 import inventoryService from "../../../services/inventory.service";
-import { inventoryFilterDef } from "../../shared/searchFilter/filterData";
+import { distributableInventoryFilterDef } from "../../shared/searchFilter/filterData";
 import SearchFilter from "../../shared/searchFilter/SearchFilter";
 import DistribuableProductsTable from "../ui/DistributableProductsTable";
 import DistributingProductsTable from "../ui/DistributingProductsTable";
@@ -77,7 +77,7 @@ function ProductDistributionPage() {
 
   const onSortChange = (sortModel) => {
     setSort({
-      sortColumn: inventoryFilterDef.find(
+      sortColumn: distributableInventoryFilterDef.find(
         (f) => f.field === sortModel[0]?.field
       )?.key,
       sortDirection: sortModel[0]?.sort,
@@ -99,6 +99,11 @@ function ProductDistributionPage() {
   };
 
   const getDistributableInventory = async () => {
+    setDistributableProducts({
+      ...distributableProducts,
+      loading: true,
+      error: null,
+    });
     try {
       const { data } = await inventoryService.getDistributable(
         filter,
@@ -126,9 +131,9 @@ function ProductDistributionPage() {
   const onAddProductsClick = (selectedItems) => {
     setDistributingProducts(
       distributingProducts.concat(
-        distributableProducts.data
-          .filter((item) => selectedItems.includes(item.id))
-          .concat(distributingProducts)
+        distributableProducts.data.filter((item) =>
+          selectedItems.includes(item.id)
+        )
       )
     );
 
@@ -261,7 +266,7 @@ function ProductDistributionPage() {
         </Typography>
 
         <SearchFilter
-          filterDef={inventoryFilterDef}
+          filterDef={distributableInventoryFilterDef}
           onApply={onFilterApply}
           onClear={onFilterClear}
         />
