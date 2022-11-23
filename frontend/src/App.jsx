@@ -1,16 +1,33 @@
 import { IconButton, Typography } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
-import AuthPage from "./components/authentication/page/AuthPage";
+import LoginPage from "./components/authentication/page/LoginPage";
 import ProcurementCreatePage from "./components/procurement/page/ProcurementCreatePage";
 import ProcurementPage from "./components/procurement/page/ProcurementPage";
-import SingleProcurementPage from "./components/procurement/page/SingleProcurementPage";
-import QuotationOfferPage from "./components/quotation/page/QuotationOfferPage";
+import ProcurementDetailsPage from "./components/procurement/page/ProcurementDetailsPage";
+import QuotationDetailsPage from "./components/quotation/page/QuotationDetailsPage";
 import QuotationPage from "./components/quotation/page/QuotationPage";
 import NavDrawer from "./components/shared/nav/NavDrawer";
 import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { RiCloseLine as CloseIcon } from "react-icons/ri";
+import RegisterPage from "./components/authentication/page/RegisterPage";
+import AuthGuard from "./components/shared/authGuard/AuthGurad";
+import { UserRoles } from "./constants/enums";
+import InventoryPage from "./components/inventory/page/InventoryPage";
+import OrderRequestPage from "./components/orderRequest/page/OrderRequestPage";
+import OrderRequestDetailsPage from "./components/orderRequest/page/OrderRequestDetailsPage";
+import PurchaseOrderPage from "./components/purchaseOrder/page/PurchaseOrderPage";
+import PurchaseOrderDetailsPage from "./components/purchaseOrder/page/PurchaseOrderDetailsPage";
+import ProductDistributionPage from "./components/distribution/page/ProductDistributionPage";
+import ProductReturnReceivePage from "./components/receive_return/page/ProductReturnReceivePage";
+import DistributionPage from "./components/distribution/page/DistributionPage";
+import ReceiveReturnPage from "./components/receive_return/page/ReceiveReturnPage";
+import AdminDashboardPage from "./components/admin/page/AdminDashboardPage";
+import ProfilePage from "./components/profile/page/ProfilePage";
+import InventoryProductPage from "./components/inventory/page/InventoryProductPage";
+import DistributionDetailsPage from "./components/distribution/page/DistributionDetailsPage";
+import ReceiveReturnDetailsPage from "./components/receive_return/page/ReceiveReturnDetailsPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -36,24 +53,140 @@ function App() {
 
   return (
     <Routes>
-      <Route index element={<AuthPage />} />
+      <Route path="/login" element={<LoginPage />} />
 
-      <Route path="/" element={<NavDrawer />}>
-        <Route path="procurements" element={<ProcurementPage />} />
-        <Route
-          path="procurements/:procurementId"
-          element={<SingleProcurementPage />}
-        />
-        <Route path="procurements/create" element={<ProcurementCreatePage />} />
-        <Route path="quotations" element={<QuotationPage />} />
-        <Route
-          path="quotations/:procurementId"
-          element={<QuotationOfferPage />}
-        />
-        <Route
-          path="*"
-          element={<Typography variant="h4">Sorry! Page Not Found</Typography>}
-        />
+      <Route path="/register" element={<RegisterPage />} />
+
+      <Route element={<AuthGuard />}>
+        <Route path="/" element={<NavDrawer />}>
+          <Route path="profile/:id" element={<ProfilePage />} />
+
+          <Route
+            element={
+              <AuthGuard allowedRoles={[UserRoles.ADMIN, UserRoles.DIRECTOR]} />
+            }
+          >
+            <Route path="admin-dashboard" element={<AdminDashboardPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthGuard
+                allowedRoles={[
+                  UserRoles.ADMIN,
+                  UserRoles.DIRECTOR,
+                  UserRoles.OFFICE_MANAGER,
+                  UserRoles.OFFICE_OFFICER,
+                  UserRoles.STORE_MANAGER,
+                  UserRoles.STORE_OFFICER,
+                  UserRoles.EMPLOYEE,
+                ]}
+              />
+            }
+          >
+            <Route path="inventory" element={<InventoryPage />} />
+            <Route path="inventory/:id" element={<InventoryProductPage />} />
+          </Route>
+
+          <Route
+            element={
+              <AuthGuard
+                allowedRoles={[
+                  UserRoles.ADMIN,
+                  UserRoles.DIRECTOR,
+                  UserRoles.STORE_MANAGER,
+                  UserRoles.STORE_OFFICER,
+                ]}
+              />
+            }
+          >
+            <Route path="distribution" element={<DistributionPage />} />
+            <Route
+              path="distribution/:id"
+              element={<DistributionDetailsPage />}
+            />
+            <Route
+              path="distribution/distribute"
+              element={<ProductDistributionPage />}
+            />
+
+            <Route path="receive-returns" element={<ReceiveReturnPage />} />
+            <Route
+              path="receive-returns/:id"
+              element={<ReceiveReturnDetailsPage />}
+            />
+            <Route
+              path="receive-returns/receive"
+              element={<ProductReturnReceivePage />}
+            />
+          </Route>
+
+          <Route
+            element={
+              <AuthGuard
+                allowedRoles={[
+                  UserRoles.ADMIN,
+                  UserRoles.DIRECTOR,
+                  UserRoles.OFFICE_MANAGER,
+                  UserRoles.OFFICE_OFFICER,
+                ]}
+              />
+            }
+          >
+            <Route
+              path="procurements/create"
+              element={<ProcurementCreatePage />}
+            />
+
+            <Route path="procurements" element={<ProcurementPage />} />
+
+            <Route
+              path="procurements/:procurementId"
+              element={<ProcurementDetailsPage />}
+            />
+
+            <Route path="purchase-orders" element={<PurchaseOrderPage />} />
+            <Route
+              path="purchase-orders/:purchaseOrderId"
+              element={<PurchaseOrderDetailsPage />}
+            />
+          </Route>
+
+          <Route
+            element={
+              <AuthGuard allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]} />
+            }
+          >
+            <Route path="quotations" element={<QuotationPage />} />
+
+            <Route
+              path="quotations/:procurementId"
+              element={<QuotationDetailsPage />}
+            />
+
+            <Route path="order-requests" element={<OrderRequestPage />} />
+            <Route
+              path="order-requests/:purchaseOrderId"
+              element={<OrderRequestDetailsPage />}
+            />
+          </Route>
+
+          <Route
+            path="unauthorized"
+            element={
+              <Typography variant="h4">
+                You are not authorized to access this page
+              </Typography>
+            }
+          />
+
+          <Route
+            path="*"
+            element={
+              <Typography variant="h4">Sorry! Page Not Found</Typography>
+            }
+          />
+        </Route>
       </Route>
     </Routes>
   );

@@ -8,7 +8,7 @@ namespace API.Interfaces.Procurement
         Task<ProcurementResDto> CreateProcurement(ProcurementReqDto procuremnetDto);
         Task<bool> DeleteProcurement(int id);
 
-        Task<List<ProcurementResDto>> GetProcurements(ProcurementsGetParams procurementsGetParams);
+        Task<List<ProcurementResDto>> GetProcurements();
 
         Task<ProcurementResDto> GetProcurement(int id);
     }

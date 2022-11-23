@@ -1,12 +1,20 @@
-﻿using API.DTOs.Request;
+﻿using API.DTOs.Params;
+using API.DTOs.Request;
 using API.DTOs.Response;
+using API.Enums;
 using API.Errors;
-using API.Interfaces.Procurement;
-using Microsoft.AspNetCore.Http;
+using API.Interfaces;
+using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize(
+        UserRoleEnum.Admin,
+        UserRoleEnum.Director,
+        UserRoleEnum.OfficeManager,
+        UserRoleEnum.OfficeOfficer
+    )]
     [Route("api/[controller]")]
     [ApiController]
     public class ProcurementController : ControllerBase
@@ -23,6 +31,7 @@ namespace API.Controllers
             ProcurementReqDto procurementDto
         )
         {
+            procurementDto.CreatedById = (int)HttpContext.Items["userId"];
             return Created(
                 "Procurement created",
                 await _procurementService.CreateProcurement(procurementDto)
@@ -38,18 +47,20 @@ namespace API.Controllers
                 throw new BadRequestException();
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProcurementResDto>> GetProcurementById(int id)
         {
             return await _procurementService.GetProcurement(id);
         }
 
+        [AllowAnonymous]
         [HttpGet()]
-        public async Task<ActionResult<List<ProcurementResDto>>> GetProcurements(
-            [FromQuery] ProcurementsGetParams procurementsGetParams
+        public async Task<ActionResult<PaginatedResDto<ProcurementResDto>>> GetProcurements(
+            [FromQuery] PaginatedFilterSortParam param
         )
         {
-            return await _procurementService.GetProcurements(procurementsGetParams);
+            return await _procurementService.GetProcurements(param);
         }
     }
 }

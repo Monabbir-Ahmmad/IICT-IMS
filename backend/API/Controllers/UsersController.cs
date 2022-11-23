@@ -1,5 +1,7 @@
 using API.Database;
+using API.DTOs.Response;
 using API.Entities;
+using API.Interfaces.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,23 +11,23 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private IUserService _userService;
 
-        public UsersController(DatabaseContext context)
+        public UsersController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserResDto>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _userService.GetUsers();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<UserResDto>> GetUser(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _userService.GetUserById(id);
         }
     }
 }

@@ -18,6 +18,7 @@ import { signin } from "../../../redux/actions/auth.actions";
 import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { UserRoles } from "../../../constants/enums";
 
 const FormContainer = styled.form`
   display: flex;
@@ -38,7 +39,7 @@ function LoginForm() {
     defaultValues: { email: "", password: "" },
   });
 
-  const [loginAs, setLoginAs] = useState(1);
+  const [loginAs, setLoginAs] = useState(UserRoles.EMPLOYEE);
 
   const dispatch = useDispatch();
 
@@ -47,24 +48,11 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (values) => {
-    dispatch(signin(values.email, values.password));
+    dispatch(signin(values.email, values.password, loginAs));
   };
 
   return (
     <FormContainer onSubmit={handleSubmit(onSubmit)}>
-      <Typography
-        variant="h3"
-        sx={{ textTransform: "uppercase" }}
-        color="primary"
-        textAlign={"center"}
-      >
-        Login
-      </Typography>
-
-      <Typography variant="h6" textAlign={"center"} color={"text.secondary"}>
-        Login to continue using the app
-      </Typography>
-
       {loading && <LinearProgress />}
 
       {error && <Alert severity="error">{error}</Alert>}
@@ -110,11 +98,15 @@ function LoginForm() {
           onChange={(e) => setLoginAs(e.target.value)}
         >
           <FormControlLabel
-            value={1}
+            value={UserRoles.EMPLOYEE}
             control={<Radio />}
             label="IICT Employee"
           />
-          <FormControlLabel value={2} control={<Radio />} label="Supplier" />
+          <FormControlLabel
+            value={UserRoles.SUPPLIER}
+            control={<Radio />}
+            label="Supplier"
+          />
         </RadioGroup>
       </FormControl>
 

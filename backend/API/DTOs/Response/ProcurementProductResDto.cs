@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace API.DTOs.Response
 {
     public class ProcurementProductResDto
@@ -17,10 +12,13 @@ namespace API.DTOs.Response
 
         public string Details { get; set; }
 
-        public float EstimatedPrice { get; set; }
+        public decimal EstimatedPrice { get; set; }
 
         public int Quantity { get; set; }
 
-        public float EstimatedTotalPrice { get; set; }
+        public decimal EstimatedTotalPrice
+        {
+            get { return EstimatedPrice * Quantity; }
+        }
     }
 }

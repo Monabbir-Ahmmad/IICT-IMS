@@ -39,7 +39,10 @@ namespace API.Middlewares
 
                 var response = _env.IsDevelopment()
                     ? new ErrorResDto(statusCode, ex.Message, ex.StackTrace?.ToString())
-                    : new ErrorResDto(statusCode, "Internal server error");
+                    : new ErrorResDto(
+                        statusCode,
+                        statusCode < 500 ? ex.Message : "Internal Server Error"
+                    );
 
                 var options = new JsonSerializerOptions
                 {

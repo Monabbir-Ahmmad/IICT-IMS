@@ -1,19 +1,29 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { UserRoles } from "../../../constants/enums";
 
-function AuthGuard({ children }) {
-  const navigate = useNavigate();
+function AuthGuard({ allowedRoles = Object.values(UserRoles) }) {
+  const location = useLocation();
+  const { userAuth } = useSelector((state) => state.userLogin);
 
-  const { userAuthInfo } = useSelector((state) => state.userLogin);
-
-  useEffect(() => {
-    if (!userAuthInfo?.id) {
-      navigate("/?page=sign-in", { replace: true });
-    }
-  }, [navigate, userAuthInfo]);
-
-  return children;
+  return allowedRoles.includes(userAuth?.role) ? (
+    <Outlet />
+  ) : userAuth?.id ? (
+    <Navigate
+      to={{
+        pathname: "/unauthorized",
+        state: { from: location },
+      }}
+    />
+  ) : (
+    <Navigate
+      replace
+      to={{
+        pathname: "/login",
+        state: { from: location },
+      }}
+    />
+  );
 }
 
 export default AuthGuard;

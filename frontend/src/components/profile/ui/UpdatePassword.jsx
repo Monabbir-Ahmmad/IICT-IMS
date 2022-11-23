@@ -1,128 +1,86 @@
 import {
-  Alert,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
   InputAdornment,
   LinearProgress,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import { FiEye as Visibility, FiEyeOff as VisibilityOff } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { updateUserPassword } from "../../../redux/reducers/actions/userActions";
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePassword } from "../../../redux/actions/user.actions";
 
-function UpdatePassword({ openPasswordEdit, handlePasswordEditCancel }) {
+function UpdatePassword() {
   const dispatch = useDispatch();
+  const { handleSubmit, control, watch, reset } = useForm({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    },
+  });
 
-  const { loading, success, error } = useSelector(
-    (state) => state.userPasswordUpdate
-  );
-
-  const [valueMissing, setValueMissing] = useState(false);
+  const { loading, success } = useSelector((state) => state.userPasswordUpdate);
 
   const [showPassword, setShowPassword] = useState({
-    oldPassword: false,
+    currentPassword: false,
     newPassword: false,
     confirmNewPassword: false,
   });
 
-  const [values, setValues] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
-  });
-
   useEffect(() => {
     if (success) {
-      resetEdit();
+      resetState();
     }
   }, [success]);
 
-  const handleChange = (prop) => (e) => {
-    setValues({ ...values, [prop]: e.target.value });
+  const handlePasswordShowClick = (prop) => {
+    setShowPassword((prev) => ({ ...prev, [prop]: !prev[prop] }));
   };
 
-  const handleClickShowPassword = (prop) => (e) => {
-    setShowPassword({ ...showPassword, [prop]: !showPassword[prop] });
-  };
-
-  const resetEdit = () => {
-    setValueMissing(false);
-
+  const resetState = () => {
+    reset();
     setShowPassword({
-      oldPassword: false,
+      currentPassword: false,
       newPassword: false,
       confirmNewPassword: false,
     });
-
-    setValues({
-      oldPassword: "",
-      newPassword: "",
-      confirmNewPassword: "",
-    });
-
-    handlePasswordEditCancel();
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (
-      Object.keys(values).every((key) => values[key]) &&
-      values.newPassword === values.confirmNewPassword
-    ) {
-      setValueMissing(false);
-      dispatch(updateUserPassword(values.oldPassword, values.newPassword));
-    } else {
-      setValueMissing(true);
-    }
+  const onSubmit = (data) => {
+    dispatch(updatePassword(data));
   };
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth={"sm"}
-      open={openPasswordEdit}
-      onClose={resetEdit}
-      PaperProps={{
-        sx: { bgcolor: "background.paper", backgroundImage: "none" },
-      }}
-    >
-      <DialogTitle>Change Password</DialogTitle>
-      <DialogContent>
-        <form id="password-update-form" onSubmit={handleSubmit}>
-          <Stack spacing={4} pt={3}>
-            {loading && <LinearProgress />}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack spacing={2}>
+        <Typography variant={"h6"}>Update Password</Typography>
 
-            {error && <Alert severity="error">{error}</Alert>}
+        {loading && <LinearProgress />}
 
-            {success && <Alert severity="success">Update successful</Alert>}
-
+        <Controller
+          name="currentPassword"
+          control={control}
+          rules={{ required: "Current password is required" }}
+          render={({ field, fieldState }) => (
             <TextField
-              variant="outlined"
+              {...field}
               label="Current Password"
-              autoComplete="on"
-              type={showPassword.oldPassword ? "text" : "password"}
-              error={valueMissing && !values.oldPassword}
-              helperText={
-                valueMissing && !values.oldPassword
-                  ? "Please enter your current password"
-                  : ""
-              }
-              value={values.oldPassword}
-              onChange={handleChange("oldPassword")}
+              variant="outlined"
+              autoComplete="current-password"
+              type={showPassword.currentPassword ? "text" : "password"}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={handleClickShowPassword("oldPassword")}
+                      onClick={() => handlePasswordShowClick("currentPassword")}
                     >
-                      {showPassword.oldPassword ? (
+                      {showPassword.currentPassword ? (
                         <VisibilityOff />
                       ) : (
                         <Visibility />
@@ -132,25 +90,27 @@ function UpdatePassword({ openPasswordEdit, handlePasswordEditCancel }) {
                 ),
               }}
             />
+          )}
+        />
 
+        <Controller
+          name="newPassword"
+          control={control}
+          rules={{ required: "New password is required" }}
+          render={({ field, fieldState }) => (
             <TextField
-              variant="outlined"
+              {...field}
               label="New Password"
-              autoComplete="on"
+              variant="outlined"
+              autoComplete="new-password"
               type={showPassword.newPassword ? "text" : "password"}
-              error={valueMissing && !values.newPassword}
-              helperText={
-                valueMissing && !values.newPassword
-                  ? "Please enter your new password"
-                  : ""
-              }
-              value={values.newPassword}
-              onChange={handleChange("newPassword")}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={handleClickShowPassword("newPassword")}
+                      onClick={() => handlePasswordShowClick("newPassword")}
                     >
                       {showPassword.newPassword ? (
                         <VisibilityOff />
@@ -162,31 +122,33 @@ function UpdatePassword({ openPasswordEdit, handlePasswordEditCancel }) {
                 ),
               }}
             />
+          )}
+        />
 
+        <Controller
+          name="confirmNewPassword"
+          control={control}
+          rules={{
+            required: "Confirm password is required",
+            validate: (value) =>
+              value === watch("newPassword") || "Passwords do not match",
+          }}
+          render={({ field, fieldState }) => (
             <TextField
-              variant="outlined"
+              {...field}
               label="Confirm New Password"
-              autoComplete="on"
+              variant="outlined"
+              autoComplete="confirm-password"
               type={showPassword.confirmNewPassword ? "text" : "password"}
-              error={
-                valueMissing &&
-                (!values.confirmNewPassword ||
-                  values.newPassword !== values.confirmNewPassword)
-              }
-              helperText={
-                valueMissing &&
-                (!values.confirmNewPassword ||
-                  values.newPassword !== values.confirmNewPassword)
-                  ? "Please confirm your new password"
-                  : ""
-              }
-              value={values.confirmNewPassword}
-              onChange={handleChange("confirmNewPassword")}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={handleClickShowPassword("confirmNewPassword")}
+                      onClick={() =>
+                        handlePasswordShowClick("confirmNewPassword")
+                      }
                     >
                       {showPassword.confirmNewPassword ? (
                         <VisibilityOff />
@@ -198,16 +160,17 @@ function UpdatePassword({ openPasswordEdit, handlePasswordEditCancel }) {
                 ),
               }}
             />
-          </Stack>
-        </form>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={resetEdit}>Cancel</Button>
-        <Button type="submit" form="password-update-form">
-          Confirm
+          )}
+        />
+      </Stack>
+
+      <Stack direction="row" justifyContent="flex-start" spacing={2} mt={2}>
+        <Button onClick={resetState}>Clear</Button>
+        <Button variant="contained" type="submit">
+          Confirm Changes
         </Button>
-      </DialogActions>
-    </Dialog>
+      </Stack>
+    </form>
   );
 }
 

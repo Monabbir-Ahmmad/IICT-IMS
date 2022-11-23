@@ -14,6 +14,10 @@ import {
   GET_PROCUREMENT_LIST_SUCCESS,
   GET_PROCUREMENT_REQUEST,
   GET_PROCUREMENT_SUCCESS,
+  PROCUREMENT_QUOTATION_ACCEPT_FAIL,
+  PROCUREMENT_QUOTATION_ACCEPT_REQUEST,
+  PROCUREMENT_QUOTATION_ACCEPT_RESET,
+  PROCUREMENT_QUOTATION_ACCEPT_SUCCESS,
 } from "../action_types/procurement";
 import { showErrorAlert, showSuccessAlert } from "./alertSnackbar.actions";
 
@@ -132,3 +136,34 @@ export const deleteProcurement = (id) => async (dispatch, getState) => {
     dispatch({ type: DELETE_PROCUREMENT_RESET });
   }, 5000);
 };
+
+export const procurementQuotationAccept =
+  (data) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: PROCUREMENT_QUOTATION_ACCEPT_REQUEST });
+
+      const res = await procurementService.acceptQuotation(data);
+
+      dispatch({ type: PROCUREMENT_QUOTATION_ACCEPT_SUCCESS });
+
+      dispatch({ type: GET_PROCUREMENT_SUCCESS, payload: res.data });
+
+      dispatch(showSuccessAlert("Quotation accepted successfully"));
+    } catch (error) {
+      const errorMessage =
+        error.response && error.response.data?.message
+          ? error.response.data?.message
+          : error.message;
+
+      dispatch({
+        type: PROCUREMENT_QUOTATION_ACCEPT_FAIL,
+        payload: errorMessage,
+      });
+
+      dispatch(showErrorAlert(errorMessage));
+    }
+
+    setTimeout(() => {
+      dispatch({ type: PROCUREMENT_QUOTATION_ACCEPT_RESET });
+    }, 5000);
+  };

@@ -14,13 +14,10 @@ namespace API.DTOs.Request
         [Required]
         public string Details { get; set; }
 
-        [Required]
-        public float EstimatedPrice { get; set; }
+        [Required, Range(1, 300000)]
+        public decimal EstimatedPrice { get; set; }
 
-        [Required]
+        [Required, Range(1, 1000)]
         public int Quantity { get; set; }
-
-        [Required]
-        public float EstimatedTotalPrice { get; set; }
     }
 }

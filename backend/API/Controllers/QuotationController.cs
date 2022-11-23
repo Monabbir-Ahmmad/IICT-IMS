@@ -1,10 +1,14 @@
+using API.DTOs.Params;
 using API.DTOs.Request;
 using API.DTOs.Response;
-using API.Interfaces.Quotation;
+using API.Enums;
+using API.Interfaces;
+using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize(UserRoleEnum.Admin, UserRoleEnum.Supplier)]
     [ApiController]
     [Route("api/supplier/[controller]")]
     public class QuotationController : ControllerBase
@@ -21,6 +25,7 @@ namespace API.Controllers
             QuotationCreateReqDto createQuotationDto
         )
         {
+            createQuotationDto.SupplierId = (int)HttpContext.Items["userId"];
             return Ok(await _quotationService.CreateQuotation(createQuotationDto));
         }
 
@@ -30,10 +35,22 @@ namespace API.Controllers
             return Ok(await _quotationService.GetQuotation(id));
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<List<QuotationResDto>>> GetQuotations(int procurementId)
+        [HttpGet("procurement/{procurementId}")]
+        public async Task<ActionResult<PaginatedResDto<QuotationResDto>>> GetQuotations(
+            int procurementId,
+            [FromQuery] PaginatedFilterSortParam param
+        )
         {
-            return Ok(await _quotationService.GetQuotations(procurementId));
+            return Ok(await _quotationService.GetQuotations(procurementId, param));
+        }
+
+        [HttpGet("procurement-requests")]
+        public async Task<ActionResult<PaginatedResDto<ProcurementResDto>>> GetProcurementRequests(
+            [FromQuery] PaginatedFilterSortParam param
+        )
+        {
+            var supplierId = (int)HttpContext.Items["userId"];
+            return Ok(await _quotationService.GetProcurementRequests(supplierId, param));
         }
     }
 }

@@ -18,15 +18,11 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { currencyFormatter } from "../../../utils/utilities";
-import { getAllProductCategories } from "../../../redux/actions/productCategory.actions";
 import { createProcurement } from "../../../redux/actions/procurement.actions";
+import autoCompleteService from "../../../services/autoComplete.service";
 
 function ProcurementCreatePage() {
   const dispatch = useDispatch();
-
-  const { productCategories } = useSelector(
-    (state) => state.productCategoryList
-  );
 
   const { loading, success, error } = useSelector(
     (state) => state.procurementCreate
@@ -42,17 +38,23 @@ function ProcurementCreatePage() {
   const [openAddNew, setOpenAddNew] = useState(false);
 
   const [products, setProducts] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [productCategories, setProductCategories] = useState([]);
 
   useEffect(() => {
-    dispatch(getAllProductCategories());
-  }, [dispatch]);
+    (async () => {
+      try {
+        const { data } = await autoCompleteService.getProductCategories();
+        setProductCategories(data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (success) {
       reset();
       setProducts([]);
-      setSelectedRows([]);
     }
   }, [success, reset]);
 
@@ -67,25 +69,11 @@ function ProcurementCreatePage() {
     setOpenAddNew(false);
   };
 
-  const onRowSelectionChange = (newSelectedRows) => {
-    setSelectedRows(newSelectedRows);
-  };
-
-  const onDeleteSelected = () => {
+  const onDeleteSelected = (selectedRows) => {
     setProducts(products.filter((item) => !selectedRows.includes(item.id)));
-    setSelectedRows([]);
   };
 
   const onSubmit = (data) => {
-    console.log({
-      ...data,
-      estimatedTotalPrice: products.reduce(
-        (acc, item) => acc + item.estimatedTotalPrice,
-        0
-      ),
-      products,
-    });
-
     dispatch(
       createProcurement({
         ...data,
@@ -123,7 +111,7 @@ function ProcurementCreatePage() {
             justifyContent={"space-between"}
           >
             <Typography variant="subtitle1">
-              Total Estimated Price:{" "}
+              Estimated Subtotal Price:{" "}
               <strong>
                 {currencyFormatter().format(
                   products.reduce(
@@ -138,24 +126,7 @@ function ProcurementCreatePage() {
               <strong>{moment(Date.now()).format("MMM Do, YYYY")}</strong>
             </Typography>
           </Stack>
-          <Stack direction={{ xs: "column", lg: "row" }} spacing={4}>
-            <Controller
-              name="title"
-              control={control}
-              rules={{ required: "Procurement title is required" }}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Procurement Title"
-                  variant="outlined"
-                  placeholder="Enter procurement title"
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
-                  sx={{ flex: 2 }}
-                />
-              )}
-            />
-
+          <Stack direction={{ xs: "column", lg: "row" }} spacing={3}>
             <Controller
               name="procurementCategoryId"
               control={control}
@@ -181,6 +152,23 @@ function ProcurementCreatePage() {
             />
 
             <Controller
+              name="title"
+              control={control}
+              rules={{ required: "Procurement title is required" }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label="Procurement Title"
+                  variant="outlined"
+                  placeholder="Enter procurement title"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  sx={{ flex: 2 }}
+                />
+              )}
+            />
+
+            <Controller
               name="deadline"
               control={control}
               rules={{ required: "Tender deadline is required" }}
@@ -190,7 +178,9 @@ function ProcurementCreatePage() {
                     disablePast
                     label="Tender Deadline"
                     value={field.value}
-                    onChange={(newValue) => field.onChange(newValue)}
+                    onChange={(newValue) =>
+                      field.onChange(newValue?.format("YYYY-MM-DD"))
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -218,15 +208,11 @@ function ProcurementCreatePage() {
         Product List
       </Typography>
 
-      <Paper variant="outlined">
-        <ProcurementProductTable
-          data={products}
-          selectedRows={selectedRows}
-          onAddNewRowClick={() => setOpenAddNew(true)}
-          onRowSelectionChange={onRowSelectionChange}
-          onSelectedRowDeleteClick={onDeleteSelected}
-        />
-      </Paper>
+      <ProcurementProductTable
+        data={products}
+        onAddNewRowClick={() => setOpenAddNew(true)}
+        onSelectedRowDeleteClick={onDeleteSelected}
+      />
     </Stack>
   );
 }

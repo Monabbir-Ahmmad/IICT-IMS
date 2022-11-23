@@ -20,10 +20,24 @@ import {
   procurementCreateReducer,
   procurementDeleteReducer,
   procurementListReducer,
-  singleProcurementReducer,
+  procurementQuotationAcceptReducer,
+  procurementDetailsReducer,
 } from "./reducers/procurement.reducers";
 import { quotationCreateReducer } from "./reducers/quotation.reducers";
 import { alertSnackbarReducer } from "./reducers/alertSnackbar.reducers";
+import {
+  deliverPurchaseOrderReducer,
+  purchaseOrderDetailsReducer,
+  purchaseOrdersReducer,
+} from "./reducers/purchaseOrder.reducer";
+import {
+  distributableInventoryListReducer,
+  distributeInventoryReducer,
+  inventoryListReducer,
+  inventoryProductDetailsReducer,
+  receivableInventoryListReducer,
+  receiveReturnInventoryReducer,
+} from "./reducers/inventory.reducer";
 
 const reducer = combineReducers({
   alertSnackbar: alertSnackbarReducer,
@@ -38,13 +52,23 @@ const reducer = combineReducers({
   productCategoryUpdate: productCategoryUpdateReducer,
   procurementCreate: procurementCreateReducer,
   procurementList: procurementListReducer,
-  singleProcurement: singleProcurementReducer,
+  procurementDetails: procurementDetailsReducer,
   procurementDelete: procurementDeleteReducer,
   quotationCreate: quotationCreateReducer,
+  procurementQuotationAccept: procurementQuotationAcceptReducer,
+  purchaseOrders: purchaseOrdersReducer,
+  purchaseOrderDetails: purchaseOrderDetailsReducer,
+  deliverPurchaseOrder: deliverPurchaseOrderReducer,
+  inventoryList: inventoryListReducer,
+  distributeInventory: distributeInventoryReducer,
+  distributableInventoryList: distributableInventoryListReducer,
+  receivableInventoryList: receivableInventoryListReducer,
+  receiveReturnInventory: receiveReturnInventoryReducer,
+  inventoryProductDetails: inventoryProductDetailsReducer,
 });
 
 const initialState = {
-  userLogin: { userAuthInfo: tokenService.getUser() },
+  userLogin: { userAuth: tokenService.getUser() },
 };
 
 const reduxStore = configureStore({ reducer, preloadedState: initialState });

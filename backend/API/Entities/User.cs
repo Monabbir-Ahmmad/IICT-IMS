@@ -1,18 +1,13 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace API.Entities
 {
-    public class User
+    public class User : AccountBaseEntity
     {
-        public int Id { get; set; }
-
-        [Required]
         public string Username { get; set; }
 
-        [Required]
-        public string Email { get; set; }
+        public UserRole Role { get; set; }
 
-        [Required]
-        public string Password { get; set; }
+        public string ContactNumber { get; set; }
+
+        public string Designation { get; set; }
     }
 }

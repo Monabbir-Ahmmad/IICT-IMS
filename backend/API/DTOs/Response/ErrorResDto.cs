@@ -6,7 +6,7 @@ namespace API.DTOs.Response
         public string Message { get; set; }
         public string Details { get; set; }
 
-        public ErrorResDto(int statusCode, string message, string? details = null)
+        public ErrorResDto(int statusCode, string message, string details = null)
         {
             StatusCode = statusCode;
             Message = message;

@@ -13,6 +13,10 @@ import {
   GET_PROCUREMENT_LIST_SUCCESS,
   GET_PROCUREMENT_REQUEST,
   GET_PROCUREMENT_SUCCESS,
+  PROCUREMENT_QUOTATION_ACCEPT_FAIL,
+  PROCUREMENT_QUOTATION_ACCEPT_REQUEST,
+  PROCUREMENT_QUOTATION_ACCEPT_RESET,
+  PROCUREMENT_QUOTATION_ACCEPT_SUCCESS,
 } from "../action_types/procurement";
 
 export const procurementCreateReducer = (state = {}, action) => {
@@ -46,7 +50,7 @@ export const procurementListReducer = (
   }
 };
 
-export const singleProcurementReducer = (state = {}, action) => {
+export const procurementDetailsReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_PROCUREMENT_REQUEST:
       return { loading: true };
@@ -68,6 +72,21 @@ export const procurementDeleteReducer = (state = {}, action) => {
     case DELETE_PROCUREMENT_FAIL:
       return { loading: false, success: false, error: action.payload };
     case DELETE_PROCUREMENT_RESET:
+      return { loading: false, success: false };
+    default:
+      return state;
+  }
+};
+
+export const procurementQuotationAcceptReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PROCUREMENT_QUOTATION_ACCEPT_REQUEST:
+      return { loading: true };
+    case PROCUREMENT_QUOTATION_ACCEPT_SUCCESS:
+      return { loading: false, success: true };
+    case PROCUREMENT_QUOTATION_ACCEPT_FAIL:
+      return { loading: false, success: false, error: action.payload };
+    case PROCUREMENT_QUOTATION_ACCEPT_RESET:
       return { loading: false, success: false };
     default:
       return state;

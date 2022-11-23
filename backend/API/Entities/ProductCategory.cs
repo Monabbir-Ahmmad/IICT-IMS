@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace API.Entities
+﻿namespace API.Entities
 {
-    public class ProductCategory
+    public class ProductCategory : BaseEntity
     {
-        public int Id { get; set; }
-
-        [Required]
         public string Name { get; set; }
     }
 }

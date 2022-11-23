@@ -3,6 +3,7 @@
     public class ProcurementResDto
     {
         public int Id { get; set; }
+
         public string Title { get; set; }
 
         public string Category { get; set; }
@@ -11,7 +12,13 @@
 
         public DateTime Deadline { get; set; }
 
-        public float EstimatedTotalPrice { get; set; }
+        public decimal EstimatedTotalPrice { get; set; }
+
+        public string Status { get; set; }
+
+        public bool IsApproved { get; set; }
+
+        public UserResDto CreatedBy { get; set; }
 
         public List<ProcurementProductResDto> Products { get; set; }
 

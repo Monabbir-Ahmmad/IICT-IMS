@@ -1,11 +1,13 @@
+using System.Net.Http.Headers;
 using API.DTOs.Request;
 using API.DTOs.Response;
-using API.Entities;
-using API.Interfaces.Auth;
+using API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
@@ -20,130 +22,79 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResDto>> Register(RegisterReqDto registerDto)
+        public async Task<ActionResult> Register(RegisterReqDto registerDto)
         {
-            try
-            {
-                if (await _authService.UserExists(registerDto.Email))
-                    return Conflict("User already exists");
+            await _authService.RegisterUser(registerDto);
 
-                var result = await _authService.RegisterUser(registerDto);
-
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
-
-                return Created("User created", result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return NoContent();
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<AuthResDto>> Login(LoginReqDto loginDto)
         {
-            try
-            {
-                var result = await _authService.LoginUser(loginDto);
+            var result = await _authService.LoginUser(loginDto);
 
-                if (result == null)
-                    return Unauthorized("Invalid credentials");
+            SetHeaderCookie(result.AccessToken);
 
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return Ok(result);
         }
 
         [HttpPost("supplier/register")]
-        public async Task<ActionResult<AuthResDto>> SupplierRegister(
-            SupplierRegisterReqDto supplierRegisterDto
-        )
+        public async Task<ActionResult> SupplierRegister(SupplierRegisterReqDto supplierRegisterDto)
         {
-            try
-            {
-                if (
-                    await _authService.SupplierExists(
-                        supplierRegisterDto.BIN,
-                        supplierRegisterDto.Email,
-                        supplierRegisterDto.CompanyName
-                    )
-                )
-                    return Conflict("Supplier already exists");
+            await _authService.RegisterSupplier(supplierRegisterDto);
 
-                var result = await _authService.RegisterSupplier(supplierRegisterDto);
-
-                if (result == null)
-                    return BadRequest("Failed to create supplier");
-
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
-
-                return Created("Supplier created", result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+            return NoContent();
         }
 
         [HttpPost("supplier/login")]
         public async Task<ActionResult<AuthResDto>> SupplierLogin(LoginReqDto loginDto)
         {
-            try
-            {
-                var result = await _authService.LoginUser(loginDto);
+            var result = await _authService.LoginSupplier(loginDto);
 
-                if (result == null)
-                    return Unauthorized("Invalid credentials");
+            SetHeaderCookie(result.AccessToken);
 
-                HttpContext.Response.Cookies.Append(
-                    "authorization",
-                    result.Token.ToString(),
-                    new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
-                );
+            return Ok(result);
+        }
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("{ErrorMessage}", ex.Message);
+        [HttpPost("logout")]
+        public Task<ActionResult> Logout()
+        {
+            HttpContext.Response.Cookies.Delete("authorization");
+            return Task.FromResult<ActionResult>(Ok());
+        }
 
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    new { response = "Something went wrong." }
-                );
-            }
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordReqDto forgotPasswordDto)
+        {
+            await _authService.ForgotPassword(forgotPasswordDto);
+
+            return NoContent();
+        }
+
+        [HttpGet("reset-password/{token}")]
+        public async Task<ActionResult> ResetPassword(string token)
+        {
+            var newPassword = await _authService.ResetPassword(token);
+
+            return Ok("New password: " + newPassword);
+        }
+
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult<AuthResDto>> RefreshToken(RefreshTokenReqDto refreshTokenReq)
+        {
+            var result = await _authService.RefreshToken(refreshTokenReq.RefreshToken);
+            SetHeaderCookie(result.AccessToken);
+            return Ok(result);
+        }
+
+        private void SetHeaderCookie(string token)
+        {
+            HttpContext.Response.Cookies.Append(
+                "authorization",
+                new AuthenticationHeaderValue("Bearer", token).ToString(),
+                new CookieOptions { HttpOnly = false, Expires = DateTime.Now.AddDays(7) }
+            );
         }
     }
 }

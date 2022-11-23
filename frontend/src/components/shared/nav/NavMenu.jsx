@@ -1,23 +1,27 @@
-import { Button, MenuList, Stack, Toolbar } from "@mui/material";
+import { Button, List, Stack, Toolbar } from "@mui/material";
 import {
-  RiHome5Line as HomeIcon,
+  RiDashboardLine as DashboardIcon,
   RiShutDownLine as LogoutIcon,
-  RiTeamLine as PeopleIcon,
-  RiArchiveLine as ProductIcon,
-  RiShoppingCartLine as ProcurementIcon,
+  RiArchiveLine as InventoryIcon,
+  RiFileList3Line as ProcurementIcon,
   RiFileList3Line as QuotationIcon,
   RiUser6Line as UserIcon,
+  RiShoppingCartLine as OrderRequestIcon,
+  RiShoppingCartLine as PurchaseOrderIcon,
+  RiDownload2Line as ReceiveReturnIcon,
+  RiUpload2Line as DistributionIcon,
 } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import NavLinkItem from "./NavLinkItem";
 import { logout } from "../../../redux/actions/auth.actions";
 import { useNavigate } from "react-router-dom";
+import { UserRoles } from "../../../constants/enums";
 
 function NavMenu() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { userAuthInfo } = useSelector((state) => state.userLogin);
+  const { userAuth } = useSelector((state) => state.userLogin);
 
   const handleLogoutClick = () => {
     dispatch(logout());
@@ -28,30 +32,97 @@ function NavMenu() {
     <Stack height={"100%"}>
       <Toolbar />
 
-      <MenuList sx={{ flex: 1 }}>
-        <NavLinkItem title={"Home"} link={"/home"} icon={HomeIcon} />
+      <List component={"nav"} sx={{ flex: 1 }}>
+        <NavLinkItem
+          title={"Admin Dashboard"}
+          link={"/admin-dashboard"}
+          icon={DashboardIcon}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.DIRECTOR]}
+        />
 
         <NavLinkItem
           title={"Profile"}
-          link={`/profile/${userAuthInfo?.id}`}
+          link={`/profile/${userAuth?.id}`}
           icon={UserIcon}
         />
-        <NavLinkItem title={"Products"} link={"/products"} icon={ProductIcon} />
-
-        <NavLinkItem title={"Users"} link={"/users"} icon={PeopleIcon} />
 
         <NavLinkItem
           title={"Procurements"}
           link={"/procurements"}
           icon={ProcurementIcon}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+          ]}
         />
 
         <NavLinkItem
           title={"Quotations"}
           link={"/quotations"}
           icon={QuotationIcon}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]}
         />
-      </MenuList>
+
+        <NavLinkItem
+          title={"Purchase Orders"}
+          link={"/purchase-orders"}
+          icon={PurchaseOrderIcon}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+          ]}
+        />
+
+        <NavLinkItem
+          title={"Order Requests"}
+          link={"/order-requests"}
+          icon={OrderRequestIcon}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]}
+        />
+
+        <NavLinkItem
+          title={"Inventory"}
+          link={"/inventory"}
+          icon={InventoryIcon}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+            UserRoles.EMPLOYEE,
+          ]}
+        />
+
+        <NavLinkItem
+          title={"Distribution"}
+          link={"/distribution"}
+          icon={DistributionIcon}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+          ]}
+        />
+
+        <NavLinkItem
+          title={"Receive Returns"}
+          link={"/receive-returns"}
+          icon={ReceiveReturnIcon}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+          ]}
+        />
+      </List>
 
       <Button
         variant="outlined"

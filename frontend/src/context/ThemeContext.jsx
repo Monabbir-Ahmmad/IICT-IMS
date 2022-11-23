@@ -29,7 +29,7 @@ function ThemeContextProvider({ children }) {
     () =>
       createTheme({
         typography: {
-          fontFamily: "Montserrat",
+          fontFamily: "Noto Sans",
           fontWeightLight: 400,
           fontWeightRegular: 500,
           fontWeightMedium: 600,

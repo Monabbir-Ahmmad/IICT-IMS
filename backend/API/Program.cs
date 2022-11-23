@@ -1,31 +1,35 @@
+using System.Text.Json.Serialization;
+using API.Config;
 using API.Database;
-using API.Interfaces.Auth;
-using API.Interfaces.Procurement;
-using API.Interfaces.ProductCategory;
-using API.Interfaces.Quotation;
+using API.Database.Seed;
 using API.Middlewares;
-using API.Services.Auth;
-using API.Services.Procurements;
-using API.Services.ProductCategories;
-using API.Services.Quotations;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     options.EnableSensitiveDataLogging();
 });
 
+builder.Services.Configure<FormOptions>(x =>
+{
+    x.ValueLengthLimit = int.MaxValue;
+    x.MultipartBodyLengthLimit = int.MaxValue;
+    x.MemoryBufferThreshold = int.MaxValue;
+});
+
 // Dependency injections
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IProcurementService, ProcurementService>();
-builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
-builder.Services.AddScoped<IQuotationService, QuotationService>();
+builder.Services.AddScopedServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,7 +38,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -42,14 +45,42 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(
+    x => x.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+);
+
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 
-app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+// app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+app.UseStaticFiles(
+    new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "Resources")
+        ),
+        RequestPath = "/Resources"
+    }
+);
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+try
+{
+    var context = services.GetRequiredService<DatabaseContext>();
+    await context.Database.MigrateAsync();
+    await SeedDatabase.SeedDataAsync(context);
+}
+catch (Exception ex)
+{
+    var logger = loggerFactory.CreateLogger<Program>();
+    logger.LogError(ex, "An error occurred during migration");
+}
 
 app.Run();

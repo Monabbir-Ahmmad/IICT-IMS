@@ -1,9 +1,10 @@
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
-import { alpha, Box, Button, Typography } from "@mui/material";
+import { alpha, Box, Button, Paper, Typography } from "@mui/material";
 import { MdDelete as DeleteIcon, MdAdd as AddIcon } from "react-icons/md";
 import EmptyTableOverlay from "../../shared/dataTable/EmptyTableOverlay";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 import { currencyFormatter } from "../../../utils/utilities";
+import { useState } from "react";
 
 function CustomeToolbar({
   onAddNewRowClick,
@@ -27,17 +28,23 @@ function CustomeToolbar({
         sx={{ m: 1.5, mr: "auto" }}
         onClick={onAddNewRowClick}
       >
-        Add New Product To List
+        Add Product
       </Button>
 
       {selectedRows.length > 0 && (
-        <Box display={"flex"} alignItems={"center"} gap={3} m={1.5}>
+        <Box
+          display={"flex"}
+          flexDirection={{ xs: "row-reverse", sm: "row" }}
+          alignItems={"center"}
+          gap={3}
+          m={1.5}
+        >
           <Typography>{selectedRows.length} Rows Selected</Typography>
           <Button
             startIcon={<DeleteIcon />}
             variant="contained"
             color="error"
-            onClick={onSelectedRowDeleteClick}
+            onClick={() => onSelectedRowDeleteClick(selectedRows)}
           >
             Delete
           </Button>
@@ -51,34 +58,57 @@ const columns = [
   {
     field: "name",
     headerName: "Name",
-    width: 300,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     renderCell: RenderCellExpand,
   },
   {
     field: "manufacturer",
     headerName: "Manufacturer",
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     renderCell: RenderCellExpand,
-    width: 200,
   },
   {
     field: "details",
     headerName: "Details",
-    width: 400,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     renderCell: RenderCellExpand,
   },
   {
     field: "estimatedPrice",
     headerName: "Estimated Price",
     type: "number",
-    width: 150,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     valueFormatter: ({ value }) => currencyFormatter().format(value),
   },
-  { field: "quantity", headerName: "Quantity", type: "number", width: 150 },
+  {
+    field: "quantity",
+    headerName: "Quantity",
+    type: "number",
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
+  },
   {
     field: "estimatedTotalPrice",
     headerName: "Estimated Total Price",
     type: "number",
-    width: 200,
+    headerAlign: "center",
+    align: "center",
+    flex: 1,
+    minWidth: 100,
     valueFormatter: ({ value }) => currencyFormatter().format(value),
   },
 ];
@@ -86,15 +116,21 @@ const columns = [
 function ProcurementProductTable({
   data = [],
   onAddNewRowClick,
-  onRowSelectionChange,
   onSelectedRowDeleteClick,
-  selectedRows,
 }) {
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const onSelectionChange = (newSelectedRows) => {
+    setSelectedRows(newSelectedRows);
+  };
+
   return (
-    <div style={{ height: 650, width: "100%" }}>
+    <Paper variant="outlined" sx={{ height: 650 }}>
       <DataGrid
         rows={data}
         columns={columns}
+        disableColumnMenu
+        disableColumnFilter
         checkboxSelection
         disableSelectionOnClick
         hideFooterSelectedRowCount
@@ -109,10 +145,10 @@ function ProcurementProductTable({
             selectedRows,
           },
         }}
-        onSelectionModelChange={onRowSelectionChange}
+        onSelectionModelChange={onSelectionChange}
         sx={{ border: 0 }}
       />
-    </div>
+    </Paper>
   );
 }
 

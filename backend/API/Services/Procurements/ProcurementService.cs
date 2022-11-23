@@ -3,6 +3,7 @@ using API.Database;
 using API.DTOs.Request;
 using API.DTOs.Response;
 using API.Entities;
+using API.Enums;
 using API.Errors;
 using API.Interfaces.Procurement;
 using AutoMapper;
@@ -23,40 +24,62 @@ namespace API.Services.Procurements
 
         public async Task<ProcurementResDto> CreateProcurement(ProcurementReqDto procurementReqDto)
         {
-            var procurementCategory = await _context.ProductCategories
+            var createdBy = await _context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == procurementReqDto.CreatedById);
+
+            if (createdBy == null)
+                throw new NotFoundException("User not found.");
+
+            if (!UserRoleEnum.ProcurementMakerRoles.Contains(createdBy.Role.Name))
+                throw new BadRequestException("User is not allowed to create procurement.");
+
+            var procurementCategory = await _context.Categories
                 .Where(x => x.Id == procurementReqDto.ProcurementCategoryId)
                 .FirstOrDefaultAsync();
 
             if (procurementCategory == null)
                 throw new NotFoundException("Procurement category not found.");
 
+            var estimatedTotalPrice = procurementReqDto.Products.Sum(
+                x => x.EstimatedPrice * x.Quantity
+            );
+
+            if (estimatedTotalPrice > 300000)
+                throw new BadRequestException(
+                    "Estimated subtotal price cannot be greater than 300,000."
+                );
+
             var procurement = new Procurement
             {
+                CreatedBy = createdBy,
                 Title = procurementReqDto.Title,
                 Category = procurementCategory,
-                EstimatedTotalPrice = procurementReqDto.EstimatedTotalPrice,
-                Deadline = procurementReqDto.TenderDeadline,
-                Products = procurementReqDto.Products.ConvertAll<ProcurementProduct>(
-                    x =>
-                        new ProcurementProduct
+                EstimatedTotalPrice = estimatedTotalPrice,
+                Deadline = procurementReqDto.Deadline,
+                Status = StatusEnum.PendingApproval,
+                Products = procurementReqDto.Products.ConvertAll<ProcurementProduct>(x =>
+                {
+                    return new ProcurementProduct
+                    {
+                        Product = new Product
                         {
                             Name = x.Name,
                             Category = procurementCategory,
                             Manufacturer = x.Manufacturer,
                             Details = x.Details,
-                            EstimatedPrice = x.EstimatedPrice,
-                            Quantity = x.Quantity,
-                            EstimatedTotalPrice = x.EstimatedTotalPrice
-                        }
-                )
+                        },
+                        EstimatedPrice = x.EstimatedPrice,
+                        Quantity = x.Quantity,
+                    };
+                })
             };
 
             _context.Procurements.Add(procurement);
+
             await _context.SaveChangesAsync();
 
-            var procurementResDto = _mapper.Map<ProcurementResDto>(procurement);
-
-            return procurementResDto;
+            return _mapper.Map<ProcurementResDto>(procurement);
         }
 
         public async Task<bool> DeleteProcurement(int id)
@@ -65,8 +88,14 @@ namespace API.Services.Procurements
 
             if (procurement == null)
                 throw new NotFoundException("Procurement not found.");
+            if (procurement.Status == StatusEnum.OfferAccepted)
+                throw new ApiException(
+                    HttpStatusCode.Forbidden,
+                    "Can't delete procurement after accepting an offer."
+                );
 
             _context.Procurements.Remove(procurement);
+
             var result = await _context.SaveChangesAsync();
 
             return result > 0;
@@ -78,41 +107,34 @@ namespace API.Services.Procurements
                 .Where(x => x.Id == id)
                 .Include(x => x.Category)
                 .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Quotations)
                 .ThenInclude(x => x.Supplier)
+                .ThenInclude(s => s.Category)
+                .Include(x => x.CreatedBy)
+                .ThenInclude(x => x.Role)
                 .FirstOrDefaultAsync();
 
             if (procurement == null)
                 throw new NotFoundException("Procurement not found.");
 
-            var procurementResDto = _mapper.Map<ProcurementResDto>(procurement);
-
-            return procurementResDto;
+            return _mapper.Map<ProcurementResDto>(procurement);
         }
 
-        public async Task<List<ProcurementResDto>> GetProcurements(
-            ProcurementsGetParams procurementsGetParams
-        )
+        public async Task<List<ProcurementResDto>> GetProcurements()
         {
-            var procurementList = new List<Procurement>();
-
-            IQueryable<Procurement> procurements = _context.Procurements.Include(x => x.Category);
-            if (procurementsGetParams?.CategoryId > 0)
-            {
-                procurements = procurements.Where(
-                    x => x.Category.Id == procurementsGetParams.CategoryId
-                );
-            }
-
-            procurementList = await procurements
+            var procurements = await _context.Procurements
+                .Include(x => x.Category)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.Category)
                 .Include(x => x.Quotations)
                 .ThenInclude(x => x.Supplier)
+                .ThenInclude(s => s.Category)
                 .ToListAsync();
 
-            var procurementListResDto = _mapper.Map<List<ProcurementResDto>>(procurementList);
-
-            return procurementListResDto;
+            return _mapper.Map<List<ProcurementResDto>>(procurements);
         }
     }
 }

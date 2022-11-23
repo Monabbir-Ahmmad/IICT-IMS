@@ -88,7 +88,7 @@ const GridCellExpand = memo(function GridCellExpand(props) {
         <Popper
           open={showFullCell && anchorEl !== null}
           anchorEl={anchorEl}
-          style={{ width, marginLeft: -17, zIndex: 1 }}
+          style={{ width, zIndex: 1 }}
         >
           <Paper
             elevation={1}
