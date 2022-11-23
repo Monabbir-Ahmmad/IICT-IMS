@@ -45,7 +45,6 @@ namespace API.Enums
         {
             Admin,
             Director,
-            OfficeManager,
         };
 
         public static readonly List<string> PurchaseOrderMakerRoles = new List<string>
@@ -60,12 +59,12 @@ namespace API.Enums
         {
             Admin,
             Director,
-            OfficeManager,
         };
 
         public static readonly List<string> InventoryManagementRoles = new List<string>
         {
             Admin,
+            Director,
             StoreManager,
             StoreOfficer
         };

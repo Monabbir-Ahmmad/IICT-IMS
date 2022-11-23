@@ -1,5 +1,6 @@
 //Host of the api
 export const API_URL = "http://localhost:5000";
+export const IMAGE_HOST_URL = "http://localhost:5000/Resources/Images/";
 
 //Authentication
 export const POST_REFRESH_TOKEN = "/auth/refreshToken";
@@ -43,20 +44,25 @@ export const GET_PURCHASE_ORDER_LIST = "/purchaseOrder";
 export const GET_ORDER_REQUEST_LIST = "/purchaseOrder/order-request";
 export const GET_ORDER_REQUEST = "/purchaseOrder/order-request";
 export const GET_PURCHASE_ORDER = "/purchaseOrder";
-export const SEND_PURCHASE_ORDER_DELIVERY = "/purchaseOrder/delivery";
+export const ORDER_RECEIVE_CONFIRM = "/purchaseOrder/order-received";
 export const CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE =
   "/purchaseOrder/delivery/receive";
 
 //Inventory
 export const GET_INVENTORY = "/inventory";
 export const GET_INVENTORY_LIST = "/inventory";
-export const GET_DISTRIBUTABLE_INVENTORY = "/inventory/distributable";
-export const DISTRIBUTE_INVENTORY = "/inventory/distribute";
-export const RECEIVE_RETURN_INVENTORY = "/inventory/receive-return";
-export const GET_RECEIVABLE_INVENTORY = "/inventory/receivable";
 export const GET_INVENTORY_PRODUCT = "/inventory/product";
-export const GET_DISTRIBUTION_HISTORY = "/inventory/distribution-history";
-export const GET_RECEIVE_RETURN_HISTORY = "/inventory/receive-return-history";
+export const UPDATE_INVENTORY_PRODUCT_STATUS = "/inventory/product/status";
+
+//Distribution
+export const GET_DISTRIBUTABLE_INVENTORY = "/distribution/distributable";
+export const DISTRIBUTE_INVENTORY = "/distribution/distribute";
+export const GET_DISTRIBUTION_HISTORY = "/distribution/history";
+
+//Receive Return
+export const RECEIVE_RETURN_INVENTORY = "/receiveReturn/receive-return";
+export const GET_RECEIVABLE_INVENTORY = "/receiveReturn/receivable";
+export const GET_RECEIVE_RETURN_HISTORY = "/receiveReturn/history";
 
 //Admin
 export const GET_PENDING_COUNTS = "/admin/pending-counts";

@@ -6,5 +6,8 @@ namespace API.DTOs.Request
     {
         [Required]
         public int PurchaseOrderId { get; set; }
+
+        [Required]
+        public IFormFile Voucher { get; set; }
     }
 }

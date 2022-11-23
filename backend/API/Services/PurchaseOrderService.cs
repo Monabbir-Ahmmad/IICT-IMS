@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using API.Database;
 using API.DTOs.Params;
 using API.DTOs.Request;
@@ -130,6 +131,7 @@ namespace API.Interfaces
                 .ThenInclude(x => x.Supplier)
                 .Include(x => x.CreatedBy)
                 .ThenInclude(x => x.Role)
+                .Include(x => x.Voucher)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
             if (purchaseOrder == null)
@@ -217,8 +219,8 @@ namespace API.Interfaces
             return _mapper.Map<PurchaseOrderResDto>(orderRequest);
         }
 
-        public async Task<PurchaseOrderResDto> DeliverPurchaseOrderProducts(
-            PurchaseOrderDeliveryReqDto purchaseOrderDeliveryReqDto
+        public async Task<PurchaseOrderResDto> ConfrimOrderRequestReceive(
+            OrderRequestReceiveConfirmDto orderRequestReceiveConfirmDto
         )
         {
             var purchaseOrder = await _context.PurchaseOrders
@@ -229,7 +231,7 @@ namespace API.Interfaces
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
                 .ThenInclude(x => x.Supplier)
-                .SingleOrDefaultAsync(x => x.Id == purchaseOrderDeliveryReqDto.PurchaseOrderId);
+                .SingleOrDefaultAsync(x => x.Id == orderRequestReceiveConfirmDto.PurchaseOrderId);
 
             if (purchaseOrder == null)
                 throw new NotFoundException("Purchase order not found.");
@@ -240,7 +242,7 @@ namespace API.Interfaces
                     "Purchase order has already been delivered."
                 );
 
-            foreach (var product in purchaseOrderDeliveryReqDto.Products)
+            foreach (var product in orderRequestReceiveConfirmDto.Products)
             {
                 var purchaseOrderProduct = purchaseOrder.Products.SingleOrDefault(
                     x => x.Id == product.Id
@@ -256,8 +258,8 @@ namespace API.Interfaces
                 _context.PurchaseOrderProducts.Update(purchaseOrderProduct);
             }
 
-            purchaseOrder.Status = StatusEnum.DeliverySent;
-            purchaseOrder.DeliveryDate = purchaseOrderDeliveryReqDto.DeliveryDate;
+            purchaseOrder.Status = StatusEnum.OrderAccepted;
+            purchaseOrder.DeliveryDate = orderRequestReceiveConfirmDto.DeliveryDate;
 
             _context.PurchaseOrders.Update(purchaseOrder);
             await _context.SaveChangesAsync();
@@ -265,7 +267,9 @@ namespace API.Interfaces
             return _mapper.Map<PurchaseOrderResDto>(purchaseOrder);
         }
 
-        public async Task<PurchaseOrderResDto> ConfirmDeliveryReceive(int purchaseOrderId)
+        public async Task<PurchaseOrderResDto> ConfirmDeliveryReceive(
+            DeliveryConfirmReqDto deliveryConfirmReqDto
+        )
         {
             var purchaseOrder = await _context.PurchaseOrders
                 .Include(x => x.Category)
@@ -275,15 +279,17 @@ namespace API.Interfaces
                 .Include(x => x.Procurement)
                 .Include(x => x.Quotation)
                 .ThenInclude(x => x.Supplier)
-                .SingleOrDefaultAsync(x => x.Id == purchaseOrderId);
+                .SingleOrDefaultAsync(x => x.Id == deliveryConfirmReqDto.PurchaseOrderId);
 
             if (purchaseOrder == null)
                 throw new NotFoundException("Purchase order not found.");
 
-            if (purchaseOrder.Status != StatusEnum.DeliverySent)
-                throw new ApiException(
-                    HttpStatusCode.Conflict,
-                    "Delivery has not been sent or has already been received."
+            if (purchaseOrder.DeliveryDate > DateTime.Now)
+                throw new BadRequestException("Delivery has not been sent yet.");
+
+            if (purchaseOrder.Status != StatusEnum.OrderAccepted)
+                throw new BadRequestException(
+                    "Order has not been accepted or delivery has already been received."
                 );
 
             foreach (var product in purchaseOrder.Products)
@@ -305,6 +311,11 @@ namespace API.Interfaces
 
             purchaseOrder.Status = StatusEnum.DeliveryCompleted;
             purchaseOrder.ReceiveDate = DateTime.Now;
+
+            purchaseOrder.Voucher =
+                deliveryConfirmReqDto.Voucher != null
+                    ? new Voucher { FileName = SaveVoucherImage(deliveryConfirmReqDto.Voucher) }
+                    : null;
 
             _context.PurchaseOrders.Update(purchaseOrder);
             await _context.SaveChangesAsync();
@@ -329,6 +340,48 @@ namespace API.Interfaces
             var result = await _context.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        private string SaveVoucherImage(IFormFile file)
+        {
+            try
+            {
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                if (!Directory.Exists(pathToSave))
+                {
+                    Directory.CreateDirectory(pathToSave);
+                }
+
+                if (file.Length > 0)
+                {
+                    //Create filename with unique guid
+                    var fileName =
+                        Guid.NewGuid()
+                        + ContentDispositionHeaderValue
+                            .Parse(file.ContentDisposition)
+                            .FileName.Trim('"');
+
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    return fileName;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

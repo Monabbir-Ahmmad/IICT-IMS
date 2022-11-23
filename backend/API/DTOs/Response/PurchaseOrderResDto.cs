@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using API.Entities;
 
 namespace API.DTOs.Response
 {
@@ -28,6 +25,8 @@ namespace API.DTOs.Response
         public SupplierResDto Supplier { get; set; }
 
         public UserResDto CreatedBy { get; set; }
+
+        public Voucher Voucher { get; set; }
 
         public List<PurchaseOrderProductResDto> Products { get; set; }
 

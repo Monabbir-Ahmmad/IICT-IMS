@@ -89,17 +89,17 @@ export const getPurchaseOrders = () => async (dispatch) => {
   }
 };
 
-export const sendDelivery = (data) => async (dispatch) => {
+export const confirmOrderReceive = (data) => async (dispatch) => {
   try {
     dispatch({ type: DELIVER_PURCHASE_ORDER_REQUEST });
 
-    const res = await purchaseOrderService.sendDelivery(data);
+    const res = await purchaseOrderService.confirmOrderReceive(data);
 
     dispatch({ type: DELIVER_PURCHASE_ORDER_SUCCESS });
 
     dispatch({ type: GET_PURCHASE_ORDER_SUCCESS, payload: res.data });
 
-    dispatch(showSuccessAlert("Delivery sent successfully"));
+    dispatch(showSuccessAlert("Order accepted successfully"));
   } catch (error) {
     const errorMessage =
       error.response && error.response.data?.message
@@ -118,11 +118,14 @@ export const sendDelivery = (data) => async (dispatch) => {
   }, 5000);
 };
 
-export const confirmDelivery = (id) => async (dispatch) => {
+export const confirmDelivery = (id, voucherImage) => async (dispatch) => {
   try {
     dispatch({ type: CONFIRM_DELIVERY_REQUEST });
 
-    const res = await purchaseOrderService.confirmDeliveryReceive(id);
+    const res = await purchaseOrderService.confirmDeliveryReceive(
+      id,
+      voucherImage
+    );
 
     dispatch({ type: CONFIRM_DELIVERY_SUCCESS });
 

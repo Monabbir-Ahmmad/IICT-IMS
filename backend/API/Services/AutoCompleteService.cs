@@ -36,7 +36,10 @@ namespace API.Services
 
         public async Task<List<UserResDto>> GetUsers()
         {
-            var users = await _context.Users.Include(x => x.Role).ToListAsync();
+            var users = await _context.Users
+                .Include(x => x.Role)
+                .Where(x => x.IsVerified)
+                .ToListAsync();
 
             return _mapper.Map<List<UserResDto>>(users);
         }

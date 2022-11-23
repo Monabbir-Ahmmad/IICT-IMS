@@ -19,5 +19,7 @@ namespace API.DTOs.Response
         public string Status { get; set; }
 
         public DistributionResDto CurrentDistribution { get; set; }
+
+        public PurchaseOrderResDto PurchaseOrder { get; set; }
     }
 }

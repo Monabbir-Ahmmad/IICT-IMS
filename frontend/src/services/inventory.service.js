@@ -8,6 +8,7 @@ import {
   GET_RECEIVABLE_INVENTORY,
   GET_RECEIVE_RETURN_HISTORY,
   RECEIVE_RETURN_INVENTORY,
+  UPDATE_INVENTORY_PRODUCT_STATUS,
 } from "../constants/apiLinks";
 import api from "./api";
 
@@ -76,6 +77,10 @@ class InventoryService {
     });
   }
 
+  async getDistribution(id) {
+    return await api().get(`${GET_DISTRIBUTION_HISTORY}/${id}`);
+  }
+
   async getReceiveReturnHistory(filter, sort, pageNumber = 0, pageSize = 20) {
     return await api().get(GET_RECEIVE_RETURN_HISTORY, {
       params: {
@@ -84,6 +89,17 @@ class InventoryService {
         pageNumber,
         pageSize,
       },
+    });
+  }
+
+  async getReceiveReturn(id) {
+    return await api().get(`${GET_RECEIVE_RETURN_HISTORY}/${id}`);
+  }
+
+  async updateProductStatus(productId, status) {
+    return await api().put(UPDATE_INVENTORY_PRODUCT_STATUS, {
+      productId,
+      status,
     });
   }
 }

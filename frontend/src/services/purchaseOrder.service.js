@@ -5,7 +5,7 @@ import {
   GET_ORDER_REQUEST_LIST,
   GET_PURCHASE_ORDER,
   GET_PURCHASE_ORDER_LIST,
-  SEND_PURCHASE_ORDER_DELIVERY,
+  ORDER_RECEIVE_CONFIRM,
 } from "../constants/apiLinks";
 import api from "./api";
 
@@ -33,14 +33,19 @@ class PurchaseOrderService {
     return await api().get(`${GET_PURCHASE_ORDER}/${id}`);
   }
 
-  async sendDelivery(data) {
-    return await api().post(SEND_PURCHASE_ORDER_DELIVERY, data);
+  async confirmOrderReceive(data) {
+    return await api().post(ORDER_RECEIVE_CONFIRM, data);
   }
 
-  async confirmDeliveryReceive(purchaseOrderId) {
-    return await api().post(CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE, {
-      purchaseOrderId,
-    });
+  async confirmDeliveryReceive(purchaseOrderId, voucherImage) {
+    const formData = new FormData();
+    formData.append("purchaseOrderId", purchaseOrderId);
+    formData.append("voucher", voucherImage);
+
+    return await api("multipart/form-data").post(
+      CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE,
+      formData
+    );
   }
 
   async getOrderRequestList(filter, sort, pageNumber = 0, pageSize = 20) {

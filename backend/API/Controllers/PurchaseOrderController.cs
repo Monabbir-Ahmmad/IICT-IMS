@@ -89,14 +89,12 @@ namespace API.Controllers
         }
 
         [Authorize(UserRoleEnum.Admin, UserRoleEnum.Supplier)]
-        [HttpPost("delivery")]
-        public async Task<ActionResult<PurchaseOrderResDto>> DeliverPurchaseOrderProducts(
-            PurchaseOrderDeliveryReqDto purchaseOrderDeliveryReqDto
+        [HttpPost("order-received")]
+        public async Task<ActionResult<PurchaseOrderResDto>> ConfirmOrderRequestReceive(
+            OrderRequestReceiveConfirmDto orderReceiveConfirmDto
         )
         {
-            return await _purchaseOrderService.DeliverPurchaseOrderProducts(
-                purchaseOrderDeliveryReqDto
-            );
+            return await _purchaseOrderService.ConfrimOrderRequestReceive(orderReceiveConfirmDto);
         }
 
         [Authorize(
@@ -107,12 +105,10 @@ namespace API.Controllers
         )]
         [HttpPost("delivery/receive")]
         public async Task<ActionResult<PurchaseOrderResDto>> ConfirmDeliveryReceive(
-            DeliveryConfirmReqDto deliveryConfirmReqDto
+            [FromForm] DeliveryConfirmReqDto deliveryConfirmReqDto
         )
         {
-            return await _purchaseOrderService.ConfirmDeliveryReceive(
-                deliveryConfirmReqDto.PurchaseOrderId
-            );
+            return await _purchaseOrderService.ConfirmDeliveryReceive(deliveryConfirmReqDto);
         }
     }
 }
