@@ -3,12 +3,18 @@ import InventroyProductListTable from "../ui/InventoryProductListTable";
 import { useEffect } from "react";
 import { RiAddFill as AddIcon } from "react-icons/ri";
 import { useState } from "react";
-import InventoryProductDetailsDialog from "../ui/InventoryProductDetailsDialog";
 import SearchFilter from "../../shared/searchFilter/SearchFilter";
 import { inventoryFilterDef } from "../../shared/searchFilter/filterData";
 import inventoryService from "../../../services/inventory.service";
+import { useNavigate } from "react-router-dom";
+import ProductStatusUpdaterDialog from "../ui/ProductStatusUpdaterDialog";
+import { useDispatch } from "react-redux";
+import { showSuccessAlert } from "../../../redux/actions/alertSnackbar.actions";
 
 function InventoryPage() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [inventoryList, setInventoryList] = useState({
     data: [],
     rowCount: 0,
@@ -22,8 +28,7 @@ function InventoryPage() {
     pageNumber: 0,
   });
 
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const [inventoryProductId, setInventoryProductId] = useState(null);
+  const [productToEdit, setProductToEdit] = useState();
 
   useEffect(() => {
     getInventory(filter, sort, pagination.pageNumber);
@@ -34,8 +39,7 @@ function InventoryPage() {
   }, [filter, sort]);
 
   const onRowClick = (id) => {
-    setInventoryProductId(id);
-    setOpenDetailsDialog(true);
+    navigate(`./${id}`);
   };
 
   const onSortChange = (sortModel) => {
@@ -62,7 +66,7 @@ function InventoryPage() {
   };
 
   const getInventory = async () => {
-    setInventoryList({ ...inventoryList, loading: true });
+    setInventoryList({ ...inventoryList, loading: true, error: null });
     try {
       const { data } = await inventoryService.getList(
         filter,
@@ -88,14 +92,35 @@ function InventoryPage() {
     }
   };
 
+  const onStatusEditClick = (id) => {
+    setProductToEdit(id);
+  };
+
+  const onStatusEditConfirm = async (id, status) => {
+    setProductToEdit(null);
+    setInventoryList({ ...inventoryList, loading: true, error: null });
+    try {
+      await inventoryService.updateProductStatus(id, status);
+      setInventoryList({
+        ...inventoryList,
+        data: inventoryList.data.map((p) =>
+          p.id === id ? { ...p, status } : p
+        ),
+        loading: false,
+      });
+
+      dispatch(showSuccessAlert("Product status updated successfully"));
+    } catch (error) {
+      setInventoryList({
+        ...inventoryList,
+        loading: false,
+        error: error.message,
+      });
+    }
+  };
+
   return (
     <Stack spacing={3}>
-      <InventoryProductDetailsDialog
-        open={openDetailsDialog}
-        onClose={() => setOpenDetailsDialog(false)}
-        inventoryProductId={inventoryProductId}
-      />
-
       <Button
         variant="contained"
         startIcon={<AddIcon />}
@@ -107,6 +132,13 @@ function InventoryPage() {
       {inventoryList.error && (
         <Alert severity="error">{inventoryList.error}</Alert>
       )}
+
+      <ProductStatusUpdaterDialog
+        open={!!productToEdit}
+        onClose={() => setProductToEdit(null)}
+        onConfirmStatusChange={onStatusEditConfirm}
+        inventoryProductId={productToEdit}
+      />
 
       <Typography variant="h5">Product list</Typography>
 
@@ -126,6 +158,7 @@ function InventoryPage() {
           pageNumber={pagination.pageNumber}
           rowCount={inventoryList.rowCount}
           pageSize={20}
+          onStatusEditClick={onStatusEditClick}
         />
       </div>
     </Stack>

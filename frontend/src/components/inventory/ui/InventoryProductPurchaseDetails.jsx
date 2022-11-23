@@ -1,71 +1,23 @@
-import {
-  Button,
-  Chip,
-  Divider,
-  LinearProgress,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Chip, Divider, Link, Paper, Typography } from "@mui/material";
+import { Stack } from "@mui/system";
 import moment from "moment";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { currencyFormatter, statusColors } from "../../../utils/utilities";
-import {
-  confirmDelivery,
-  getPurchaseOrder,
-} from "../../../redux/actions/purchaseOrder.action";
-import PurchaseOrderProductTable from "../ui/PurchaseOrderProductTable";
-import { Status } from "../../../constants/enums";
-import PurchaseOrderReceiveConfirmer from "../ui/PurchaseOrderReceiveConfirmer";
-import ImageViewer from "../../shared/imageViewer/ImageViewer";
+import { Link as RouterLink } from "react-router-dom";
 import { IMAGE_HOST_URL } from "../../../constants/apiLinks";
+import { currencyFormatter, statusColors } from "../../../utils/utilities";
+import ImageViewer from "../../shared/imageViewer/ImageViewer";
 
-function PurchaseOrderDetailsPage() {
-  const dispatch = useDispatch();
-
-  const { purchaseOrder, loading } = useSelector(
-    (state) => state.purchaseOrderDetails
-  );
-
-  const { purchaseOrderId } = useParams();
-
-  const [deliveryReceiveConfirmOpen, setDeliveryReceiveConfirmOpen] =
-    useState(false);
-
-  useEffect(() => {
-    dispatch(getPurchaseOrder(purchaseOrderId));
-  }, [dispatch, purchaseOrderId]);
-
-  const onDeliveryReceiveConfirmClick = (voucherImage) => {
-    dispatch(confirmDelivery(purchaseOrderId, voucherImage));
-    setDeliveryReceiveConfirmOpen(false);
-  };
-
+function InventoryProductPurchaseDetails({ purchaseOrder }) {
   return (
     <Stack spacing={2}>
-      {loading && <LinearProgress />}
-
-      <PurchaseOrderReceiveConfirmer
-        open={deliveryReceiveConfirmOpen}
-        onClose={() => setDeliveryReceiveConfirmOpen(false)}
-        onConfirm={onDeliveryReceiveConfirmClick}
-      />
-
-      {purchaseOrder?.status !== Status.DeliveryCompleted && (
-        <Button
-          variant="contained"
-          sx={{ alignSelf: "flex-start" }}
-          onClick={() => setDeliveryReceiveConfirmOpen(true)}
-          disabled={purchaseOrder?.status !== Status.OrderAccepted}
-        >
-          Confirm Delivery Receive
-        </Button>
-      )}
-
       <Typography variant="h5">
-        Order #{purchaseOrder?.id}{" "}
+        Purchase Order
+        <Link
+          component={RouterLink}
+          to={"/purchase-orders/" + purchaseOrder?.id}
+          underline="hover"
+        >
+          #{purchaseOrder?.id}
+        </Link>{" "}
         <Chip
           variant="outlined"
           label={purchaseOrder?.status}
@@ -191,13 +143,7 @@ function PurchaseOrderDetailsPage() {
           </Stack>
         </Paper>
       </Stack>
-      <Typography variant="h6" sx={{ pt: 3 }}>
-        Product List
-      </Typography>
-
-      <PurchaseOrderProductTable data={purchaseOrder?.products} />
     </Stack>
   );
 }
-
-export default PurchaseOrderDetailsPage;
+export default InventoryProductPurchaseDetails;

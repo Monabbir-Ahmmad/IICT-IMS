@@ -21,7 +21,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import {
   getOrderRequest,
-  sendDelivery,
+  confirmOrderReceive,
 } from "../../../redux/actions/purchaseOrder.action";
 import { showErrorAlert } from "../../../redux/actions/alertSnackbar.actions";
 
@@ -87,7 +87,11 @@ function OrderRequestDetailsPage() {
       purchaseOrder.totalPrice
     )
       dispatch(
-        sendDelivery({ ...values, purchaseOrderId, products: orderedProducts })
+        confirmOrderReceive({
+          ...values,
+          purchaseOrderId,
+          products: orderedProducts,
+        })
       );
     else
       dispatch(
@@ -110,7 +114,7 @@ function OrderRequestDetailsPage() {
               startIcon={<DeliveryIcon />}
               disabled={orderedProducts?.some((p) => !p.unitPrice)}
             >
-              Send Order Delivery
+              Confirm Order Receive
             </Button>
 
             <Controller

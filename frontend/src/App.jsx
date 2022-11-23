@@ -25,6 +25,9 @@ import DistributionPage from "./components/distribution/page/DistributionPage";
 import ReceiveReturnPage from "./components/receive_return/page/ReceiveReturnPage";
 import AdminDashboardPage from "./components/admin/page/AdminDashboardPage";
 import ProfilePage from "./components/profile/page/ProfilePage";
+import InventoryProductPage from "./components/inventory/page/InventoryProductPage";
+import DistributionDetailsPage from "./components/distribution/page/DistributionDetailsPage";
+import ReceiveReturnDetailsPage from "./components/receive_return/page/ReceiveReturnDetailsPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -58,25 +61,78 @@ function App() {
         <Route path="/" element={<NavDrawer />}>
           <Route path="profile/:id" element={<ProfilePage />} />
 
-          <Route element={<AuthGuard allowedRoles={[UserRoles.ADMIN]} />}>
+          <Route
+            element={
+              <AuthGuard allowedRoles={[UserRoles.ADMIN, UserRoles.DIRECTOR]} />
+            }
+          >
             <Route path="admin-dashboard" element={<AdminDashboardPage />} />
+          </Route>
 
+          <Route
+            element={
+              <AuthGuard
+                allowedRoles={[
+                  UserRoles.ADMIN,
+                  UserRoles.DIRECTOR,
+                  UserRoles.OFFICE_MANAGER,
+                  UserRoles.OFFICE_OFFICER,
+                  UserRoles.STORE_MANAGER,
+                  UserRoles.STORE_OFFICER,
+                  UserRoles.EMPLOYEE,
+                ]}
+              />
+            }
+          >
             <Route path="inventory" element={<InventoryPage />} />
+            <Route path="inventory/:id" element={<InventoryProductPage />} />
+          </Route>
 
+          <Route
+            element={
+              <AuthGuard
+                allowedRoles={[
+                  UserRoles.ADMIN,
+                  UserRoles.DIRECTOR,
+                  UserRoles.STORE_MANAGER,
+                  UserRoles.STORE_OFFICER,
+                ]}
+              />
+            }
+          >
             <Route path="distribution" element={<DistributionPage />} />
-
+            <Route
+              path="distribution/:id"
+              element={<DistributionDetailsPage />}
+            />
             <Route
               path="distribution/distribute"
               element={<ProductDistributionPage />}
             />
 
             <Route path="receive-returns" element={<ReceiveReturnPage />} />
-
+            <Route
+              path="receive-returns/:id"
+              element={<ReceiveReturnDetailsPage />}
+            />
             <Route
               path="receive-returns/receive"
               element={<ProductReturnReceivePage />}
             />
+          </Route>
 
+          <Route
+            element={
+              <AuthGuard
+                allowedRoles={[
+                  UserRoles.ADMIN,
+                  UserRoles.DIRECTOR,
+                  UserRoles.OFFICE_MANAGER,
+                  UserRoles.OFFICE_OFFICER,
+                ]}
+              />
+            }
+          >
             <Route
               path="procurements/create"
               element={<ProcurementCreatePage />}
@@ -96,7 +152,11 @@ function App() {
             />
           </Route>
 
-          <Route element={<AuthGuard />}>
+          <Route
+            element={
+              <AuthGuard allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]} />
+            }
+          >
             <Route path="quotations" element={<QuotationPage />} />
 
             <Route

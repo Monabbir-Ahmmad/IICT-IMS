@@ -37,7 +37,7 @@ function NavMenu() {
           title={"Admin Dashboard"}
           link={"/admin-dashboard"}
           icon={DashboardIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.DIRECTOR]}
         />
 
         <NavLinkItem
@@ -50,7 +50,12 @@ function NavMenu() {
           title={"Procurements"}
           link={"/procurements"}
           icon={ProcurementIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+          ]}
         />
 
         <NavLinkItem
@@ -64,8 +69,14 @@ function NavMenu() {
           title={"Purchase Orders"}
           link={"/purchase-orders"}
           icon={PurchaseOrderIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+          ]}
         />
+
         <NavLinkItem
           title={"Order Requests"}
           link={"/order-requests"}
@@ -77,21 +88,39 @@ function NavMenu() {
           title={"Inventory"}
           link={"/inventory"}
           icon={InventoryIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+            UserRoles.EMPLOYEE,
+          ]}
         />
 
         <NavLinkItem
           title={"Distribution"}
           link={"/distribution"}
           icon={DistributionIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+          ]}
         />
 
         <NavLinkItem
           title={"Receive Returns"}
           link={"/receive-returns"}
           icon={ReceiveReturnIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+          ]}
         />
       </List>
 
