@@ -4,7 +4,7 @@ import HomePageImage from "../../../assets/images/bg3.png";
 function HomePage() {
   return (
     <Stack
-      spacing={2}
+      spacing={3}
       sx={{
         width: 1,
         height: 0.8,
@@ -16,14 +16,13 @@ function HomePage() {
         alt="Art"
         src={HomePageImage}
         style={{
-          width: "50%",
+          width: 400,
           objectFit: "cover",
         }}
       />
 
-      <Typography variant="h4">
-        Welcome To IICT Inventory Management System
-      </Typography>
+      <Typography variant="h4">Welcome To</Typography>
+      <Typography variant="h4">IICT Inventory Management System</Typography>
     </Stack>
   );
 }
