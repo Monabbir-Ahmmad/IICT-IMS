@@ -32,6 +32,7 @@ import CategoryManagementPage from "./components/category/page/CategoryManagemen
 import DirectPurchasePage from "./components/directPurchase/page/DirectPurchasePage";
 import CreateDirectPurchasePage from "./components/directPurchase/page/CreateDirectPurchasePage";
 import DirectPurchaseDetailsPage from "./components/directPurchase/page/DirectPurchaseDetailsPage";
+import HomePage from "./components/home/page/HomePage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -63,6 +64,7 @@ function App() {
 
       <Route element={<AuthGuard />}>
         <Route path="/" element={<NavDrawer />}>
+          <Route path="/" element={<HomePage />} />
           <Route path="profile/:id" element={<ProfilePage />} />
 
           <Route
