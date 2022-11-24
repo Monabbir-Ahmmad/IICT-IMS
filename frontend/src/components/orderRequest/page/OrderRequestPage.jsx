@@ -107,7 +107,7 @@ function OrderRequestPage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={orderRequests.rowCount}
-          pageSize={20}
+          pageSize={25}
         />
       </div>
     </Stack>

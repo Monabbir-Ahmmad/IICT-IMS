@@ -114,7 +114,7 @@ function DistributionPage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={distributionHistory.rowCount}
-          pageSize={20}
+          pageSize={25}
         />
       </div>
     </Stack>

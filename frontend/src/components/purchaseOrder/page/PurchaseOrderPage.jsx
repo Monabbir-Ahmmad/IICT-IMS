@@ -106,7 +106,7 @@ function PurchaseOrderPage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={purchaseOrders.rowCount}
-          pageSize={20}
+          pageSize={25}
         />
       </div>
     </Stack>

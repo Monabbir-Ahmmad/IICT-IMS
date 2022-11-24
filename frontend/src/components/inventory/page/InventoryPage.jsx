@@ -148,7 +148,7 @@ function InventoryPage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={inventoryList.rowCount}
-          pageSize={20}
+          pageSize={25}
           onStatusEditClick={onStatusEditClick}
         />
       </div>

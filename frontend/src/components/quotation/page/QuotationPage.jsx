@@ -106,7 +106,7 @@ function QuotationPage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={procurementRequests.rowCount}
-          pageSize={20}
+          pageSize={25}
         />
       </div>
     </Stack>

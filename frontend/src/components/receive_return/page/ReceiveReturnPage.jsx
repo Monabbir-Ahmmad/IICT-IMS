@@ -113,7 +113,7 @@ function ReceiveReturnPage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={receiveReturnHistory.rowCount}
-          pageSize={20}
+          pageSize={25}
         />
       </div>
     </Stack>

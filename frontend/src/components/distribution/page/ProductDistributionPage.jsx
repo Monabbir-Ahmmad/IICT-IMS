@@ -277,7 +277,7 @@ function ProductDistributionPage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={distributableProducts.rowCount}
-          pageSize={20}
+          pageSize={25}
         />
       </div>
     </Stack>

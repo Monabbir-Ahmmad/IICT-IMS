@@ -124,8 +124,8 @@ function ProcurementListTable({
         disableColumnMenu
         loading={loading}
         sortingMode="server"
-        rowsPerPageOptions={[5]}
-        page={pageNumber}
+        rowsPerPageOptions={[100]}
+        autoPageSize
         rowCount={rowCount}
         pageSize={pageSize}
         onSortModelChange={onSortChange}

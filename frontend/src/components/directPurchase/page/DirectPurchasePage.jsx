@@ -114,7 +114,7 @@ function DirectPurchasePage() {
           onPageChange={onPageChange}
           pageNumber={pagination.pageNumber}
           rowCount={purchases.rowCount}
-          pageSize={20}
+          pageSize={25}
         />
       </div>
     </Stack>
