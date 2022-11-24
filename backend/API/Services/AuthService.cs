@@ -212,7 +212,7 @@ namespace API.Services
                 );
 
                 if (supplier == null)
-                    throw new UnauthorizedException("Invalid email address.");
+                    throw new BadRequestException("Invalid email address.");
 
                 userId = supplier.Id;
                 role = UserRoleEnum.Supplier;
@@ -225,7 +225,7 @@ namespace API.Services
                     .SingleOrDefaultAsync();
 
                 if (user == null)
-                    throw new UnauthorizedException("Invalid email address.");
+                    throw new BadRequestException("Invalid email address.");
 
                 userId = user.Id;
                 role = user.Role.Name;

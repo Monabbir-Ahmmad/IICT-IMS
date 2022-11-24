@@ -56,9 +56,7 @@ function RegisterForm() {
       try {
         const { data } = await autoCompleteService.getUserRoles();
         setUserRoles(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   }, []);
 

@@ -53,9 +53,7 @@ function CreateDirectPurchasePage() {
       try {
         const { data } = await autoCompleteService.getProductCategories();
         setProductCategories(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   }, []);
 

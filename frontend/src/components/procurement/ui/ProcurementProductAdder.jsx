@@ -51,9 +51,7 @@ function ProcurementProductAdder({ open, onSubmit, onCancel, categoryId }) {
         try {
           const { data } = await autoCompleteService.getProducts(categoryId);
           setAutoCompleteProducts(data);
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       })();
 
       setValue("existingProduct", null);

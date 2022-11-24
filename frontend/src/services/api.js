@@ -30,7 +30,7 @@ const instance = axios.create({
 const api = (contentType = "application/json") => {
   instance.defaults.headers["Content-Type"] = contentType;
 
-  instance.interceptors.response.use((res) => res, logError);
+  //instance.interceptors.response.use((res) => res, logError);
 
   instance.interceptors.response.use((res) => res, flatenErrors);
 

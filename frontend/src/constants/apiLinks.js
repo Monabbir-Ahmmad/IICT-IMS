@@ -10,6 +10,7 @@ export const POST_SUPPLIER_REGISTER = `/auth/supplier/register`;
 export const POST_USER_LOGIN = `/auth/login`;
 export const POST_SUPPLIER_LOGIN = `/auth/supplier/login`;
 export const POST_LOGOUT = `/auth/logout`;
+export const POST_FORGOT_PASSWORD = `/auth/forgot-password`;
 
 //Auto complete
 export const GET_AUTO_COMPLETE_USER_ROLES = `/autoComplete/public/userRoles`;

@@ -58,9 +58,7 @@ function SupplierRegisterForm() {
       try {
         const { data } = await autoCompleteService.getProductCategories();
         setSupplierCategories(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   }, []);
 

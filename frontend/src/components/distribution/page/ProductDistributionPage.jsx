@@ -62,9 +62,7 @@ function ProductDistributionPage() {
       try {
         const { data } = await autoCompleteService.getUsers();
         setDistributees(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   }, []);
 

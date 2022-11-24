@@ -60,9 +60,7 @@ function ProductReturnReceivePage() {
       try {
         const { data } = await autoCompleteService.getUsers();
         setReceiveFrom(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   }, []);
 

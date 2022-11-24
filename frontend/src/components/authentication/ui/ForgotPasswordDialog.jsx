@@ -7,6 +7,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  LinearProgress,
   Radio,
   RadioGroup,
   Stack,
@@ -16,13 +17,26 @@ import {
 import { useEffect } from "react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { UserRoles } from "../../../constants/enums";
+import {
+  showErrorAlert,
+  showSuccessAlert,
+} from "../../../redux/actions/alertSnackbar.actions";
+import authService from "../../../services/auth.service";
 
 function ForgotPasswordDialog({ open, onClose }) {
+  const dispatch = useDispatch();
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       email: "",
     },
+  });
+
+  const [forgotPassword, setForgotPassword] = useState({
+    loading: false,
+    success: false,
+    error: null,
   });
 
   const [emailFor, setEmailFor] = useState(UserRoles.EMPLOYEE);
@@ -31,8 +45,25 @@ function ForgotPasswordDialog({ open, onClose }) {
     reset();
   }, [open, reset]);
 
-  const onSubmit = (value) => {
-    console.log(value);
+  const onSubmit = async (value) => {
+    setForgotPassword({ ...forgotPassword, loading: true, error: null });
+    try {
+      await authService.forgotPassword(
+        value.email,
+        emailFor === UserRoles.SUPPLIER
+      );
+      setForgotPassword({ loading: false, error: null, success: true });
+      dispatch(showSuccessAlert("Password reset link sent to your email"));
+      onClose();
+    } catch (error) {
+      setForgotPassword({
+        loading: false,
+        error: error.message,
+        success: false,
+      });
+
+      dispatch(showErrorAlert(error.message));
+    }
   };
 
   return (
@@ -48,6 +79,8 @@ function ForgotPasswordDialog({ open, onClose }) {
     >
       <DialogTitle>Forgot Your Password?</DialogTitle>
       <DialogContent dividers>
+        {forgotPassword.loading && <LinearProgress />}
+
         <form id="forgot-password-form" onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={2} p={2}>
             <Typography variant={"body2"}>

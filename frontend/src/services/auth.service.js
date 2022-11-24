@@ -1,4 +1,5 @@
 import {
+  POST_FORGOT_PASSWORD,
   POST_LOGOUT,
   POST_SUPPLIER_LOGIN,
   POST_SUPPLIER_REGISTER,
@@ -54,6 +55,10 @@ class AuthService {
   async logout() {
     await api().post(POST_LOGOUT);
     tokenService.removeUser();
+  }
+
+  async forgotPassword(email, isSupplier) {
+    return await api().post(POST_FORGOT_PASSWORD, { email, isSupplier });
   }
 }
 
