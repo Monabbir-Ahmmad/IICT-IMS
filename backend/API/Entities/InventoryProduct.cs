@@ -10,7 +10,7 @@ namespace API.Entities
 
         public string Status { get; set; }
 
-        public Voucher Voucher { get; set; }
+        public DirectPurchase DirectPurchase { get; set; }
 
         public PurchaseOrder PurchaseOrder { get; set; }
 

@@ -27,7 +27,7 @@ function QuotationResTable({ data = [], onQuotationAccept }) {
       },
       {
         field: "createdAt",
-        headerName: "Created At",
+        headerName: "Quoted At",
         type: "date",
         headerAlign: "center",
         align: "center",

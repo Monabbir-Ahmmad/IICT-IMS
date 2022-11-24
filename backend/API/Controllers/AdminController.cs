@@ -103,5 +103,13 @@ namespace API.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("reject-purchase-order/{id}")]
+        public async Task<IActionResult> RejectPurchaseOrder(int id)
+        {
+            await _adminService.DeletePurchaseOrder(id);
+
+            return NoContent();
+        }
     }
 }

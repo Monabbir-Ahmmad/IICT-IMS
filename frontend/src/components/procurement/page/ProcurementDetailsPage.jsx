@@ -18,6 +18,7 @@ import {
 } from "../../../redux/actions/procurement.actions";
 import { currencyFormatter, statusColors } from "../../../utils/utilities";
 import QuotationOfferProductTable from "../../quotation/ui/QuotationOfferProductTable";
+import ProcurementPrinter from "../ui/ProcurementPrinter";
 import QuotationAccepter from "../ui/QuotationAccepter";
 import QuotationResTable from "../ui/QuotationResTable";
 
@@ -58,14 +59,22 @@ function ProcurementDetailsPage() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <Typography variant="h5">
-        Procurement #{procurement?.id}{" "}
-        <Chip
-          variant="outlined"
-          label={procurement?.status}
-          color={statusColors[procurement?.status]}
-        />
-      </Typography>
+      <Stack
+        spacing={2}
+        direction={{ xs: "column", lg: "row" }}
+        justifyContent={{ xs: "start", lg: "space-between" }}
+        alignItems={{ xs: "start", lg: "center" }}
+      >
+        <Typography variant="h5">
+          Procurement #{procurement?.id}{" "}
+          <Chip
+            variant="outlined"
+            label={procurement?.status}
+            color={statusColors[procurement?.status]}
+          />
+        </Typography>
+        <ProcurementPrinter procurement={procurement} />
+      </Stack>
 
       <Stack width={1} spacing={3} direction={{ xs: "column", lg: "row" }}>
         <Paper variant="outlined" sx={{ flex: 1 }}>
@@ -97,7 +106,7 @@ function ProcurementDetailsPage() {
             </Typography>
 
             <Typography variant={"body1"}>
-              Estimated Subtotal Price:{" "}
+              Estimated Total Price:{" "}
               <strong>
                 {currencyFormatter().format(procurement?.estimatedTotalPrice)}
               </strong>

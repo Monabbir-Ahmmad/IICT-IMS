@@ -24,10 +24,12 @@ namespace API.Interfaces
 
         Task<PurchaseOrderResDto> GetOrderRequest(int id, int supplierId);
 
-        Task<PurchaseOrderResDto> DeliverPurchaseOrderProducts(
-            PurchaseOrderDeliveryReqDto purchaseOrderDeliveryReqDto
+        Task<PurchaseOrderResDto> ConfrimOrderRequestReceive(
+            OrderRequestReceiveConfirmDto purchaseOrderDeliveryReqDto
         );
 
-        Task<PurchaseOrderResDto> ConfirmDeliveryReceive(int purchaseOrderId);
+        Task<PurchaseOrderResDto> ConfirmDeliveryReceive(
+            DeliveryConfirmReqDto deliveryConfirmReqDto
+        );
     }
 }

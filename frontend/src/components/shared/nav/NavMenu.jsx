@@ -6,6 +6,8 @@ import {
   RiFileList3Line as ProcurementIcon,
   RiFileList3Line as QuotationIcon,
   RiUser6Line as UserIcon,
+  RiNodeTree as CategoryIcon,
+  RiShoppingBag2Line as DirectPurchaseIcon,
   RiShoppingCartLine as OrderRequestIcon,
   RiShoppingCartLine as PurchaseOrderIcon,
   RiDownload2Line as ReceiveReturnIcon,
@@ -37,24 +39,47 @@ function NavMenu() {
           title={"Admin Dashboard"}
           link={"/admin-dashboard"}
           icon={DashboardIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[UserRoles.ADMIN, UserRoles.DIRECTOR]}
         />
 
         <NavLinkItem
-          title={"Profile"}
-          link={`/profile/${userAuth?.id}`}
-          icon={UserIcon}
+          title={"Category Management"}
+          link={"/category-management"}
+          icon={CategoryIcon}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.STORE_MANAGER,
+          ]}
+        />
+
+        <NavLinkItem
+          title={"Direct Purchases"}
+          link={"/direct-purchases"}
+          icon={DirectPurchaseIcon}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.STORE_MANAGER,
+          ]}
         />
 
         <NavLinkItem
           title={"Procurements"}
           link={"/procurements"}
           icon={ProcurementIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+          ]}
         />
 
         <NavLinkItem
-          title={"Quotations"}
+          title={"RFQs"}
           link={"/quotations"}
           icon={QuotationIcon}
           allowedRoles={[UserRoles.ADMIN, UserRoles.SUPPLIER]}
@@ -64,8 +89,14 @@ function NavMenu() {
           title={"Purchase Orders"}
           link={"/purchase-orders"}
           icon={PurchaseOrderIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+          ]}
         />
+
         <NavLinkItem
           title={"Order Requests"}
           link={"/order-requests"}
@@ -77,21 +108,45 @@ function NavMenu() {
           title={"Inventory"}
           link={"/inventory"}
           icon={InventoryIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.OFFICE_MANAGER,
+            UserRoles.OFFICE_OFFICER,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+            UserRoles.EMPLOYEE,
+          ]}
         />
 
         <NavLinkItem
           title={"Distribution"}
           link={"/distribution"}
           icon={DistributionIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+          ]}
         />
 
         <NavLinkItem
           title={"Receive Returns"}
           link={"/receive-returns"}
           icon={ReceiveReturnIcon}
-          allowedRoles={[UserRoles.ADMIN]}
+          allowedRoles={[
+            UserRoles.ADMIN,
+            UserRoles.DIRECTOR,
+            UserRoles.STORE_MANAGER,
+            UserRoles.STORE_OFFICER,
+          ]}
+        />
+
+        <NavLinkItem
+          title={"Profile"}
+          link={`/profile/${userAuth?.id}`}
+          icon={UserIcon}
         />
       </List>
 

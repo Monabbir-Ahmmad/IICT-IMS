@@ -1,4 +1,5 @@
 using API.DTOs.Response;
+using API.Entities;
 using API.Enums;
 using API.Interfaces;
 using API.Utilities;
@@ -45,6 +46,21 @@ namespace API.Controllers
         public async Task<ActionResult<List<UserResDto>>> GetUsers()
         {
             return await _autoCompleteService.GetUsers();
+        }
+
+        [Authorize(
+            UserRoleEnum.Admin,
+            UserRoleEnum.Director,
+            UserRoleEnum.OfficeManager,
+            UserRoleEnum.StoreManager,
+            UserRoleEnum.OfficeOfficer,
+            UserRoleEnum.StoreOfficer,
+            UserRoleEnum.NormalEmployee
+        )]
+        [HttpGet("products/{categoryId}")]
+        public async Task<ActionResult<List<Product>>> GetProducts(int categoryId)
+        {
+            return await _autoCompleteService.GetProducts(categoryId);
         }
     }
 }

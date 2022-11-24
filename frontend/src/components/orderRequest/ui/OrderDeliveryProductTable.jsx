@@ -1,9 +1,25 @@
-import { Button, Paper } from "@mui/material";
+import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import moment from "moment";
 import { useMemo } from "react";
 import { currencyFormatter } from "../../../utils/utilities";
 import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
+
+function CustomFooterComponent({ data }) {
+  return (
+    <Stack alignItems={"center"}>
+      <Divider sx={{ width: "100%" }} />
+      <Typography variant="body1" sx={{ p: 2 }}>
+        Total Price:{" "}
+        <strong>
+          {currencyFormatter().format(
+            data?.reduce((acc, p) => acc + p.totalPrice, 0)
+          )}
+        </strong>
+      </Typography>
+    </Stack>
+  );
+}
 
 function OrderDeliveryProductTable({
   data = [],
@@ -72,7 +88,7 @@ function OrderDeliveryProductTable({
       },
       {
         field: "totalPrice",
-        headerName: "Total Price",
+        headerName: "Subtotal Price",
         type: "number",
         headerAlign: "center",
         align: "center",
@@ -111,6 +127,12 @@ function OrderDeliveryProductTable({
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        components={{
+          Footer: CustomFooterComponent,
+        }}
+        componentsProps={{
+          footer: { data },
+        }}
         sx={{ border: 0 }}
       />
     </Paper>

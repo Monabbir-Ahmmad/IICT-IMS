@@ -68,7 +68,7 @@ function PurchaseOrderProductTable({ data = [] }) {
       },
       {
         field: "totalPrice",
-        headerName: "Total Price",
+        headerName: "Subtotal Price",
         type: "number",
         headerAlign: "center",
         align: "center",

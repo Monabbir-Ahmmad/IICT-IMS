@@ -77,7 +77,7 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
             </Typography>
 
             <Typography variant="body1">
-              Order Subtotal Cost:{" "}
+              Order Total Cost:{" "}
               <strong>
                 {currencyFormatter().format(quotation?.quotedTotalPrice)}
               </strong>
@@ -103,6 +103,7 @@ function QuotationAccepter({ open, quotation, onSubmit, onCancel }) {
                         error={!!fieldState.error}
                         helperText={fieldState.error?.message}
                         sx={{ flex: 1 }}
+                        inputProps={{ ...params.inputProps, readOnly: true }}
                       />
                     )}
                   />

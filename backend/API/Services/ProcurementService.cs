@@ -60,22 +60,42 @@ namespace API.Services
                 EstimatedTotalPrice = estimatedTotalPrice,
                 Deadline = procurementReqDto.Deadline,
                 Status = StatusEnum.PendingApproval,
-                Products = procurementReqDto.Products.ConvertAll<ProcurementProduct>(x =>
-                {
-                    return new ProcurementProduct
-                    {
-                        Product = new Product
-                        {
-                            Name = x.Name,
-                            Category = procurementCategory,
-                            Manufacturer = x.Manufacturer,
-                            Details = x.Details,
-                        },
-                        EstimatedPrice = x.EstimatedPrice,
-                        Quantity = x.Quantity,
-                    };
-                })
+                Products = new List<ProcurementProduct>()
             };
+
+            foreach (var product in procurementReqDto.Products)
+            {
+                Product productEntity = null;
+                if (product.Id > 0)
+                    productEntity = await _context.Products
+                        .Where(x => x.Id == product.Id)
+                        .FirstOrDefaultAsync();
+
+                if (productEntity == null)
+                    procurement.Products.Add(
+                        new ProcurementProduct
+                        {
+                            Product = new Product
+                            {
+                                Name = product.Name,
+                                Category = procurementCategory,
+                                Manufacturer = product.Manufacturer,
+                                Details = product.Details
+                            },
+                            EstimatedPrice = product.EstimatedPrice,
+                            Quantity = product.Quantity
+                        }
+                    );
+                else
+                    procurement.Products.Add(
+                        new ProcurementProduct
+                        {
+                            Product = productEntity,
+                            EstimatedPrice = product.EstimatedPrice,
+                            Quantity = product.Quantity
+                        }
+                    );
+            }
 
             _context.Procurements.Add(procurement);
 

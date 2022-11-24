@@ -21,13 +21,15 @@ export const statusColors = {
   "Pending Approval": "warning",
   "Offer Available": "info",
   "Offer Sent": "info",
-  "Delivery Sent": "info",
+  "Order Accepted": "info",
   "In Inventory": "info",
   Distributed: "success",
   Approved: "success",
   "Offer Accepted": "success",
   "Delivery Completed": "success",
-  "Offer Rejected": "danger",
+  "Offer Rejected": "error",
+  "Permanently Damaged": "error",
+  "Temporarily Damaged": "error",
 };
 
 export const randomImageById = (id) => {

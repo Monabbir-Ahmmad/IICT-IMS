@@ -6,16 +6,16 @@ import {
 import api from "./api";
 
 class ProductCategoryService {
-  async create(name) {
-    return await api().post(CREATE_PRODUCT_CATEGORY, { name });
+  async create(data) {
+    return await api().post(CREATE_PRODUCT_CATEGORY, data);
   }
 
   async getAll() {
     return await api().get(GET_PRODUCT_CATEGORIES);
   }
 
-  async update(id, name) {
-    return await api().put(UPDATE_PRODUCT_CATEGORY, { id, name });
+  async update(data) {
+    return await api().put(UPDATE_PRODUCT_CATEGORY, data);
   }
 }
 

@@ -15,6 +15,7 @@ namespace API.Database
         public DbSet<Quotation> Quotations { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseOrderProduct> PurchaseOrderProducts { get; set; }
+        public DbSet<DirectPurchase> DirectPurchases { get; set; }
         public DbSet<InventoryProduct> InventoryProducts { get; set; }
         public DbSet<Distribution> Distributions { get; set; }
         public DbSet<ReceiveReturn> ReceiveReturns { get; set; }

@@ -202,6 +202,7 @@ function ProductDistributionPage() {
                         error={!!fieldState.error}
                         helperText={fieldState.error?.message}
                         sx={{ flex: 1 }}
+                        inputProps={{ ...params.inputProps, readOnly: true }}
                       />
                     )}
                   />

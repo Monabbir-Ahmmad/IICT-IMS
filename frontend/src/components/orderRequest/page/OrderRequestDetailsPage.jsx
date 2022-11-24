@@ -21,7 +21,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import {
   getOrderRequest,
-  sendDelivery,
+  confirmOrderReceive,
 } from "../../../redux/actions/purchaseOrder.action";
 import { showErrorAlert } from "../../../redux/actions/alertSnackbar.actions";
 
@@ -87,7 +87,11 @@ function OrderRequestDetailsPage() {
       purchaseOrder.totalPrice
     )
       dispatch(
-        sendDelivery({ ...values, purchaseOrderId, products: orderedProducts })
+        confirmOrderReceive({
+          ...values,
+          purchaseOrderId,
+          products: orderedProducts,
+        })
       );
     else
       dispatch(
@@ -110,17 +114,17 @@ function OrderRequestDetailsPage() {
               startIcon={<DeliveryIcon />}
               disabled={orderedProducts?.some((p) => !p.unitPrice)}
             >
-              Send Order Delivery
+              Confirm Order Receive
             </Button>
 
             <Controller
               name="deliveryDate"
               control={control}
-              rules={{ required: "Delivery date is required" }}
+              rules={{ required: "Estimated delivery date is required" }}
               render={({ field, fieldState }) => (
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                   <DatePicker
-                    label="Delivery Date"
+                    label="Estimated Delivery Date"
                     value={field.value}
                     disablePast
                     maxDate={new Date(purchaseOrder?.deliveryDeadline)}
@@ -137,6 +141,7 @@ function OrderRequestDetailsPage() {
                           maxWidth: 500,
                           width: "100%",
                         }}
+                        inputProps={{ ...params.inputProps, readOnly: true }}
                       />
                     )}
                   />
@@ -186,7 +191,7 @@ function OrderRequestDetailsPage() {
             </Typography>
 
             <Typography variant={"body1"}>
-              Delivery Date:{" "}
+              Estimated Delivery Date:{" "}
               <strong>
                 {purchaseOrder?.deliveryDate
                   ? moment(purchaseOrder?.deliveryDate).format("MMM Do, YYYY")
@@ -195,7 +200,7 @@ function OrderRequestDetailsPage() {
             </Typography>
 
             <Typography variant={"body1"}>
-              Subtotal Price:{" "}
+              Total Price:{" "}
               <strong>
                 {currencyFormatter().format(purchaseOrder?.totalPrice)}
               </strong>

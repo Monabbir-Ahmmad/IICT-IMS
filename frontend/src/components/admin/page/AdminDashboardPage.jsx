@@ -57,7 +57,7 @@ function AdminDashboardPage() {
     }
   };
 
-  const onApprove = () => {
+  const onChange = () => {
     getPendingCounts();
   };
 
@@ -89,17 +89,17 @@ function AdminDashboardPage() {
       </Tabs>
 
       <TabPanel value={tabValue} index={0}>
-        <PendingUsers onApprove={onApprove} />
+        <PendingUsers onChange={onChange} />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        <PendingSuppliers onApprove={onApprove} />
+        <PendingSuppliers onChange={onChange} />
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
-        <PendingProcurements onApprove={onApprove} />
+        <PendingProcurements onChange={onChange} />
       </TabPanel>
 
       <TabPanel value={tabValue} index={3}>
-        <PendingPurchaseOrders onApprove={onApprove} />
+        <PendingPurchaseOrders onChange={onChange} />
       </TabPanel>
     </Stack>
   );

@@ -28,15 +28,17 @@ function ProcurementCreatePage() {
     (state) => state.procurementCreate
   );
 
-  const { handleSubmit, control, formState, reset } = useForm({
+  const { handleSubmit, control, formState, reset, watch } = useForm({
     defaultValues: {
       title: "",
       deadline: "",
       procurementCategoryId: "",
     },
   });
-  const [openAddNew, setOpenAddNew] = useState(false);
 
+  const watchCategory = watch("procurementCategoryId");
+
+  const [openAddNew, setOpenAddNew] = useState(false);
   const [products, setProducts] = useState([]);
   const [productCategories, setProductCategories] = useState([]);
 
@@ -58,6 +60,10 @@ function ProcurementCreatePage() {
     }
   }, [success, reset]);
 
+  useEffect(() => {
+    setProducts([]);
+  }, [watchCategory]);
+
   const onAddNewProductSubmit = (newItem) => {
     setProducts([
       ...products,
@@ -70,17 +76,13 @@ function ProcurementCreatePage() {
   };
 
   const onDeleteSelected = (selectedRows) => {
-    setProducts(products.filter((item) => !selectedRows.includes(item.id)));
+    setProducts(products.filter((item) => !selectedRows.includes(item.rowId)));
   };
 
   const onSubmit = (data) => {
     dispatch(
       createProcurement({
         ...data,
-        estimatedTotalPrice: products.reduce(
-          (acc, item) => acc + item.estimatedTotalPrice,
-          0
-        ),
         products,
       })
     );
@@ -111,7 +113,7 @@ function ProcurementCreatePage() {
             justifyContent={"space-between"}
           >
             <Typography variant="subtitle1">
-              Estimated Subtotal Price:{" "}
+              Estimated Total Price:{" "}
               <strong>
                 {currencyFormatter().format(
                   products.reduce(
@@ -188,6 +190,7 @@ function ProcurementCreatePage() {
                         error={!!fieldState.error}
                         helperText={fieldState.error?.message}
                         sx={{ flex: 1 }}
+                        inputProps={{ ...params.inputProps, readOnly: true }}
                       />
                     )}
                   />
@@ -202,6 +205,7 @@ function ProcurementCreatePage() {
         open={openAddNew}
         onSubmit={onAddNewProductSubmit}
         onCancel={() => setOpenAddNew(false)}
+        categoryId={watchCategory}
       />
 
       <Typography variant="h6" sx={{ pt: 3 }}>

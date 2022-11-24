@@ -17,6 +17,7 @@ namespace API.MapperProfiles
             MapProcurementProduct();
             MapQuotation();
             MapPurchaseOrder();
+            MapDirectPurchase();
             MapPurchaseOrderProduct();
             MapInventoryProduct();
             MapDistributionHistory();
@@ -82,6 +83,12 @@ namespace API.MapperProfiles
         private void MapPurchaseOrder()
         {
             CreateMap<PurchaseOrder, PurchaseOrderResDto>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
+        }
+
+        private void MapDirectPurchase()
+        {
+            CreateMap<DirectPurchase, DirectPurchaseResDto>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name));
         }
 

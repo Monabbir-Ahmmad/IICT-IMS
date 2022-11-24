@@ -51,7 +51,6 @@ function ReceivableProductsTable({
         headerName: "ID",
         headerAlign: "center",
         align: "center",
-        flex: 1,
         minWidth: 100,
       },
       {

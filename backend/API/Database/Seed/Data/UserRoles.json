@@ -5,6 +5,5 @@
   { "Name": "Store Manager" },
   { "Name": "Office Officer" },
   { "Name": "Store Officer" },
-  { "Name": "Normal Employee" },
-  { "Name": "Supplier" }
+  { "Name": "Normal Employee" }
 ]

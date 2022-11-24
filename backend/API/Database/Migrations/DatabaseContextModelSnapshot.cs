@@ -28,6 +28,9 @@ namespace API.Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .HasColumnType("varchar(255)");
 
@@ -40,6 +43,51 @@ namespace API.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("API.Entities.DirectPurchase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("SupplierAddress")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SupplierContact")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SupplierName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("VoucherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("VoucherId");
+
+                    b.ToTable("DirectPurchases");
                 });
 
             modelBuilder.Entity("API.Entities.Distribution", b =>
@@ -87,6 +135,9 @@ namespace API.Database.Migrations
                     b.Property<int?>("CurrentDistributionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DirectPurchaseId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(65,30)");
 
@@ -111,6 +162,8 @@ namespace API.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentDistributionId");
+
+                    b.HasIndex("DirectPurchaseId");
 
                     b.HasIndex("ProductId");
 
@@ -550,6 +603,21 @@ namespace API.Database.Migrations
                     b.ToTable("ReceiveReturnHistory", (string)null);
                 });
 
+            modelBuilder.Entity("API.Entities.DirectPurchase", b =>
+                {
+                    b.HasOne("API.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("API.Entities.Voucher", "Voucher")
+                        .WithMany()
+                        .HasForeignKey("VoucherId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Voucher");
+                });
+
             modelBuilder.Entity("API.Entities.Distribution", b =>
                 {
                     b.HasOne("API.Entities.User", "DistributedTo")
@@ -571,6 +639,10 @@ namespace API.Database.Migrations
                         .WithMany()
                         .HasForeignKey("CurrentDistributionId");
 
+                    b.HasOne("API.Entities.DirectPurchase", "DirectPurchase")
+                        .WithMany("Products")
+                        .HasForeignKey("DirectPurchaseId");
+
                     b.HasOne("API.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId");
@@ -579,17 +651,17 @@ namespace API.Database.Migrations
                         .WithMany()
                         .HasForeignKey("PurchaseOrderId");
 
-                    b.HasOne("API.Entities.Voucher", "Voucher")
+                    b.HasOne("API.Entities.Voucher", null)
                         .WithMany("InventoryProducts")
                         .HasForeignKey("VoucherId");
 
                     b.Navigation("CurrentDistribution");
 
+                    b.Navigation("DirectPurchase");
+
                     b.Navigation("Product");
 
                     b.Navigation("PurchaseOrder");
-
-                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("API.Entities.Procurement", b =>
@@ -765,6 +837,11 @@ namespace API.Database.Migrations
                         .HasForeignKey("ReceiveReturnHistoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("API.Entities.DirectPurchase", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("API.Entities.Procurement", b =>

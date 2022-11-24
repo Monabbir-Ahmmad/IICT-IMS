@@ -53,49 +53,5 @@ namespace API.Controllers
 
             return Ok(await products.ToListAsync());
         }
-
-        [HttpPost("file")]
-        public async Task<ActionResult> PostFile(IFormFile file)
-        {
-            //Save file to disk
-            try
-            {
-                var folderName = Path.Combine("Resources", "Images");
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-
-                if (!Directory.Exists(pathToSave))
-                {
-                    Directory.CreateDirectory(pathToSave);
-                }
-
-                if (file.Length > 0)
-                {
-                    //Create filename with unique guid
-                    var fileName =
-                        Guid.NewGuid()
-                        + ContentDispositionHeaderValue
-                            .Parse(file.ContentDisposition)
-                            .FileName.Trim('"');
-
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
-
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-
-                    return Ok(new { dbPath });
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            catch (System.Exception)
-            {
-                return BadRequest();
-            }
-        }
     }
 }

@@ -8,6 +8,7 @@ import { currencyFormatter, statusColors } from "../../../utils/utilities";
 
 function PendingProcurementsTable({
   data = [],
+  onRowClick,
   onApproveClick,
   onRejectClick,
 }) {
@@ -18,7 +19,6 @@ function PendingProcurementsTable({
         headerName: "ID",
         headerAlign: "center",
         align: "center",
-        flex: 1,
         minWidth: 100,
       },
       {
@@ -114,6 +114,7 @@ function PendingProcurementsTable({
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        onRowClick={(params) => onRowClick(params.id)}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}

@@ -5,7 +5,7 @@ import { showSuccessAlert } from "../../../redux/actions/alertSnackbar.actions";
 import adminService from "../../../services/admin.service";
 import PendingSuppliersTable from "./PendingSuppliersTable";
 
-function PendingSuppliers({ onApprove }) {
+function PendingSuppliers({ onChange }) {
   const dispatch = useDispatch();
 
   const [pendingSuppliers, setPendingSuppliers] = useState({
@@ -43,7 +43,7 @@ function PendingSuppliers({ onApprove }) {
         error: null,
       });
       dispatch(showSuccessAlert("Supplier approved successfully"));
-      onApprove();
+      onChange();
     } catch (error) {
       setPendingSuppliers({
         data: pendingSuppliers.data,
@@ -63,7 +63,7 @@ function PendingSuppliers({ onApprove }) {
         error: null,
       });
       dispatch(showSuccessAlert("Supplier rejected successfully"));
-      onApprove();
+      onChange();
     } catch (error) {
       setPendingSuppliers({
         data: pendingSuppliers.data,

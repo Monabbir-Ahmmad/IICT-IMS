@@ -1,11 +1,13 @@
 import { Alert, LinearProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { showSuccessAlert } from "../../../redux/actions/alertSnackbar.actions";
 import adminService from "../../../services/admin.service";
 import PendingProcurementsTable from "./PendingProcurementsTable";
 
-function PendingProcurements({ onApprove }) {
+function PendingProcurements({ onChange }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [pendingProcurements, setPendingProcurements] = useState({
@@ -43,7 +45,7 @@ function PendingProcurements({ onApprove }) {
         error: null,
       });
       dispatch(showSuccessAlert("Procurement approved successfully"));
-      onApprove();
+      onChange();
     } catch (error) {
       setPendingProcurements({
         data: pendingProcurements.data,
@@ -51,6 +53,10 @@ function PendingProcurements({ onApprove }) {
         error: error.message,
       });
     }
+  };
+
+  const onRowClick = (id) => {
+    navigate(`/procurements/${id}`);
   };
 
   const onRejectClick = async (id) => {
@@ -63,6 +69,7 @@ function PendingProcurements({ onApprove }) {
         error: null,
       });
       dispatch(showSuccessAlert("Procurement rejected successfully"));
+      onChange();
     } catch (error) {
       setPendingProcurements({
         data: pendingProcurements.data,
@@ -84,6 +91,7 @@ function PendingProcurements({ onApprove }) {
         data={pendingProcurements.data}
         onApproveClick={onApproveClick}
         onRejectClick={onRejectClick}
+        onRowClick={onRowClick}
       />
     </Stack>
   );

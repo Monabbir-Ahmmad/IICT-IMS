@@ -1,5 +1,5 @@
 import { Alert, Button, Stack, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RiUploadFill as DistributeIcon } from "react-icons/ri";
 import DistributionHistoryTable from "../ui/DistributionHistoryTable";
 import { useEffect, useState } from "react";
@@ -8,6 +8,8 @@ import SearchFilter from "../../shared/searchFilter/SearchFilter";
 import { distributorHistoryFilterDef } from "../../shared/searchFilter/filterData";
 
 function DistributionPage() {
+  const navigate = useNavigate();
+
   const [distributionHistory, setDistributionHistory] = useState({
     data: [],
     rowCount: 0,
@@ -29,7 +31,9 @@ function DistributionPage() {
     setPagination({ pageNumber: 0 });
   }, [filter, sort]);
 
-  const onRowClick = (id) => {};
+  const onRowClick = (id) => {
+    navigate(`./${id}`);
+  };
 
   const onSortChange = (sortModel) => {
     setSort({

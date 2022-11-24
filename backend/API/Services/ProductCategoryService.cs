@@ -5,6 +5,7 @@ using API.DTOs.Response;
 using API.Entities;
 using API.Errors;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
@@ -13,22 +14,31 @@ namespace API.Services
     {
         private readonly DatabaseContext _context;
 
-        public ProductCategoryService(DatabaseContext context)
+        private readonly IMapper _mapper;
+
+        public ProductCategoryService(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<ProductCategoryResDto> CreateCategory(string categoryName)
+        public async Task<ProductCategoryResDto> CreateCategory(
+            ProductCategoryCreateReqDto categoryDto
+        )
         {
-            if (await _context.Categories.Where(x => x.Name == categoryName).AnyAsync())
+            if (await _context.Categories.Where(x => x.Name == categoryDto.Name).AnyAsync())
                 throw new ApiException(HttpStatusCode.Conflict, "Category already exists.");
 
-            var category = new Category { Name = categoryName };
+            var category = new Category
+            {
+                Name = categoryDto.Name,
+                Description = categoryDto.Description
+            };
 
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            return new ProductCategoryResDto { Id = category.Id, Name = category.Name };
+            return _mapper.Map<ProductCategoryResDto>(category);
         }
 
         public async Task DeleteCategory(int categoryId)
@@ -46,13 +56,9 @@ namespace API.Services
 
         public async Task<List<ProductCategoryResDto>> GetCategories()
         {
-            var categoryList = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
 
-            var categoryListResDto = categoryList.ConvertAll(
-                x => new ProductCategoryResDto { Id = x.Id, Name = x.Name }
-            );
-
-            return categoryListResDto;
+            return _mapper.Map<List<ProductCategoryResDto>>(categories);
         }
 
         public async Task UpdateCategory(ProductCategoryUpdateReqDto categoryDto)
@@ -64,10 +70,15 @@ namespace API.Services
             if (category == null)
                 throw new NotFoundException("Category not found.");
 
-            if (await _context.Categories.Where(x => x.Name == categoryDto.Name).AnyAsync())
+            if (
+                await _context.Categories
+                    .Where(x => x.Name == categoryDto.Name && x.Id != categoryDto.Id)
+                    .AnyAsync()
+            )
                 throw new ApiException(HttpStatusCode.Conflict, "Category already exists.");
 
             category.Name = categoryDto.Name;
+            category.Description = categoryDto.Description;
 
             _context.Categories.Update(category);
 

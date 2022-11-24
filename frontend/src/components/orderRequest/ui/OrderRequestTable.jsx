@@ -58,7 +58,7 @@ function OrderRequestTable({
       },
       {
         field: "deliveryDate",
-        headerName: "Delivery Date",
+        headerName: "Estimated Delivery Date",
         type: "date",
         flex: 1,
         minWidth: 100,
@@ -69,7 +69,7 @@ function OrderRequestTable({
       },
       {
         field: "totalPrice",
-        headerName: "Subtotal Price",
+        headerName: "Total Price",
         type: "number",
         flex: 1,
         minWidth: 100,

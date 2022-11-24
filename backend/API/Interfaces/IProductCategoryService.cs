@@ -5,7 +5,7 @@ namespace API.Interfaces
 {
     public interface IProductCategoryService
     {
-        Task<ProductCategoryResDto> CreateCategory(string categoryName);
+        Task<ProductCategoryResDto> CreateCategory(ProductCategoryCreateReqDto categoryDto);
         Task DeleteCategory(int categoryId);
         Task<List<ProductCategoryResDto>> GetCategories();
         Task UpdateCategory(ProductCategoryUpdateReqDto categoryDto);

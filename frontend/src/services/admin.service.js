@@ -9,6 +9,7 @@ import {
   GET_PENDING_SUPPLIERS,
   GET_PENDING_USERS,
   REJECT_PROCUREMENT,
+  REJECT_PURCHASE_ORDER,
   REJECT_SUPPLIER,
   REJECT_USER,
 } from "../constants/apiLinks";
@@ -61,6 +62,10 @@ class AdminService {
 
   async approvePurchaseOrder(purchaseOrderId) {
     return await api().put(`${APPROVE_PURCHASE_ORDER}/${purchaseOrderId}`);
+  }
+
+  async rejectPurchaseOrder(purchaseOrderId) {
+    return await api().delete(`${REJECT_PURCHASE_ORDER}/${purchaseOrderId}`);
   }
 }
 

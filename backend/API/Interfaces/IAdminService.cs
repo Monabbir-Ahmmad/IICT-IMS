@@ -31,5 +31,7 @@ namespace API.Interfaces
         Task DeleteSupplier(int supplierId);
 
         Task DeleteProcurement(int procurementId);
+
+        Task DeletePurchaseOrder(int purchaseOrderId);
     }
 }

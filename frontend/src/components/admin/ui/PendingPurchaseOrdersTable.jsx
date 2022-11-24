@@ -6,13 +6,17 @@ import moment from "moment/moment";
 import { useMemo } from "react";
 import { currencyFormatter, statusColors } from "../../../utils/utilities";
 
-function PendingPurchaseOrdersTable({ data = [], onApproveClick }) {
+function PendingPurchaseOrdersTable({
+  data = [],
+  onApproveClick,
+  onRejectClick,
+  onRowClick,
+}) {
   const columns = useMemo(
     () => [
       {
         field: "id",
         headerName: "ID",
-        flex: 1,
         minWidth: 100,
         headerAlign: "center",
         align: "center",
@@ -24,8 +28,16 @@ function PendingPurchaseOrdersTable({ data = [], onApproveClick }) {
         minWidth: 100,
         headerAlign: "center",
         align: "center",
-        valueGetter: ({ row }) => row?.procurement?.title,
+        valueGetter: ({ row }) => row?.title,
         renderCell: RenderCellExpand,
+      },
+      {
+        field: "category",
+        headerName: "Category",
+        flex: 1,
+        minWidth: 100,
+        headerAlign: "center",
+        align: "center",
       },
       {
         field: "createdAt",
@@ -48,19 +60,8 @@ function PendingPurchaseOrdersTable({ data = [], onApproveClick }) {
         valueFormatter: ({ value }) => moment(value).format("MMM Do, YYYY"),
       },
       {
-        field: "deliveryDate",
-        headerName: "Delivery Date",
-        type: "date",
-        flex: 1,
-        minWidth: 100,
-        headerAlign: "center",
-        align: "center",
-        valueFormatter: ({ value }) =>
-          value ? moment(value).format("MMM Do, YYYY") : "N/A",
-      },
-      {
         field: "totalPrice",
-        headerName: "Subtotal Price",
+        headerName: "Total Price",
         type: "number",
         flex: 1,
         minWidth: 100,
@@ -94,10 +95,18 @@ function PendingPurchaseOrdersTable({ data = [], onApproveClick }) {
           >
             Approve
           </Button>,
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            onClick={() => onRejectClick(params.id)}
+          >
+            Reject
+          </Button>,
         ],
       },
     ],
-    [onApproveClick]
+    [onApproveClick, onRejectClick]
   );
 
   return (
@@ -106,6 +115,7 @@ function PendingPurchaseOrdersTable({ data = [], onApproveClick }) {
         rows={data}
         columns={columns}
         disableSelectionOnClick
+        onRowClick={(params) => onRowClick(params.id)}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
         }}

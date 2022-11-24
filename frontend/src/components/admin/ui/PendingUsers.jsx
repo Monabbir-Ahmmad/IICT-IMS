@@ -5,7 +5,7 @@ import { showSuccessAlert } from "../../../redux/actions/alertSnackbar.actions";
 import adminService from "../../../services/admin.service";
 import PendingUsersTable from "./PendingUsersTable";
 
-function PendingUsers({ onApprove }) {
+function PendingUsers({ onChange }) {
   const dispatch = useDispatch();
 
   const [pendingUsers, setPendingUsers] = useState({
@@ -43,7 +43,7 @@ function PendingUsers({ onApprove }) {
         error: null,
       });
       dispatch(showSuccessAlert("User approved successfully"));
-      onApprove();
+      onChange();
     } catch (error) {
       setPendingUsers({
         data: pendingUsers.data,
@@ -63,7 +63,7 @@ function PendingUsers({ onApprove }) {
         error: null,
       });
       dispatch(showSuccessAlert("User rejected successfully"));
-      onApprove();
+      onChange();
     } catch (error) {
       setPendingUsers({
         data: pendingUsers.data,

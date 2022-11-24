@@ -21,7 +21,6 @@ function PurchaseOrderTable({
       {
         field: "id",
         headerName: "ID",
-        flex: 1,
         minWidth: 100,
         headerAlign: "center",
         align: "center",
@@ -85,7 +84,7 @@ function PurchaseOrderTable({
       },
       {
         field: "deliveryDate",
-        headerName: "Delivery Date",
+        headerName: "Estimated Delivery Date",
         type: "date",
         flex: 1,
         minWidth: 100,
@@ -96,7 +95,7 @@ function PurchaseOrderTable({
       },
       {
         field: "totalPrice",
-        headerName: "Subtotal Price",
+        headerName: "Total Price",
         type: "number",
         flex: 1,
         minWidth: 100,

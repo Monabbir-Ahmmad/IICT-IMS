@@ -148,6 +148,20 @@ namespace API.Services
             return;
         }
 
+        public async Task DeletePurchaseOrder(int purchaseOrderId)
+        {
+            var purchaseOrder = await _context.PurchaseOrders.FindAsync(purchaseOrderId);
+
+            if (purchaseOrder == null)
+                throw new NotFoundException("Purchase order not found.");
+
+            _context.PurchaseOrders.Remove(purchaseOrder);
+
+            await _context.SaveChangesAsync();
+
+            return;
+        }
+
         public async Task<List<ProcurementResDto>> GetPendingProcurements()
         {
             var pendingProcurements = await _context.Procurements

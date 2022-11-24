@@ -91,7 +91,7 @@ function QuotationDetailsPage() {
               name="quotedTotalPrice"
               control={control}
               rules={{
-                required: "Subtotal price offer is required",
+                required: "Total price offer is required",
                 pattern: {
                   value: /^(?:[1-9]\d*|0(?!(?:\.0+)?$))?(?:\.\d+)?$/,
                   message: "Invalid price",
@@ -101,7 +101,7 @@ function QuotationDetailsPage() {
                 <TextField
                   {...field}
                   variant="outlined"
-                  label="Subtotal price offer"
+                  label="Total price offer"
                   placeholder="Enter total price offer"
                   type={"number"}
                   error={!!fieldState.error}
@@ -164,7 +164,7 @@ function QuotationDetailsPage() {
               </strong>
             </Typography>
             <Typography variant={"body1"}>
-              Estimated Subtotal Price:{" "}
+              Estimated Total Price:{" "}
               <strong>
                 {currencyFormatter().format(
                   procurementDetails.procurement?.estimatedTotalPrice
@@ -173,7 +173,7 @@ function QuotationDetailsPage() {
             </Typography>
 
             <Typography variant={"body1"}>
-              Your Quoted Subtotal Price:{" "}
+              Your Quoted Total Price:{" "}
               <strong>
                 {procurementDetails.procurement?.quotations.find(
                   (quotation) => quotation.supplier.id === Number(userAuth.id)

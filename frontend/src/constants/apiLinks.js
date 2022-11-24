@@ -1,5 +1,7 @@
 //Host of the api
 export const API_URL = "http://localhost:5000";
+export const IMAGE_HOST_URL = "http://localhost:5000/Resources/Images/";
+export const PRODUCT_QR_CODE_BASE = "http://localhost:3000/inventory/";
 
 //Authentication
 export const POST_REFRESH_TOKEN = "/auth/refreshToken";
@@ -13,6 +15,7 @@ export const POST_LOGOUT = `/auth/logout`;
 export const GET_AUTO_COMPLETE_USER_ROLES = `/autoComplete/public/userRoles`;
 export const GET_AUTO_COMPLETE_USERS = `/autoComplete/users`;
 export const GET_AUTO_COMPLETE_PRODUCT_CATEGORIES = `/autoComplete/public/productCategories`;
+export const GET_AUTO_COMPLETE_PRODUCTS = `/autoComplete/products`;
 
 //User
 export const GET_USER_PROFILE = "/user/profile";
@@ -43,20 +46,30 @@ export const GET_PURCHASE_ORDER_LIST = "/purchaseOrder";
 export const GET_ORDER_REQUEST_LIST = "/purchaseOrder/order-request";
 export const GET_ORDER_REQUEST = "/purchaseOrder/order-request";
 export const GET_PURCHASE_ORDER = "/purchaseOrder";
-export const SEND_PURCHASE_ORDER_DELIVERY = "/purchaseOrder/delivery";
+export const ORDER_RECEIVE_CONFIRM = "/purchaseOrder/order-received";
 export const CONFIRM_PURCHASE_ORDER_DELIVERY_RECEIVE =
   "/purchaseOrder/delivery/receive";
+
+//Direct purchase
+export const CREATE_DIRECT_PURCHASE = "/directPurchase/create";
+export const GET_DIRECT_PURCHASE_LIST = "/directPurchase";
+export const GET_DIRECT_PURCHASE = "/directPurchase";
 
 //Inventory
 export const GET_INVENTORY = "/inventory";
 export const GET_INVENTORY_LIST = "/inventory";
-export const GET_DISTRIBUTABLE_INVENTORY = "/inventory/distributable";
-export const DISTRIBUTE_INVENTORY = "/inventory/distribute";
-export const RECEIVE_RETURN_INVENTORY = "/inventory/receive-return";
-export const GET_RECEIVABLE_INVENTORY = "/inventory/receivable";
 export const GET_INVENTORY_PRODUCT = "/inventory/product";
-export const GET_DISTRIBUTION_HISTORY = "/inventory/distribution-history";
-export const GET_RECEIVE_RETURN_HISTORY = "/inventory/receive-return-history";
+export const UPDATE_INVENTORY_PRODUCT_STATUS = "/inventory/product/status";
+
+//Distribution
+export const GET_DISTRIBUTABLE_INVENTORY = "/distribution/distributable";
+export const DISTRIBUTE_INVENTORY = "/distribution/distribute";
+export const GET_DISTRIBUTION_HISTORY = "/distribution/history";
+
+//Receive Return
+export const RECEIVE_RETURN_INVENTORY = "/receiveReturn/receive-return";
+export const GET_RECEIVABLE_INVENTORY = "/receiveReturn/receivable";
+export const GET_RECEIVE_RETURN_HISTORY = "/receiveReturn/history";
 
 //Admin
 export const GET_PENDING_COUNTS = "/admin/pending-counts";
@@ -71,3 +84,4 @@ export const REJECT_SUPPLIER = "/admin/reject-supplier";
 export const APPROVE_PROCUREMENT = "/admin/approve-procurement";
 export const REJECT_PROCUREMENT = "/admin/reject-procurement";
 export const APPROVE_PURCHASE_ORDER = "/admin/approve-purchase-order";
+export const REJECT_PURCHASE_ORDER = "/admin/reject-purchase-order";

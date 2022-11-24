@@ -103,7 +103,7 @@ const columns = [
   },
   {
     field: "estimatedTotalPrice",
-    headerName: "Estimated Total Price",
+    headerName: "Estimated Subtotal Price",
     type: "number",
     headerAlign: "center",
     align: "center",
@@ -134,6 +134,7 @@ function ProcurementProductTable({
         checkboxSelection
         disableSelectionOnClick
         hideFooterSelectedRowCount
+        getRowId={(row) => row.rowId}
         components={{
           NoRowsOverlay: EmptyTableOverlay,
           Toolbar: CustomeToolbar,

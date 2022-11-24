@@ -52,7 +52,7 @@ const columns = [
   },
   {
     field: "estimatedTotalPrice",
-    headerName: "Estimated Total Price",
+    headerName: "Estimated Subtotal Price",
     type: "number",
     headerAlign: "center",
     align: "center",

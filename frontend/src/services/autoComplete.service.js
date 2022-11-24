@@ -1,4 +1,5 @@
 import {
+  GET_AUTO_COMPLETE_PRODUCTS,
   GET_AUTO_COMPLETE_PRODUCT_CATEGORIES,
   GET_AUTO_COMPLETE_USERS,
   GET_AUTO_COMPLETE_USER_ROLES,
@@ -16,6 +17,10 @@ class AutoCompleteService {
 
   async getUsers() {
     return await api().get(GET_AUTO_COMPLETE_USERS);
+  }
+
+  async getProducts(categoryId = 0) {
+    return await api().get(`${GET_AUTO_COMPLETE_PRODUCTS}/${categoryId}`);
   }
 }
 

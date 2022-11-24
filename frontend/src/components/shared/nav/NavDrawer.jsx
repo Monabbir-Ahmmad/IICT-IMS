@@ -12,7 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
-const drawerWidth = 300;
+const drawerWidth = 350;
 
 function NavDrawer({ window }) {
   const theme = useTheme();

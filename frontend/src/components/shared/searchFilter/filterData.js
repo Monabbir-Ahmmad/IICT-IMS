@@ -177,7 +177,7 @@ export const orderRequestFilterDef = [
   {
     field: "deliveryDate",
     key: "deliveryDate",
-    label: "Delivery Date",
+    label: "Estimated Delivery Date",
     type: "date",
     operators: dateOperators,
   },
@@ -295,7 +295,7 @@ export const purchaseOrderFilterDef = [
   {
     field: "deliveryDate",
     key: "deliveryDate",
-    label: "Delivery Date",
+    label: "Estimated Delivery Date",
     type: "date",
     operators: dateOperators,
   },
@@ -409,5 +409,50 @@ export const distributableInventoryFilterDef = [
     label: "Status",
     type: "search",
     operators: textOperators,
+  },
+];
+
+export const directPurchaseFilterDef = [
+  {
+    field: "id",
+    key: "id",
+    label: "ID",
+    type: "number",
+    operators: numberOperators,
+  },
+  {
+    field: "title",
+    key: "title",
+    label: "Title",
+    type: "search",
+    operators: textOperators,
+  },
+  {
+    field: "category",
+    key: "category.name",
+    label: "Category",
+    type: "search",
+    operators: textOperators,
+  },
+  {
+    field: "supplierName",
+    key: "supplierName",
+    label: "Supplier Name",
+    type: "search",
+    operators: textOperators,
+  },
+  {
+    field: "purchaseDate",
+    key: "purchaseDate",
+    label: "Purchasing Date",
+    type: "date",
+    operators: dateOperators,
+  },
+  {
+    field: "totalPrice",
+    key: "totalPrice",
+    label: "Total Price",
+    type: "number",
+    operators: numberOperators,
   },
 ];

@@ -9,6 +9,7 @@ import RenderCellExpand from "../../shared/dataTable/RenderCellExpand";
 function InventroyProductListTable({
   data = [],
   loading,
+  onStatusEditClick,
   onRowOpenClick,
   onSortChange,
   onPageChange,
@@ -23,7 +24,6 @@ function InventroyProductListTable({
         headerName: "ID",
         headerAlign: "center",
         align: "center",
-        flex: 1,
         minWidth: 100,
       },
       {
@@ -91,16 +91,17 @@ function InventroyProductListTable({
         flex: 1,
         minWidth: 100,
         getActions: (params) => [
-          <Button variant="contained" size="small">
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => onStatusEditClick(params.row.id)}
+          >
             Edit Status
-          </Button>,
-          <Button variant="contained" size="small">
-            Print
           </Button>,
         ],
       },
     ],
-    []
+    [onStatusEditClick]
   );
 
   return (

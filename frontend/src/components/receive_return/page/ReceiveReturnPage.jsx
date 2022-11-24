@@ -1,5 +1,5 @@
 import { Alert, Button, Stack, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RiDownloadFill as ReturnReceiveIcon } from "react-icons/ri";
 import ReceiveReturnHistoryTable from "../ui/ReceiveReturnHistoryTable";
 import { useEffect, useState } from "react";
@@ -8,6 +8,8 @@ import SearchFilter from "../../shared/searchFilter/SearchFilter";
 import { receiveReturnHistoryFilterDef } from "../../shared/searchFilter/filterData";
 
 function ReceiveReturnPage() {
+  const navigate = useNavigate();
+
   const [receiveReturnHistory, setReceiveReturnHistory] = useState({
     data: [],
     rowCount: 0,
@@ -29,7 +31,9 @@ function ReceiveReturnPage() {
     setPagination({ pageNumber: 0 });
   }, [filter, sort]);
 
-  const onRowClick = (id) => {};
+  const onRowClick = (id) => {
+    navigate(`./${id}`);
+  };
 
   const onSortChange = (sortModel) => {
     setSort({

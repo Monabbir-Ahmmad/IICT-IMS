@@ -5,6 +5,8 @@ namespace API.DTOs.Request
 {
     public class ProcurementProductReqDto
     {
+        public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 

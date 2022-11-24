@@ -17,7 +17,10 @@ namespace API.Config
             services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<IQuotationService, QuotationService>();
             services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+            services.AddScoped<IDirectPurchaseService, DirectPurchaseService>();
             services.AddScoped<IInventoryService, InventoryService>();
+            services.AddScoped<IDistributionService, DistributionService>();
+            services.AddScoped<IReceiveReturnService, ReceiveReturnService>();
 
             return services;
         }

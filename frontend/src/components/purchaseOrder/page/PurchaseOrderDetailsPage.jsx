@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import moment from "moment";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { currencyFormatter, statusColors } from "../../../utils/utilities";
@@ -18,6 +18,10 @@ import {
 } from "../../../redux/actions/purchaseOrder.action";
 import PurchaseOrderProductTable from "../ui/PurchaseOrderProductTable";
 import { Status } from "../../../constants/enums";
+import PurchaseOrderReceiveConfirmer from "../ui/PurchaseOrderReceiveConfirmer";
+import ImageViewer from "../../shared/imageViewer/ImageViewer";
+import { IMAGE_HOST_URL } from "../../../constants/apiLinks";
+import PurchaseOrderPrinter from "../ui/PurchaseOrderPrinter";
 
 function PurchaseOrderDetailsPage() {
   const dispatch = useDispatch();
@@ -28,37 +32,64 @@ function PurchaseOrderDetailsPage() {
 
   const { purchaseOrderId } = useParams();
 
+  const [deliveryReceiveConfirmOpen, setDeliveryReceiveConfirmOpen] =
+    useState(false);
+
   useEffect(() => {
     dispatch(getPurchaseOrder(purchaseOrderId));
   }, [dispatch, purchaseOrderId]);
 
-  const onDeliveryReceiveConfirmClick = () => {
-    dispatch(confirmDelivery(purchaseOrderId));
+  const onDeliveryReceiveConfirmClick = (voucherImage) => {
+    dispatch(confirmDelivery(purchaseOrderId, voucherImage));
+    setDeliveryReceiveConfirmOpen(false);
   };
 
   return (
     <Stack spacing={2}>
       {loading && <LinearProgress />}
 
+      <PurchaseOrderReceiveConfirmer
+        open={deliveryReceiveConfirmOpen}
+        onClose={() => setDeliveryReceiveConfirmOpen(false)}
+        onConfirm={onDeliveryReceiveConfirmClick}
+      />
+
       {purchaseOrder?.status !== Status.DeliveryCompleted && (
         <Button
           variant="contained"
           sx={{ alignSelf: "flex-start" }}
-          onClick={onDeliveryReceiveConfirmClick}
-          disabled={purchaseOrder?.status !== Status.DeliverySent}
+          onClick={() => setDeliveryReceiveConfirmOpen(true)}
+          disabled={purchaseOrder?.status !== Status.OrderAccepted}
         >
           Confirm Delivery Receive
         </Button>
       )}
 
-      <Typography variant="h5">
-        Order #{purchaseOrder?.id}{" "}
-        <Chip
-          variant="outlined"
-          label={purchaseOrder?.status}
-          color={statusColors[purchaseOrder?.status]}
+      <Stack
+        spacing={2}
+        direction={{ xs: "column", lg: "row" }}
+        justifyContent={{ xs: "start", lg: "space-between" }}
+        alignItems={{ xs: "start", lg: "center" }}
+      >
+        <Typography variant="h5">
+          Order #{purchaseOrder?.id}{" "}
+          <Chip
+            variant="outlined"
+            label={purchaseOrder?.status}
+            color={statusColors[purchaseOrder?.status]}
+          />
+        </Typography>
+
+        <PurchaseOrderPrinter purchaseOrder={purchaseOrder} />
+      </Stack>
+
+      {purchaseOrder?.voucher && (
+        <ImageViewer
+          image={IMAGE_HOST_URL + purchaseOrder?.voucher?.fileName}
+          buttonText="View Voucher"
+          title="Voucher"
         />
-      </Typography>
+      )}
 
       <Stack width={1} spacing={3} direction={{ xs: "column", lg: "row" }}>
         <Paper variant="outlined" sx={{ flex: 1 }}>
@@ -90,7 +121,7 @@ function PurchaseOrderDetailsPage() {
             </Typography>
 
             <Typography variant={"body1"}>
-              Delivery Date:{" "}
+              Estimated Delivery Date:{" "}
               <strong>
                 {purchaseOrder?.deliveryDate
                   ? moment(purchaseOrder?.deliveryDate).format("MMM Do, YYYY")
@@ -99,7 +130,7 @@ function PurchaseOrderDetailsPage() {
             </Typography>
 
             <Typography variant={"body1"}>
-              Subtotal Price:{" "}
+              Total Price:{" "}
               <strong>
                 {currencyFormatter().format(purchaseOrder?.totalPrice)}
               </strong>

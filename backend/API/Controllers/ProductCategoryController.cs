@@ -8,7 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Authorize(UserRoleEnum.Admin, UserRoleEnum.Director)]
+    [Authorize(
+        UserRoleEnum.Admin,
+        UserRoleEnum.Director,
+        UserRoleEnum.OfficeManager,
+        UserRoleEnum.StoreManager
+    )]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductCategoryController : ControllerBase
@@ -22,10 +27,13 @@ namespace API.Controllers
 
         [HttpPost("create")]
         public async Task<ActionResult<ProductCategoryResDto>> CreateCategory(
-            [Required] string name
+            ProductCategoryCreateReqDto categoryDto
         )
         {
-            return Created("Category created", await _productCategoryService.CreateCategory(name));
+            return Created(
+                "Category created",
+                await _productCategoryService.CreateCategory(categoryDto)
+            );
         }
 
         [HttpDelete("{id}")]
@@ -36,7 +44,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> GetCategory(ProductCategoryUpdateReqDto categoryDto)
+        public async Task<ActionResult> UpdateCategory(ProductCategoryUpdateReqDto categoryDto)
         {
             await _productCategoryService.UpdateCategory(categoryDto);
             return Ok("Category updated.");
