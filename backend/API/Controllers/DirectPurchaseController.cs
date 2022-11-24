@@ -41,5 +41,11 @@ namespace API.Controllers
         {
             return await _directPurchaseService.GetDirectPurchases(param);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DirectPurchaseResDto>> GetDirectPurchase(int id)
+        {
+            return await _directPurchaseService.GetDirectPurchase(id);
+        }
     }
 }

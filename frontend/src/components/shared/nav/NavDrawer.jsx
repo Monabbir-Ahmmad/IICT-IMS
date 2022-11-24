@@ -57,7 +57,7 @@ function NavDrawer({ window }) {
 
             <Link
               component={RouterLink}
-              to="/home"
+              to="/"
               underline="none"
               sx={{
                 display: "flex",

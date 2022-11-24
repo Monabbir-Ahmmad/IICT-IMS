@@ -124,6 +124,24 @@ namespace API.Services
             };
         }
 
+
+        public async Task<DirectPurchaseResDto> GetDirectPurchase(int id)
+        {
+            var purchase = await _context.DirectPurchases
+                .Include(x => x.Category)
+                .Include(x => x.Voucher)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
+                .ThenInclude(x => x.Category)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (purchase == null)
+                throw new NotFoundException("Direct purchase not found.");
+
+            return _mapper.Map<DirectPurchaseResDto>(purchase);
+        }
+
         private string SaveVoucherImage(IFormFile file)
         {
             try
@@ -165,5 +183,7 @@ namespace API.Services
                 return null;
             }
         }
+
+
     }
 }

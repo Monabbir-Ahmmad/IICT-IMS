@@ -31,6 +31,7 @@ import ReceiveReturnDetailsPage from "./components/receive_return/page/ReceiveRe
 import CategoryManagementPage from "./components/category/page/CategoryManagementPage";
 import DirectPurchasePage from "./components/directPurchase/page/DirectPurchasePage";
 import CreateDirectPurchasePage from "./components/directPurchase/page/CreateDirectPurchasePage";
+import DirectPurchaseDetailsPage from "./components/directPurchase/page/DirectPurchaseDetailsPage";
 
 function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -90,6 +91,10 @@ function App() {
             />
 
             <Route path="direct-purchases" element={<DirectPurchasePage />} />
+            <Route
+              path="direct-purchases/:id"
+              element={<DirectPurchaseDetailsPage />}
+            />
             <Route
               path="direct-purchases/create"
               element={<CreateDirectPurchasePage />}

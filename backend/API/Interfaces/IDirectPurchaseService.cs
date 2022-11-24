@@ -11,5 +11,7 @@ namespace API.Interfaces
         Task<PaginatedResDto<DirectPurchaseResDto>> GetDirectPurchases(
             PaginatedFilterSortParam param
         );
+
+        Task<DirectPurchaseResDto> GetDirectPurchase(int id);
     }
 }
