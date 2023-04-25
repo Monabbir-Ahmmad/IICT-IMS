@@ -9,8 +9,18 @@ updates:
     directory: "/frontend" # Location of package manifests
     schedule:
       interval: "daily"
+    labels:
+      - "Dependabot"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
       
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/backend" # Location of package manifests
     schedule:
       interval: "daily"
+    labels:
+      - "Dependabot"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
