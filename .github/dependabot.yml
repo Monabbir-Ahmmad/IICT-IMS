@@ -7,6 +7,9 @@ version: 2
 updates:
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/frontend" # Location of package manifests
+    target-branch: main
+    pull-request-branch-name:
+      separator: "-"
     schedule:
       interval: "daily"
     labels:
@@ -17,6 +20,9 @@ updates:
       
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/backend" # Location of package manifests
+    target-branch: main
+    pull-request-branch-name:
+      separator: "-"
     schedule:
       interval: "daily"
     labels:
