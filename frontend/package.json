@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@date-io/moment": "^2.15.0",
-    "@emotion/react": "^11.10.4",
+    "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.12.2",
     "@mui/x-data-grid": "^6.4.0",
